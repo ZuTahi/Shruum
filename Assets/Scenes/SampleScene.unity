@@ -1341,6 +1341,7 @@ MonoBehaviour:
   suppressNormalFinisher: 0
   weaponType: 0
   fixedAttackDelay: 0.5
+  comboResetDelay: 1.5
   attackPoint: {fileID: 596047347}
   enemyLayers:
     serializedVersion: 2
@@ -1350,7 +1351,7 @@ MonoBehaviour:
   finisherPrefab: {fileID: 7388340546527839862, guid: d0d0d356ff81198489936d79b645a394, type: 3}
   attackDamage: 10
   bladeBurstPrefab: {fileID: 8598202951665349761, guid: 486776f196937034383b82521baaf474, type: 3}
-  tripleBoomerangPrefab: {fileID: 0}
+  tripleBoomerangPrefab: {fileID: 2068765294111480469, guid: f75e01299d07b0d4189b855a22aee6d2, type: 3}
   manaCost: 10
 --- !u!1 &757017076
 GameObject:
@@ -1427,7 +1428,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c22777d6e868e4f2fb421913386b154e, type: 2}
+  - {fileID: 2100000, guid: b66d84f3d21888349bc3fc399ef7b4d0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1769,6 +1770,7 @@ MonoBehaviour:
   suppressNormalFinisher: 0
   weaponType: 1
   fixedAttackDelay: 0.3
+  comboResetDelay: 1.5
   attackPoint: {fileID: 788643998}
   enemyLayers:
     serializedVersion: 2
@@ -1776,12 +1778,13 @@ MonoBehaviour:
   punchRedPrefab: {fileID: 1765755424193872440, guid: f22072be102c95f43bd1e6567c463969, type: 3}
   punchBluePrefab: {fileID: 1397579104473424997, guid: 64c1bf71394e24944bb1a9d1b4d7288b, type: 3}
   slamAoEPrefab: {fileID: 946030025922106160, guid: cf1e93d3a455abc448be89cd7b2e44e9, type: 3}
-  bladeSpikePrefab: {fileID: 0}
-  vineStrikePrefab: {fileID: 3747038943334380066, guid: f1fa4d2df5efb614fa1ca3218d8925b4, type: 3}
   manaCost: 25
   attackDamage: 12
   finisherRadius: 1.5
   finisherMultiplier: 1.5
+  bladeSpikePrefab: {fileID: 5555946528301107041, guid: e1100c675a502d34d979e8efc818831f, type: 3}
+  explosiveSeedPrefab: {fileID: 4741054630493021134, guid: 72239c9bfa166a74b83d485d09584add, type: 3}
+  projectileSpeed: 20
 --- !u!4 &788643998
 Transform:
   m_ObjectHideFlags: 0
@@ -5029,13 +5032,14 @@ MonoBehaviour:
   suppressNormalFinisher: 0
   weaponType: 2
   fixedAttackDelay: 0.5
-  shootPoint: {fileID: 2123037310}
+  comboResetDelay: 1.5
+  attackPoint: {fileID: 2123037310}
   seedProjectilePrefab: {fileID: 8625066846211236347, guid: ef9c22ef03ed16048af9dc0cfd65c394, type: 3}
   scatterSeedPrefab: {fileID: 8625066846211236347, guid: ef9c22ef03ed16048af9dc0cfd65c394, type: 3}
-  boomerangSeedPrefab: {fileID: 2068765294111480469, guid: f75e01299d07b0d4189b855a22aee6d2, type: 3}
-  explosiveSeedPrefab: {fileID: 4741054630493021134, guid: 72239c9bfa166a74b83d485d09584add, type: 3}
   projectileSpeed: 16
   manaCost: 25
+  orbitalSicklePrefab: {fileID: 5083975693567440658, guid: 752396fd92c6cce46b34ce33fde77a17, type: 3}
+  vineStrikePrefab: {fileID: 3747038943334380066, guid: f1fa4d2df5efb614fa1ca3218d8925b4, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

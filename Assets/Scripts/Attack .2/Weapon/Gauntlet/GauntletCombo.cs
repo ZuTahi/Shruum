@@ -11,17 +11,22 @@ public class GauntletCombo : ModularWeaponCombo
     public GameObject punchRedPrefab;
     public GameObject punchBluePrefab;
     public GameObject slamAoEPrefab;
-    public GameObject bladeSpikePrefab;
-    public GameObject vineStrikePrefab;
     public int manaCost = 30;
     public float attackDamage = 15f;
+
     public float finisherRadius = 1.5f;
     public float finisherMultiplier = 1.5f;
 
+    [Header("Mix Finisher: BladeSpike")]
+    public GameObject bladeSpikePrefab;
+    [Header("Mix Finisher: ExplosiveSeed")]
+    public GameObject explosiveSeedPrefab;
+    public float projectileSpeed = 20f;
+
     private int comboStep = 0;
     private float lastAttackTime = 0f;
-
     private bool isFinisherActive = false;
+
     private List<Collider> hitEnemies = new();
     protected ModularWeaponSlotManager slotManager;
 
@@ -142,25 +147,32 @@ public class GauntletCombo : ModularWeaponCombo
             return;
 
 
-        if (w1 is SlingShotWeapon && w2 is SlingShotWeapon && w3 is GauntletCombo)
+        if (w1 is DaggerCombo && w2 is DaggerCombo && w3 is GauntletCombo)
         {
             if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
             PlayerStats.Instance.SpendMana(manaCost);
 
-            Instantiate(vineStrikePrefab, attackPoint.position, transform.rotation);
+            var spike = Instantiate(bladeSpikePrefab, transform.root.position, Quaternion.identity);
+            if (spike.TryGetComponent<BladeSpike>(out var spikeScript))
+                spikeScript.followTarget = transform.root;
+
             ResetCombo();
             suppressNormalFinisher = true;
             FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
         }
-        //else if (w1 is SlingShotWeapon && w2 is SlingShotWeapon && w3 is GauntletCombo)
-        //{
-        //if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
-        //PlayerStats.Instance.SpendMana(manaCost);
+        else if (w1 is SlingShotWeapon && w2 is SlingShotWeapon && w3 is GauntletCombo)
+        {
+            if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
+            PlayerStats.Instance.SpendMana(manaCost);
 
-        //Instantiate(bladeSpikePrefab, attackPoint.position, transform.rotation);
-        //suppressNormalFinisher = true;
-        //ResetCombo();
-        //}
+            GameObject proj = Instantiate(explosiveSeedPrefab, attackPoint.position, attackPoint.rotation);
+            if (proj.TryGetComponent<Rigidbody>(out var rb))
+                rb.linearVelocity = attackPoint.forward * projectileSpeed;
+
+            ResetCombo();
+            suppressNormalFinisher = true;
+            FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
+        }
     }
 
     public override void ResetCombo()

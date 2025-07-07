@@ -13,8 +13,9 @@ public class DaggerCombo : ModularWeaponCombo
     public GameObject finisherPrefab;
     public float attackDamage = 12f;
 
-    [Header("Mix Finisher")]
+    [Header("Mix Finisher: BladeBurst")]
     public GameObject bladeBurstPrefab;
+    [Header("Mix Finisher: TripleBoomerang")]
     public GameObject tripleBoomerangPrefab;
     public int manaCost = 10;
 

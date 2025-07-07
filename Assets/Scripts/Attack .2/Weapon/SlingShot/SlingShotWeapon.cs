@@ -5,13 +5,17 @@ public class SlingShotWeapon : ModularWeaponCombo
 {
     public float fixedAttackDelay = 0f;
     public float comboResetDelay = 1.5f;
-    public Transform shootPoint;
+    public Transform attackPoint;
     public GameObject seedProjectilePrefab;
     public GameObject scatterSeedPrefab;
-    public GameObject boomerangSeedPrefab;
-    public GameObject explosiveSeedPrefab;
+
     public float projectileSpeed = 20f;
     public int manaCost = 30;
+
+    [Header("Mix Finisher: OrbitalSickles")]
+    public GameObject orbitalSicklePrefab;
+    [Header("Mix Finisher: VineStrinke")]
+    public GameObject vineStrikePrefab;
 
     private int comboStep = 0;
     private float lastAttackTime = 0.25f;
@@ -68,9 +72,9 @@ public class SlingShotWeapon : ModularWeaponCombo
 
     private void FireSingleSeed()
     {
-        GameObject proj = Instantiate(seedProjectilePrefab, shootPoint.position, shootPoint.rotation);
+        GameObject proj = Instantiate(seedProjectilePrefab, attackPoint.position, attackPoint.rotation);
         if (proj.TryGetComponent<Rigidbody>(out var rb))
-            rb.linearVelocity = shootPoint.forward * projectileSpeed;
+            rb.linearVelocity = attackPoint.forward * projectileSpeed;
 
         StartCoroutine(CheckBufferedInput());
     }
@@ -80,8 +84,8 @@ public class SlingShotWeapon : ModularWeaponCombo
         float[] angles = { -15f, 0f, 15f };
         foreach (float angle in angles)
         {
-            Quaternion rot = Quaternion.Euler(0, angle, 0) * shootPoint.rotation;
-            GameObject proj = Instantiate(scatterSeedPrefab, shootPoint.position, rot);
+            Quaternion rot = Quaternion.Euler(0, angle, 0) * attackPoint.rotation;
+            GameObject proj = Instantiate(scatterSeedPrefab, attackPoint.position, rot);
             if (proj.TryGetComponent<Rigidbody>(out var rb))
                 rb.linearVelocity = rot * Vector3.forward * projectileSpeed;
         }
@@ -134,32 +138,27 @@ public class SlingShotWeapon : ModularWeaponCombo
         if (w1 == null || w2 == null || w3 == null)
             return;
 
-        // LLJ → Boomerang Seeds
-        if (w1 is SlingShotWeapon && w2 is SlingShotWeapon && w3 is DaggerCombo)
+        // OrbitalSickles
+        if (w1 is DaggerCombo && w2 is DaggerCombo && w3 is SlingShotWeapon)
         {
             if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
             PlayerStats.Instance.SpendMana(manaCost);
 
-            for (int i = 0; i < 3; i++)
-            {
-                float angle = -10 + i * 10;
-                Quaternion rot = Quaternion.Euler(0, angle, 0) * shootPoint.rotation;
-                Instantiate(boomerangSeedPrefab, shootPoint.position, rot);
-            }
+            var sickle = Instantiate(orbitalSicklePrefab, transform.root.position, Quaternion.identity);
+            if (sickle.TryGetComponent<OrbitingSicklesController>(out var orbital))
+                orbital.followTarget = transform.root;
 
             ResetCombo();
             suppressNormalFinisher = true;
+            FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
         }
-        // LLK → Explosive Seed
-        else if (w1 is SlingShotWeapon && w2 is SlingShotWeapon && w3 is GauntletCombo)
+        // VineStrike
+        else if (w1 is GauntletCombo && w2 is GauntletCombo && w3 is SlingShotWeapon)
         {
             if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
             PlayerStats.Instance.SpendMana(manaCost);
 
-            GameObject proj = Instantiate(explosiveSeedPrefab, shootPoint.position, shootPoint.rotation);
-            if (proj.TryGetComponent<Rigidbody>(out var rb))
-                rb.linearVelocity = shootPoint.forward * projectileSpeed;
-
+            Instantiate(vineStrikePrefab, attackPoint.position, transform.rotation);
             ResetCombo();
             suppressNormalFinisher = true;
             FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
