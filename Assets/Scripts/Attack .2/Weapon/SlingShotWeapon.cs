@@ -78,6 +78,16 @@ public class SlingShotWeapon : ModularWeaponCombo
         }
 
         ResetCombo();
+
+        // ✅ Clear combo buffer
+        var buffer = FindFirstObjectByType<ModularComboBuffer>();
+        buffer?.ClearBuffer();
+
+        // ✅ Reset all other weapons to avoid lingering combo state
+        var slotManager = FindFirstObjectByType<ModularWeaponSlotManager>();
+        foreach (var w in slotManager?.GetAllWeapons())
+            w?.ResetCombo();
+
         StartCoroutine(CheckBufferedInput());
     }
 
@@ -95,12 +105,25 @@ public class SlingShotWeapon : ModularWeaponCombo
 
     public override void HandleMixFinisher(ModularWeaponInput[] combo)
     {
-        if (combo.Length < 3 || slotManager == null) return;
+        if (combo == null || combo.Length < 3 || slotManager == null) return;
 
         var weapons = slotManager.GetAllWeapons();
-        ModularWeaponCombo w1 = weapons[(int)combo[0]];
-        ModularWeaponCombo w2 = weapons[(int)combo[1]];
-        ModularWeaponCombo w3 = weapons[(int)combo[2]];
+
+        int i0 = (int)combo[0];
+        int i1 = (int)combo[1];
+        int i2 = (int)combo[2];
+
+        if (i0 < 0 || i0 >= weapons.Length ||
+            i1 < 0 || i1 >= weapons.Length ||
+            i2 < 0 || i2 >= weapons.Length)
+            return;
+
+        ModularWeaponCombo w1 = weapons[i0];
+        ModularWeaponCombo w2 = weapons[i1];
+        ModularWeaponCombo w3 = weapons[i2];
+
+        if (w1 == null || w2 == null || w3 == null)
+            return;
 
         // LLJ → Boomerang Seeds
         if (w1 is SlingShotWeapon && w2 is SlingShotWeapon && w3 is DaggerCombo)

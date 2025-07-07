@@ -32,16 +32,10 @@ public class GauntletCombo : ModularWeaponCombo
 
     public override void HandleInput()
     {
-        if (!gameObject.activeInHierarchy)
+        if (suppressNormalFinisher || isFinisherActive || Time.time - lastAttackTime < fixedAttackDelay)
             return;
-        Debug.Log($"{this.name} HandleInput called. ComboStep = {comboStep}");
 
-        suppressNormalFinisher = false; // Always reset before proceeding
-
-        if (isFinisherActive || Time.time - lastAttackTime < fixedAttackDelay) return;
         ProcessAttack();
-        Debug.Log($"{this.name} Combo Step After Input: {comboStep}");
-
     }
 
     private void ProcessAttack()
@@ -105,7 +99,12 @@ public class GauntletCombo : ModularWeaponCombo
         yield return new WaitForSeconds(0.3f);
         ResetCombo();
         Debug.Log($"{this.name} Performing Finisher");
-        FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
+        var buffer = FindFirstObjectByType<ModularComboBuffer>();
+        buffer?.ClearBuffer();
+
+        // ✅ Also reset all other weapons, just like mix finisher does
+        foreach (var w in FindFirstObjectByType<ModularWeaponSlotManager>()?.GetAllWeapons())
+            w?.ResetCombo();
 
     }
 
@@ -114,17 +113,33 @@ public class GauntletCombo : ModularWeaponCombo
         if (combo.Length < 3 || slotManager == null) return;
 
         var weapons = slotManager.GetAllWeapons();
-        ModularWeaponCombo w1 = weapons[(int)combo[0]];
-        ModularWeaponCombo w2 = weapons[(int)combo[1]];
-        ModularWeaponCombo w3 = weapons[(int)combo[2]];
 
-        if (w1 is DaggerCombo && w2 is DaggerCombo && w3 is GauntletCombo)
+        if (combo.Length < 3) return;
+
+        int i0 = (int)combo[0];
+        int i1 = (int)combo[1];
+        int i2 = (int)combo[2];
+
+        if (i0 < 0 || i0 >= weapons.Length ||
+            i1 < 0 || i1 >= weapons.Length ||
+            i2 < 0 || i2 >= weapons.Length)
+            return;
+
+        ModularWeaponCombo w1 = weapons[i0];
+        ModularWeaponCombo w2 = weapons[i1];
+        ModularWeaponCombo w3 = weapons[i2];
+
+        if (w1 == null || w2 == null || w3 == null)
+            return;
+
+
+        if (w1 is SlingShotWeapon && w2 is SlingShotWeapon && w3 is GauntletCombo)
         {
             if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
             PlayerStats.Instance.SpendMana(manaCost);
+            suppressNormalFinisher = true;
 
             Instantiate(vineStrikePrefab, attackPoint.position, transform.rotation);
-            suppressNormalFinisher = true;
             ResetCombo();
         }
         //else if (w1 is SlingShotWeapon && w2 is SlingShotWeapon && w3 is GauntletCombo)

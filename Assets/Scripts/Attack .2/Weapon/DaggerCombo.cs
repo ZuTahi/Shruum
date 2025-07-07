@@ -32,9 +32,12 @@ public class DaggerCombo : ModularWeaponCombo
     public override void HandleInput()
     {
         if (suppressNormalFinisher || isFinisherActive || Time.time - lastAttackTime < fixedAttackDelay)
+        {
+            Debug.Log("[Dagger] Input blocked due to suppression or cooldown.");
             return;
-        suppressNormalFinisher = false;
+        }
 
+        Debug.Log("[Dagger] HandleInput → Performing basic dagger attack");
         ProcessAttack();
     }
 
@@ -123,7 +126,12 @@ public class DaggerCombo : ModularWeaponCombo
             PlayerMovement.Instance.canMove = true;
 
         ResetCombo();
-        FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
+        var buffer = FindFirstObjectByType<ModularComboBuffer>();
+        buffer?.ClearBuffer();
+
+        // ✅ Also reset all other weapons, just like mix finisher does
+        foreach (var w in FindFirstObjectByType<ModularWeaponSlotManager>()?.GetAllWeapons())
+            w?.ResetCombo();
     }
 
     public override void HandleMixFinisher(ModularWeaponInput[] combo)
@@ -131,11 +139,24 @@ public class DaggerCombo : ModularWeaponCombo
         if (combo.Length < 3 || slotManager == null) return;
 
         var weapons = slotManager.GetAllWeapons();
-        ModularWeaponCombo w1 = weapons[(int)combo[0]];
-        ModularWeaponCombo w2 = weapons[(int)combo[1]];
-        ModularWeaponCombo w3 = weapons[(int)combo[2]];
 
-        if (w1 == null || w2 == null || w3 == null) return;
+        if (combo.Length < 3) return;
+
+        int i0 = (int)combo[0];
+        int i1 = (int)combo[1];
+        int i2 = (int)combo[2];
+
+        if (i0 < 0 || i0 >= weapons.Length ||
+            i1 < 0 || i1 >= weapons.Length ||
+            i2 < 0 || i2 >= weapons.Length)
+            return;
+
+        ModularWeaponCombo w1 = weapons[i0];
+        ModularWeaponCombo w2 = weapons[i1];
+        ModularWeaponCombo w3 = weapons[i2];
+
+        if (w1 == null || w2 == null || w3 == null)
+            return;
 
         if (IsCombo<GauntletCombo, GauntletCombo, DaggerCombo>(w1, w2, w3))
         {
@@ -159,9 +180,9 @@ public class DaggerCombo : ModularWeaponCombo
     {
         if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
         PlayerStats.Instance.SpendMana(manaCost);
+        suppressNormalFinisher = true;
 
         BladeBurst.Spawn(transform.root.position, bladeBurstPrefab, 6, 1.2f, 10f);
-        suppressNormalFinisher = true;
         ResetCombo();
     }
 
@@ -169,6 +190,7 @@ public class DaggerCombo : ModularWeaponCombo
     {
         if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
         PlayerStats.Instance.SpendMana(manaCost);
+        suppressNormalFinisher = true;
 
         if (tripleBoomerangPrefab == null) return;
 
@@ -179,7 +201,6 @@ public class DaggerCombo : ModularWeaponCombo
             Instantiate(tripleBoomerangPrefab, attackPoint.position, rot);
         }
 
-        suppressNormalFinisher = true;
         ResetCombo();
     }
 

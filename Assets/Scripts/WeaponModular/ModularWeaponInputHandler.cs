@@ -21,13 +21,16 @@ public class ModularWeaponInputHandler : MonoBehaviour
 
     private void HandleInput(KeyCode key, ModularWeaponInput input)
     {
-        Debug.Log($"Key Pressed: {key}, Input: {input}");
+        Debug.Log($"[InputHandler] Key Pressed: {key}, Input Enum: {input}");
 
         comboBuffer.RegisterInput(input);
 
         ModularWeaponCombo weapon = slotManager.GetWeaponByKeyCode(key);
         if (weapon == null || !weapon.gameObject.activeInHierarchy)
+        {
+            Debug.LogWarning("[InputHandler] Weapon not found or inactive.");
             return;
+        }
 
         ModularWeaponSlotKey currentSlot = key switch
         {
@@ -41,8 +44,9 @@ public class ModularWeaponInputHandler : MonoBehaviour
         if (lastSlotUsed != null && lastSlotUsed != currentSlot)
         {
             ModularWeaponCombo lastWeapon = slotManager.GetWeaponInSlot(lastSlotUsed.Value);
-            if (lastWeapon != null)
+            //if (lastWeapon != null)
                 lastWeapon.ResetCombo();
+            Debug.Log($"[InputHandler] Switched slot from {lastSlotUsed} to {currentSlot}, resetting previous weapon combo.");
         }
 
         lastSlotUsed = currentSlot;
@@ -51,6 +55,7 @@ public class ModularWeaponInputHandler : MonoBehaviour
         var combo = comboBuffer.GetCombo();
         if (combo.Length == 3 && combo[2] == input)
         {
+            Debug.Log("[InputHandler] 3-input combo detected: checking for mix finisher...");
             // Let the weapon check the pattern and decide whether to execute a mix finisher
             weapon.suppressNormalFinisher = false; // default to false before checking
             weapon.HandleMixFinisher(combo);
@@ -58,16 +63,21 @@ public class ModularWeaponInputHandler : MonoBehaviour
             // If the weapon accepted the combo, suppress normal and clear input
             if (weapon.suppressNormalFinisher)
             {
-                comboBuffer.ClearBuffer(); // ✅ Only clear if mix executed
+                Debug.Log("[InputHandler] Mix finisher accepted. Suppressing normal input.");
+                comboBuffer.ClearBuffer();
+                foreach (var w in slotManager.GetAllWeapons()) w?.ResetCombo();
+                return;
             }
             else
             {
                 // Not a valid mix finisher → treat as normal input
+                Debug.Log("[InputHandler] Not a valid mix finisher. Proceeding with normal input.");
                 weapon.HandleInput();
             }
         }
         else
         {
+            Debug.Log("[InputHandler] Triggering weapon.HandleInput()");
             weapon.HandleInput();
         }
     }
