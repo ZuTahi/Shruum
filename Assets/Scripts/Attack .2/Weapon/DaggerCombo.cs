@@ -5,6 +5,7 @@ public class DaggerCombo : ModularWeaponCombo
 {
     [Header("Basic Combo")]
     public float fixedAttackDelay = 0.3f;
+    public float comboResetDelay = 1.5f;
     public Transform attackPoint;
     public LayerMask enemyLayers;
     public GameObject slashRedPrefab;
@@ -27,6 +28,14 @@ public class DaggerCombo : ModularWeaponCombo
     {
         base.Awake();
         slotManager = FindFirstObjectByType<ModularWeaponSlotManager>();
+    }
+    void Update()
+    {
+        if (comboStep > 0 && Time.time - lastAttackTime > comboResetDelay)
+        {
+            Debug.Log("[Dagger] Combo timed out, resetting.");
+            ResetCombo();
+        }
     }
 
     public override void HandleInput()
@@ -180,17 +189,17 @@ public class DaggerCombo : ModularWeaponCombo
     {
         if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
         PlayerStats.Instance.SpendMana(manaCost);
-        suppressNormalFinisher = true;
 
         BladeBurst.Spawn(transform.root.position, bladeBurstPrefab, 6, 1.2f, 10f);
         ResetCombo();
+        suppressNormalFinisher = true;
+        FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
     }
 
     private void TryTripleBoomerang()
     {
         if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
         PlayerStats.Instance.SpendMana(manaCost);
-        suppressNormalFinisher = true;
 
         if (tripleBoomerangPrefab == null) return;
 
@@ -202,6 +211,8 @@ public class DaggerCombo : ModularWeaponCombo
         }
 
         ResetCombo();
+        suppressNormalFinisher = true;
+        FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
     }
 
     public override void ResetCombo()

@@ -4,6 +4,7 @@ using System.Collections;
 public class SlingShotWeapon : ModularWeaponCombo
 {
     public float fixedAttackDelay = 0f;
+    public float comboResetDelay = 1.5f;
     public Transform shootPoint;
     public GameObject seedProjectilePrefab;
     public GameObject scatterSeedPrefab;
@@ -22,6 +23,14 @@ public class SlingShotWeapon : ModularWeaponCombo
     {
         base.Awake();
         slotManager = FindFirstObjectByType<ModularWeaponSlotManager>();
+    }
+    void Update()
+    {
+        if (comboStep > 0 && Time.time - lastAttackTime > comboResetDelay)
+        {
+            Debug.Log("[Dagger] Combo timed out, resetting.");
+            ResetCombo();
+        }
     }
 
     public override void HandleInput()
@@ -138,8 +147,8 @@ public class SlingShotWeapon : ModularWeaponCombo
                 Instantiate(boomerangSeedPrefab, shootPoint.position, rot);
             }
 
-            suppressNormalFinisher = true;
             ResetCombo();
+            suppressNormalFinisher = true;
         }
         // LLK → Explosive Seed
         else if (w1 is SlingShotWeapon && w2 is SlingShotWeapon && w3 is GauntletCombo)
@@ -151,8 +160,9 @@ public class SlingShotWeapon : ModularWeaponCombo
             if (proj.TryGetComponent<Rigidbody>(out var rb))
                 rb.linearVelocity = shootPoint.forward * projectileSpeed;
 
-            suppressNormalFinisher = true;
             ResetCombo();
+            suppressNormalFinisher = true;
+            FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
         }
     }
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class GauntletCombo : ModularWeaponCombo
 {
     public float fixedAttackDelay = 0.3f;
+    public float comboResetDelay = 1.5f;
     public Transform attackPoint;
     public LayerMask enemyLayers;
     public GameObject punchRedPrefab;
@@ -28,6 +29,14 @@ public class GauntletCombo : ModularWeaponCombo
     {
         base.Awake();
         slotManager = FindFirstObjectByType<ModularWeaponSlotManager>();
+    }
+    void Update()
+    {
+        if (comboStep > 0 && Time.time - lastAttackTime > comboResetDelay)
+        {
+            Debug.Log("[Dagger] Combo timed out, resetting.");
+            ResetCombo();
+        }
     }
 
     public override void HandleInput()
@@ -137,19 +146,20 @@ public class GauntletCombo : ModularWeaponCombo
         {
             if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
             PlayerStats.Instance.SpendMana(manaCost);
-            suppressNormalFinisher = true;
 
             Instantiate(vineStrikePrefab, attackPoint.position, transform.rotation);
             ResetCombo();
+            suppressNormalFinisher = true;
+            FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
         }
         //else if (w1 is SlingShotWeapon && w2 is SlingShotWeapon && w3 is GauntletCombo)
         //{
-            //if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
-            //PlayerStats.Instance.SpendMana(manaCost);
+        //if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
+        //PlayerStats.Instance.SpendMana(manaCost);
 
-            //Instantiate(bladeSpikePrefab, attackPoint.position, transform.rotation);
-            //suppressNormalFinisher = true;
-            //ResetCombo();
+        //Instantiate(bladeSpikePrefab, attackPoint.position, transform.rotation);
+        //suppressNormalFinisher = true;
+        //ResetCombo();
         //}
     }
 

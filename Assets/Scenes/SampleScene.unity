@@ -1350,7 +1350,7 @@ MonoBehaviour:
   finisherPrefab: {fileID: 7388340546527839862, guid: d0d0d356ff81198489936d79b645a394, type: 3}
   attackDamage: 10
   bladeBurstPrefab: {fileID: 8598202951665349761, guid: 486776f196937034383b82521baaf474, type: 3}
-  tripleBoomerangPrefab: {fileID: 2068765294111480469, guid: f75e01299d07b0d4189b855a22aee6d2, type: 3}
+  tripleBoomerangPrefab: {fileID: 0}
   manaCost: 10
 --- !u!1 &757017076
 GameObject:
@@ -1768,7 +1768,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   suppressNormalFinisher: 0
   weaponType: 1
-  fixedAttackDelay: 0.5
+  fixedAttackDelay: 0.3
   attackPoint: {fileID: 788643998}
   enemyLayers:
     serializedVersion: 2
@@ -1776,7 +1776,7 @@ MonoBehaviour:
   punchRedPrefab: {fileID: 1765755424193872440, guid: f22072be102c95f43bd1e6567c463969, type: 3}
   punchBluePrefab: {fileID: 1397579104473424997, guid: 64c1bf71394e24944bb1a9d1b4d7288b, type: 3}
   slamAoEPrefab: {fileID: 946030025922106160, guid: cf1e93d3a455abc448be89cd7b2e44e9, type: 3}
-  bladeBurstPrefab: {fileID: 8598202951665349761, guid: 486776f196937034383b82521baaf474, type: 3}
+  bladeSpikePrefab: {fileID: 0}
   vineStrikePrefab: {fileID: 3747038943334380066, guid: f1fa4d2df5efb614fa1ca3218d8925b4, type: 3}
   manaCost: 25
   attackDamage: 12
@@ -2577,9 +2577,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponSlots:
-  - {fileID: 596047348}
-  - {fileID: 788643997}
-  - {fileID: 2123037311}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   allWeapons:
   - {fileID: 596047348}
   - {fileID: 788643997}
