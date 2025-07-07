@@ -10,7 +10,7 @@ public class GauntletCombo : ModularWeaponCombo
     public GameObject punchRedPrefab;
     public GameObject punchBluePrefab;
     public GameObject slamAoEPrefab;
-    public GameObject bladeBurstPrefab;
+    public GameObject bladeSpikePrefab;
     public GameObject vineStrikePrefab;
     public int manaCost = 30;
     public float attackDamage = 15f;
@@ -105,6 +105,7 @@ public class GauntletCombo : ModularWeaponCombo
         yield return new WaitForSeconds(0.3f);
         ResetCombo();
         Debug.Log($"{this.name} Performing Finisher");
+        FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
 
     }
 
@@ -117,16 +118,7 @@ public class GauntletCombo : ModularWeaponCombo
         ModularWeaponCombo w2 = weapons[(int)combo[1]];
         ModularWeaponCombo w3 = weapons[(int)combo[2]];
 
-        if (w1 is GauntletCombo && w2 is GauntletCombo && w3 is DaggerCombo)
-        {
-            if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
-            PlayerStats.Instance.SpendMana(manaCost);
-
-            BladeBurst.Spawn(transform.root.position, bladeBurstPrefab, 6, 1.2f, 12f);
-            suppressNormalFinisher = true;
-            ResetCombo();
-        }
-        else if (w1 is GauntletCombo && w2 is GauntletCombo && w3 is SlingShotWeapon)
+        if (w1 is DaggerCombo && w2 is DaggerCombo && w3 is GauntletCombo)
         {
             if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
             PlayerStats.Instance.SpendMana(manaCost);
@@ -135,6 +127,15 @@ public class GauntletCombo : ModularWeaponCombo
             suppressNormalFinisher = true;
             ResetCombo();
         }
+        //else if (w1 is SlingShotWeapon && w2 is SlingShotWeapon && w3 is GauntletCombo)
+        //{
+            //if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
+            //PlayerStats.Instance.SpendMana(manaCost);
+
+            //Instantiate(bladeSpikePrefab, attackPoint.position, transform.rotation);
+            //suppressNormalFinisher = true;
+            //ResetCombo();
+        //}
     }
 
     public override void ResetCombo()

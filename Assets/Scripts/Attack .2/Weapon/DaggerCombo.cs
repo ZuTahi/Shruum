@@ -31,16 +31,16 @@ public class DaggerCombo : ModularWeaponCombo
 
     public override void HandleInput()
     {
-        suppressNormalFinisher = false;
-
-        if (isFinisherActive || Time.time - lastAttackTime < fixedAttackDelay)
+        if (suppressNormalFinisher || isFinisherActive || Time.time - lastAttackTime < fixedAttackDelay)
             return;
+        suppressNormalFinisher = false;
 
         ProcessAttack();
     }
 
     private void ProcessAttack()
     {
+        PlayerMovement.Instance.canMove = false;
         lastAttackTime = Time.time;
         comboStep++;
         if (comboStep > 3) comboStep = 1;
@@ -123,6 +123,7 @@ public class DaggerCombo : ModularWeaponCombo
             PlayerMovement.Instance.canMove = true;
 
         ResetCombo();
+        FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
     }
 
     public override void HandleMixFinisher(ModularWeaponInput[] combo)
