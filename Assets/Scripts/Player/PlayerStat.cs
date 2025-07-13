@@ -119,4 +119,13 @@ public class PlayerStats : MonoBehaviour
     {
         return currentMP >= amount;
     }
+    public void AddMana(int amount)
+    {
+        currentMP += amount;
+        if (currentMP > maxMP)
+            currentMP = maxMP;
+
+        PlayerUIManager.Instance.UpdateMP(currentMP, maxMP);
+        Debug.Log("Added Mana");
+    }
 }

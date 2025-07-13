@@ -136,6 +136,8 @@ public class EnemyAIController : MonoBehaviour
     public void OnDeath()
     {
         if (stats.isDummy) return;
+        GetComponent<EnemyDrop>()?.DropItems();
+
         currentState = EnemyState.Death;
         movement.Stop();
         anim.SetTrigger("die");

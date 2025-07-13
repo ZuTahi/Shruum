@@ -29,4 +29,9 @@ public class OrbitalSickleDamage : MonoBehaviour
             }
         }
     }
+    void OnDrawGizmos()
+    {
+        Gizmos.color = new Color(0.4f, 1f, 0.4f, 0.4f); // green-ish transparent
+        Gizmos.DrawSphere(transform.position, damageRadius);
+    }
 }

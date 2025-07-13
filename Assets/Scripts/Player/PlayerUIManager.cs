@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-
 [System.Serializable]
 public class StatBar
 {
-    public RectTransform background;  // The full stat background
-    public RectTransform fill;        // The fill that grows/shrinks
-    public float baseStat;            // Starting stat (e.g., 100 HP)
-    public float baseHeight;          // Height in pixels that represents baseStat
+    public RectTransform background;  // Resizes with max stat (black base)
+    public RectTransform fill;        // Shrinks/fills based on current stat
+    public float baseStat = 100f;     // Base max stat
+    public float baseHeight = 120f;   // Base height for baseStat (in pixels)
 }
 
 public class PlayerUIManager : MonoBehaviour
@@ -26,39 +25,28 @@ public class PlayerUIManager : MonoBehaviour
         Instance = this;
     }
 
-    // ✅ Called when current HP changes (e.g. damage or heal)
-    public void UpdateHP(float current, float max)
-    {
-        UpdateStatBar(hpBar, current, max);
-    }
-
-    public void UpdateSP(float current, float max)
-    {
-        UpdateStatBar(spBar, current, max);
-    }
-
-    public void UpdateMP(float current, float max)
-    {
-        UpdateStatBar(mpBar, current, max);
-    }
+    public void UpdateHP(float current, float max) => UpdateStatBar(hpBar, current, max);
+    public void UpdateSP(float current, float max) => UpdateStatBar(spBar, current, max);
+    public void UpdateMP(float current, float max) => UpdateStatBar(mpBar, current, max);
 
     private void UpdateStatBar(StatBar bar, float current, float max)
     {
-        // Background height (includes buffer/padding to frame the fill)
-        float maxScale = max / bar.baseStat;
-        float fillAreaHeight = bar.baseHeight * maxScale;
-        float bgHeight = fillAreaHeight + 20f; // Add top/bottom padding for visuals
+        // ⬆️ How much the bar should grow for this max stat
+        float scale = max / bar.baseStat;
+        float fillHeight = bar.baseHeight * scale;
+        float backgroundHeight = fillHeight + 20f;     // Matches fill
 
-        bar.background.sizeDelta = new Vector2(bar.background.sizeDelta.x, bgHeight);
+        // 🔲 Resize black background (scales with max stat)
+        if (bar.background != null)
+            bar.background.sizeDelta = new Vector2(bar.background.sizeDelta.x, backgroundHeight);
 
-        // Match fill height to actual usable area (no padding)
-        bar.fill.sizeDelta = new Vector2(bar.fill.sizeDelta.x, fillAreaHeight);
+        // 🟩 Resize fill to match usable area
+        if (bar.fill != null)
+            bar.fill.sizeDelta = new Vector2(bar.fill.sizeDelta.x, fillHeight);
 
-        // Set fillAmount to reflect current stat
+        // 🌊 Update fill amount based on current stat
         Image fillImage = bar.fill.GetComponent<Image>();
         if (fillImage != null)
-        {
             fillImage.fillAmount = current / max;
-        }
     }
 }

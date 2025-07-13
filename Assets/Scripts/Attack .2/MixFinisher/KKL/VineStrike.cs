@@ -1,6 +1,5 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 public class VineStrike : MonoBehaviour
 {
@@ -10,26 +9,69 @@ public class VineStrike : MonoBehaviour
     public LayerMask enemyLayers;
     public float width = 0.6f;
 
+    public float destroyDelay = 1.5f; // seconds after full length
+    private bool hasFullyGrown = false;
+    private float destroyTimer = 0f;
+
+    public float damageInterval = 0.5f;
+    private float damageTimer = 0f;
+
     private float currentLength = 0f;
     private Vector3 originalScale;
 
+    private Transform visual; // Reference to the child mesh
+
     void Start()
     {
-        originalScale = transform.localScale;
-        transform.localScale = new Vector3(originalScale.x, originalScale.y, 0);
+        visual = transform.GetChild(0); // assumes first child is the mesh
+        originalScale = visual.localScale;
+        visual.localScale = new Vector3(originalScale.x, originalScale.y, 0);
+        visual.localPosition = Vector3.zero;
     }
 
     void Update()
     {
-        if (currentLength >= maxLength) return;
+        if (!hasFullyGrown)
+        {
+            float growAmount = growSpeed * Time.deltaTime;
+            currentLength += growAmount;
+            currentLength = Mathf.Min(currentLength, maxLength);
 
-        float growAmount = growSpeed * Time.deltaTime;
-        currentLength += growAmount;
-        currentLength = Mathf.Min(currentLength, maxLength);
+            // Update visual mesh: scale forward only
+            visual.localScale = new Vector3(originalScale.x, originalScale.y, currentLength);
+            visual.localPosition = new Vector3(0, 0, currentLength / 2f);
 
-        transform.localScale = new Vector3(originalScale.x, originalScale.y, currentLength);
+            // ✅ Only deal damage at interval
+            damageTimer -= Time.deltaTime;
+            if (damageTimer <= 0f)
+            {
+                DealDamage();
+                damageTimer = damageInterval;
+            }
 
-        // Damage enemies along the grown path
+            if (currentLength >= maxLength)
+            {
+                hasFullyGrown = true;
+                destroyTimer = destroyDelay;
+            }
+        }
+        else
+        {
+            // ✅ Keep dealing damage even after fully grown
+            damageTimer -= Time.deltaTime;
+            if (damageTimer <= 0f)
+            {
+                DealDamage();
+                damageTimer = damageInterval;
+            }
+
+            destroyTimer -= Time.deltaTime;
+            if (destroyTimer <= 0f)
+                Destroy(gameObject);
+        }
+    }
+    void DealDamage()
+    {
         Vector3 center = transform.position + transform.forward * (currentLength / 2f);
         Vector3 halfExtents = new Vector3(width / 2f, 1f, currentLength / 2f);
 

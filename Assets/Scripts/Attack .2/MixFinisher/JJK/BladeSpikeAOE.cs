@@ -48,4 +48,9 @@ public class BladeSpike : MonoBehaviour
             }
         }
     }
+    void OnDrawGizmos()
+    {
+        Gizmos.color = new Color(1f, 0.2f, 0.2f, 0.4f); // red-ish transparent
+        Gizmos.DrawSphere(transform.position, damageRadius);
+    }
 }

@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4067593988248479516}
   - component: {fileID: 8137177896389282204}
   - component: {fileID: 816710311050540930}
-  - component: {fileID: 9107684822157997102}
   - component: {fileID: 8200693536719598094}
   m_Layer: 0
   m_Name: BladeSpike
@@ -30,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.06582295, y: -0.44443235, z: -0.25204575}
-  m_LocalScale: {x: 2.5, y: 0.1, z: 2.5}
+  m_LocalScale: {x: 4, y: 0.1, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -88,27 +87,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &9107684822157997102
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5555946528301107041}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 2.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8200693536719598094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,7 +102,7 @@ MonoBehaviour:
   followTarget: {fileID: 0}
   damageInterval: 0.5
   duration: 3
-  damageRadius: 2.5
+  damageRadius: 2
   damage: 10
   enemyLayers:
     serializedVersion: 2
