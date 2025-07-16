@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class RoomManager : MonoBehaviour
 {
@@ -9,7 +10,11 @@ public class RoomManager : MonoBehaviour
     public ArtifactManager artifactManager;
 
     private bool isRoomCleared = false;
-
+    private void Start()
+    {
+        InitializeRoom();
+        StartCoroutine(DelayedInitialization());
+    }
     public void InitializeRoom()
     {
         Debug.Log("RoomManager: Initializing Room...");
@@ -24,6 +29,36 @@ public class RoomManager : MonoBehaviour
         {
             Debug.LogWarning("No EnemySpawner assigned. Room is instantly cleared.");
             OnRoomCleared();
+        }
+    }
+    private IEnumerator DelayedInitialization()
+    {
+        // Wait 1 frame to ensure Player is loaded
+        yield return null;
+
+        RepositionPlayer();
+        InitializeRoom();
+    }
+
+    private void RepositionPlayer()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null && playerSpawnPoint != null)
+        {
+            Vector3 newPosition = new Vector3(
+                playerSpawnPoint.position.x,
+                player.transform.position.y,   // Keep current Y
+                playerSpawnPoint.position.z
+            );
+
+            player.transform.position = newPosition;
+            player.transform.rotation = playerSpawnPoint.rotation;
+
+            Debug.Log($"Player repositioned to XZ: {newPosition}");
+        }
+        else
+        {
+            Debug.LogWarning("Player or PlayerSpawnPoint is missing!");
         }
     }
 

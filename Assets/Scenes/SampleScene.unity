@@ -2953,6 +2953,7 @@ GameObject:
   - component: {fileID: 1335838640}
   - component: {fileID: 1335838639}
   - component: {fileID: 1335838638}
+  - component: {fileID: 1335838641}
   m_Layer: 0
   m_Name: ShrineCanvas
   m_TagString: Untagged
@@ -3043,6 +3044,36 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1335838641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335838636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 599c3c4bf77d3f1469bcbac337fbc768, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offeringPanel: {fileID: 1867445253}
+  statIcons:
+  - {fileID: 1649888823}
+  - {fileID: 1108890890}
+  - {fileID: 1606657969}
+  - {fileID: 71949393}
+  - {fileID: 1603271700}
+  costTexts:
+  - {fileID: 1885276316}
+  - {fileID: 1064587827}
+  - {fileID: 529553292}
+  - {fileID: 1970170805}
+  - {fileID: 1522827123}
+  defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  baseCosts: 32000000320000004b0000007800000064000000
+  costMultiplier: 1.5
+  playerMovement: {fileID: 1099362072}
 --- !u!1 &1355167535
 GameObject:
   m_ObjectHideFlags: 0
@@ -3208,7 +3239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc9448ff6ae13344f896c933737ddedb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forestSceneName: ForestScene
+  forestSceneName: Room0
 --- !u!65 &1429473224
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4428,7 +4459,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e22c23ee1ca342a4c831483281dd0033, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiManager: {fileID: 1952719011}
+  uiManager: {fileID: 0}
 --- !u!1 &1829291310
 GameObject:
   m_ObjectHideFlags: 0
@@ -4769,7 +4800,6 @@ GameObject:
   - component: {fileID: 1952719009}
   - component: {fileID: 1952719008}
   - component: {fileID: 1952719007}
-  - component: {fileID: 1952719011}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -4861,36 +4891,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1952719011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1952719006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599c3c4bf77d3f1469bcbac337fbc768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  offeringPanel: {fileID: 1867445253}
-  statIcons:
-  - {fileID: 1649888823}
-  - {fileID: 1108890890}
-  - {fileID: 1606657969}
-  - {fileID: 71949393}
-  - {fileID: 1603271700}
-  costTexts:
-  - {fileID: 1885276316}
-  - {fileID: 1064587827}
-  - {fileID: 529553292}
-  - {fileID: 1970170805}
-  - {fileID: 1522827123}
-  defaultColor: {r: 1, g: 1, b: 1, a: 1}
-  selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  baseCosts: 32000000320000004b0000007800000064000000
-  costMultiplier: 1.5
-  playerMovement: {fileID: 1099362072}
 --- !u!1 &1970170803
 GameObject:
   m_ObjectHideFlags: 0
