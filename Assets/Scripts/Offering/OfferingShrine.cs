@@ -45,7 +45,7 @@ public class OfferingShrine : MonoBehaviour
                 break;
 
             case StatType.ATK:
-                PlayerStats.Instance.attackDamage += upgradeAmount;
+                PlayerStats.Instance.attackMultiplier += 0.1f;
                 break;
 
             case StatType.DEF:
