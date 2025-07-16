@@ -1,10 +1,12 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerInventory : MonoBehaviour
 {
     public static PlayerInventory Instance { get; private set; }
 
     public int natureForce = 0;
+    public List<string> loreNotes = new List<string>();
 
     private void Awake()
     {
@@ -19,4 +21,19 @@ public class PlayerInventory : MonoBehaviour
         // Update UI if needed
     }
 
+    public void AddLoreNote(string note)
+    {
+        if (!loreNotes.Contains(note))
+        {
+            loreNotes.Add(note);
+            Debug.Log("Collected Lore Note: " + note);
+            // Update UI if needed
+        }
+    }
+
+    public void LoadData(PlayerSaveData data)
+    {
+        natureForce = data.natureForce;
+        loreNotes = new List<string>(data.loreNotes);
+    }
 }

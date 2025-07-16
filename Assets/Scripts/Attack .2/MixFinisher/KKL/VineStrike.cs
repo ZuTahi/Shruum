@@ -25,7 +25,7 @@ public class VineStrike : MonoBehaviour
     {
         visual = transform.GetChild(0); // assumes first child is the mesh
         originalScale = visual.localScale;
-        visual.localScale = new Vector3(originalScale.x, originalScale.y, 0);
+        visual.localScale = new Vector3(originalScale.x, originalScale.y, 0.01f);
         visual.localPosition = Vector3.zero;
     }
 

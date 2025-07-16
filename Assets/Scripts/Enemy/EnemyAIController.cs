@@ -24,6 +24,8 @@ public class EnemyAIController : MonoBehaviour
     private bool isActing = false;
     private bool isStaggered = false;
 
+    public EnemySpawner spawner;
+
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;

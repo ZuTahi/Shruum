@@ -48,7 +48,18 @@ public class PlayerStats : MonoBehaviour
         PlayerUIManager.Instance.UpdateSP(currentSP, maxSP);
         PlayerUIManager.Instance.UpdateMP(currentMP, maxMP);
     }
+    public void LoadData(PlayerSaveData data)
+    {
+        currentHP = data.currentHP;
+        currentSP = data.currentSP;
+        currentMP = data.currentMP;
 
+        attackDamage = data.attackDamage;
+        baseDefensePercent = data.baseDefensePercent;
+        defenseMultiplier = data.defenseMultiplier;
+
+        Debug.Log("PlayerStats: Data Loaded from Save.");
+    }
     void Update()
     {
         RegenerateStamina();
@@ -119,6 +130,7 @@ public class PlayerStats : MonoBehaviour
     {
         return currentMP >= amount;
     }
+
     public void AddMana(int amount)
     {
         currentMP += amount;

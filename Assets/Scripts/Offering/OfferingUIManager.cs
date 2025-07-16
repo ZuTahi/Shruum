@@ -14,6 +14,8 @@ public class OfferingUIManager : MonoBehaviour
     [SerializeField] private int[] baseCosts = new int[5]; // HP → DEF
     [SerializeField] private float costMultiplier = 1.5f;
     private int[] offeringCounts = new int[5]; // One per StatType (HP → DEF)
+    private float inputBufferTime = 0.2f;
+    private float inputBufferTimer = 0f;
 
     [Header("Player Reference")]
     [SerializeField] private PlayerMovement playerMovement;
@@ -24,7 +26,11 @@ public class OfferingUIManager : MonoBehaviour
     private void Update()
     {
         if (!offeringPanel.activeSelf) return;
-
+        if (inputBufferTimer > 0f)
+        {
+            inputBufferTimer -= Time.deltaTime;
+            return; // skip inputs during buffer
+        }
         // Navigate stat selection
         if (Input.GetKeyDown(KeyCode.A))
         {
@@ -85,9 +91,10 @@ public class OfferingUIManager : MonoBehaviour
     public void ShowOfferingPanel(OfferingShrine shrine)
     {
         currentShrine = shrine;
-        selectedIndex = statIcons.Length / 2; // Center stat (e.g., MP if 5 stats)
+        selectedIndex = statIcons.Length / 2; // Center stat
         offeringPanel.SetActive(true);
         playerMovement.canMove = false;
+        inputBufferTimer = inputBufferTime; // Start buffer
         UpdateUI();
     }
 
