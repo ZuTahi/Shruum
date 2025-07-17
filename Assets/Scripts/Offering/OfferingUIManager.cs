@@ -131,11 +131,11 @@ public class OfferingUIManager : MonoBehaviour
                 if (currentShrine != null)
                 {
                     int cost = currentShrine.GetUpgradeCost((StatType)i);
-                    costTexts[i].text = $"Cost: {cost}";
+                    costTexts[i].text = $"{cost}";
                 }
                 else
                 {
-                    costTexts[i].text = "Cost: ?";
+                    costTexts[i].text = "?";
                 }
             }
         }

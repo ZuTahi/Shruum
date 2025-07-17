@@ -1,71 +1,98 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class ForestManager : MonoBehaviour
 {
-    public static ForestManager Instance;
+    public static ForestManager Instance { get; private set; }
 
-    public List<GameObject> forestRoomPrefabs; // pool of unique rooms
-    public GameObject bossRoomPrefab;
-    public Transform roomSpawnPoint;
-    public GameObject player;
+    [Header("Room Configuration")]
+    public List<string> normalRoomScenes;  // Populate via inspector (e.g., Room1, Room2,...)
+    public string midBossScene;
+    public string finalBossScene;
 
-    private Queue<GameObject> shuffledRooms = new Queue<GameObject>();
-    private GameObject currentRoom;
+    private List<string> roomSequence = new List<string>();
+    private int currentRoomIndex = 0;
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
-
-    public void StartRun()
-    {
-        Debug.Log("Starting Run: Shuffling rooms.");
-        ShuffleRooms();
-        SpawnNextRoom();
-    }
-
-    private void ShuffleRooms()
-    {
-        List<GameObject> shuffledList = new List<GameObject>(forestRoomPrefabs);
-
-        for (int i = 0; i < shuffledList.Count; i++)
+        if (Instance != null && Instance != this)
         {
-            int rnd = Random.Range(i, shuffledList.Count);
-            var temp = shuffledList[i];
-            shuffledList[i] = shuffledList[rnd];
-            shuffledList[rnd] = temp;
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    /// <summary>
+    /// Generates the shuffled room sequence for the current run.
+    /// </summary>
+    public void GenerateRoomSequence()
+    {
+        roomSequence.Clear();
+        currentRoomIndex = 0;
+
+        List<string> shuffledRooms = new List<string>(normalRoomScenes);
+        Shuffle(shuffledRooms);
+
+        // Example: 8 normal rooms, midboss after 4th, final boss last
+        int normalRoomsBeforeMidBoss = 4;
+        int normalRoomsAfterMidBoss = 4;
+
+        for (int i = 0; i < normalRoomsBeforeMidBoss; i++)
+        {
+            roomSequence.Add(shuffledRooms[i % shuffledRooms.Count]);
         }
 
-        shuffledRooms = new Queue<GameObject>(shuffledList);
+        roomSequence.Add(midBossScene);
+
+        for (int i = normalRoomsBeforeMidBoss; i < normalRoomsBeforeMidBoss + normalRoomsAfterMidBoss; i++)
+        {
+            roomSequence.Add(shuffledRooms[i % shuffledRooms.Count]);
+        }
+
+        roomSequence.Add(finalBossScene);
+
+        Debug.Log("ForestManager: Generated Room Sequence:");
+        foreach (string sceneName in roomSequence)
+        {
+            Debug.Log(sceneName);
+        }
     }
 
-    public void SpawnNextRoom()
+    /// <summary>
+    /// Returns the current scene name in the sequence without advancing.
+    /// </summary>
+    public string GetNextRoomScene()
     {
-        if (currentRoom != null)
-            Destroy(currentRoom);
-
-        GameObject nextRoomPrefab;
-
-        if (shuffledRooms.Count > 0)
+        if (currentRoomIndex < roomSequence.Count)
         {
-            nextRoomPrefab = shuffledRooms.Dequeue();
-            Debug.Log("Spawning Forest Room: " + nextRoomPrefab.name);
+            return roomSequence[currentRoomIndex];
         }
         else
         {
-            nextRoomPrefab = bossRoomPrefab;
-            Debug.Log("Spawning Boss Room!");
+            Debug.LogWarning("ForestManager: No more rooms in sequence.");
+            return null;
         }
+    }
 
-        currentRoom = Instantiate(nextRoomPrefab, roomSpawnPoint.position, Quaternion.identity);
+    /// <summary>
+    /// Advances the room index after a room is loaded.
+    /// </summary>
+    public void AdvanceRoomIndex()
+    {
+        currentRoomIndex++;
+    }
 
-        RoomManager roomManager = currentRoom.GetComponent<RoomManager>();
-        if (roomManager != null)
+    /// <summary>
+    /// Shuffles a list in-place.
+    /// </summary>
+    private void Shuffle(List<string> list)
+    {
+        for (int i = 0; i < list.Count; i++)
         {
-            player.transform.position = roomManager.playerSpawnPoint.position;
-            roomManager.InitializeRoom();
+            int rand = Random.Range(i, list.Count);
+            (list[i], list[rand]) = (list[rand], list[i]);
         }
     }
 }

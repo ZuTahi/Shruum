@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -27,6 +27,17 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("GameManager: Starting a new run!");
         ResetCurrentRunData();
+
+        if (ForestManager.Instance == null)
+        {
+            GameObject forestManagerObj = new GameObject("ForestManager");
+            forestManagerObj.AddComponent<ForestManager>();
+        }
+
+        ForestManager.Instance.GenerateRoomSequence();
+
+        // ✅ Load the waiting Room0 scene
+        SceneManager.LoadSceneAsync("Room0");
     }
 
     private void ResetCurrentRunData()

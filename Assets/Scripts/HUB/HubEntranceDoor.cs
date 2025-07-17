@@ -1,17 +1,14 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class EntranceDoor : MonoBehaviour
+public class HubEntranceDoor : MonoBehaviour
 {
-    public string forestSceneName = "ForestScene";
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Entering Forest, starting new run.");
+            Debug.Log("HubEntranceDoor: Moving to Room0");
             GameManager.Instance.StartNewRun();
-            SceneManager.LoadScene(forestSceneName);
         }
     }
 }
