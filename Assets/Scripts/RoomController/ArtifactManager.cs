@@ -1,38 +1,90 @@
 using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
 
 public class ArtifactManager : MonoBehaviour
 {
-    [Header("Artifact UI")]
+    [Header("Artifact Config")]
+    public List<ArtifactSO> artifactPool;
+    public Image[] artifactSlotImages;
     public GameObject artifactUIPanel;
 
-    private RoomManager currentRoom;
+    private ArtifactSO[] currentArtifacts = new ArtifactSO[2];
+    private int currentSelectionIndex = -1;
+    private bool selectionActive = false;
+    private RoomManager roomManagerRef;
+
+    public float selectScale = 1.2f;
+    public float normalScale = 1f;
 
     public void ShowArtifactChoices(RoomManager roomManager)
     {
-        currentRoom = roomManager;
+        roomManagerRef = roomManager;
+        artifactUIPanel.SetActive(true);
+        PlayerMovement.Instance.canMove = false;
 
-        if (artifactUIPanel != null)
+        // Select 2 random artifacts
+        for (int i = 0; i < 2; i++)
         {
-            artifactUIPanel.SetActive(true);
+            ArtifactSO randomArtifact = artifactPool[Random.Range(0, artifactPool.Count)];
+            currentArtifacts[i] = randomArtifact;
+            artifactSlotImages[i].sprite = randomArtifact.artifactIcon;
+            artifactSlotImages[i].transform.localScale = Vector3.one * normalScale;
         }
-        else
+
+        StartCoroutine(EnableSelectionWithDelay(0.5f)); // give player time before selection is active
+    }
+
+    private IEnumerator EnableSelectionWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        selectionActive = true;
+        currentSelectionIndex = 0;
+        UpdateUISelection();
+    }
+
+    private void Update()
+    {
+        if (!selectionActive) return;
+
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            Debug.LogWarning("Artifact UI Panel is not assigned.");
+            currentSelectionIndex = Mathf.Max(0, currentSelectionIndex - 1);
+            UpdateUISelection();
+        }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            currentSelectionIndex = Mathf.Min(artifactSlotImages.Length - 1, currentSelectionIndex + 1);
+            UpdateUISelection();
+        }
+        else if (Input.GetKeyDown(KeyCode.F))
+        {
+            ConfirmSelection();
         }
     }
 
-    public void OnArtifactSelected()
+    private void UpdateUISelection()
     {
-        Debug.Log("ArtifactManager: Player selected an artifact.");
-
-        if (artifactUIPanel != null)
+        for (int i = 0; i < artifactSlotImages.Length; i++)
         {
-            artifactUIPanel.SetActive(false);
+            artifactSlotImages[i].transform.localScale = (i == currentSelectionIndex)
+                ? Vector3.one * selectScale
+                : Vector3.one * normalScale;
         }
+    }
 
-        if (currentRoom != null)
-        {
-            currentRoom.OnArtifactChosen();
-        }
+    private void ConfirmSelection()
+    {
+        ArtifactSO selectedArtifact = currentArtifacts[currentSelectionIndex];
+        Debug.Log("Artifact Selected: " + selectedArtifact.artifactName);
+        selectedArtifact.ApplyEffect();
+
+        selectionActive = false;
+        PlayerMovement.Instance.canMove = true;
+        artifactUIPanel.SetActive(false);
+
+        roomManagerRef.OnArtifactChosen();
     }
 }

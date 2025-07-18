@@ -12,7 +12,6 @@ public class RoomManager : MonoBehaviour
     private bool isRoomCleared = false;
     private void Start()
     {
-        InitializeRoom();
         StartCoroutine(DelayedInitialization());
     }
     public void InitializeRoom()

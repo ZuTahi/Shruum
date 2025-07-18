@@ -143,6 +143,9 @@ public class EnemyAIController : MonoBehaviour
         currentState = EnemyState.Death;
         movement.Stop();
         anim.SetTrigger("die");
+
+        spawner?.OnEnemyDeath(gameObject);
+
         StartCoroutine(DisappearWithPoof());
     }
 
