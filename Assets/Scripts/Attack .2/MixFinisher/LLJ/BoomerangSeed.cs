@@ -71,7 +71,8 @@ public class BoomerangSeed : MonoBehaviour
         // Damage enemies but keep flying
         if (other.TryGetComponent<IDamageable>(out var target))
         {
-            target.TakeDamage(damage, transform.position, gameObject);
+            int finalDamage = Mathf.CeilToInt(damage * PlayerStats.Instance.attackMultiplier);
+            target.TakeDamage(finalDamage, transform.position, gameObject);
             return; // do NOT destroy
         }
 

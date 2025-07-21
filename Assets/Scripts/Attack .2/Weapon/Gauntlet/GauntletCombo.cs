@@ -35,11 +35,12 @@ public class GauntletCombo : ModularWeaponCombo
         base.Awake();
         slotManager = FindFirstObjectByType<ModularWeaponSlotManager>();
     }
+
     void Update()
     {
         if (comboStep > 0 && Time.time - lastAttackTime > comboResetDelay)
         {
-            Debug.Log("[Dagger] Combo timed out, resetting.");
+            Debug.Log("[Gauntlet] Combo timed out, resetting.");
             ResetCombo();
         }
     }
@@ -60,7 +61,7 @@ public class GauntletCombo : ModularWeaponCombo
 
         PlayerMovement playerMove = GetComponentInParent<PlayerMovement>();
         if (playerMove != null)
-            playerMove.TemporarilyLockMovement(0.25f); // Gauntlet might use 0.25s, Slingshot maybe 0.15f
+            playerMove.TemporarilyLockMovement(0.25f);
 
         GameObject vfx = comboStep switch
         {
@@ -77,7 +78,7 @@ public class GauntletCombo : ModularWeaponCombo
         {
             if (enemy.TryGetComponent<IDamageable>(out var target))
             {
-                float finalDamage = attackDamage * PlayerStats.Instance.attackMultiplier;
+                float finalDamage = attackDamage * PlayerData.attackMultiplier;
                 target.TakeDamage((int)finalDamage, enemy.ClosestPoint(attackPoint.position), gameObject);
             }
         }
@@ -104,7 +105,7 @@ public class GauntletCombo : ModularWeaponCombo
                 hitEnemies.Add(enemy);
                 if (enemy.TryGetComponent<IDamageable>(out var target))
                 {
-                    float dmg = attackDamage * finisherMultiplier * PlayerStats.Instance.attackMultiplier;
+                    float dmg = attackDamage * finisherMultiplier * PlayerData.attackMultiplier;
                     target.TakeDamage((int)dmg, enemy.ClosestPoint(slamPos), gameObject);
                 }
             }
@@ -116,10 +117,8 @@ public class GauntletCombo : ModularWeaponCombo
         var buffer = FindFirstObjectByType<ModularComboBuffer>();
         buffer?.ClearBuffer();
 
-        // ✅ Also reset all other weapons, just like mix finisher does
         foreach (var w in FindFirstObjectByType<ModularWeaponSlotManager>()?.GetAllWeapons())
             w?.ResetCombo();
-
     }
 
     public override void HandleMixFinisher(ModularWeaponInput[] combo)
@@ -127,8 +126,6 @@ public class GauntletCombo : ModularWeaponCombo
         if (combo.Length < 3 || slotManager == null) return;
 
         var weapons = slotManager.GetAllWeapons();
-
-        if (combo.Length < 3) return;
 
         int i0 = (int)combo[0];
         int i1 = (int)combo[1];
@@ -142,10 +139,6 @@ public class GauntletCombo : ModularWeaponCombo
         ModularWeaponCombo w1 = weapons[i0];
         ModularWeaponCombo w2 = weapons[i1];
         ModularWeaponCombo w3 = weapons[i2];
-
-        if (w1 == null || w2 == null || w3 == null)
-            return;
-
 
         if (w1 is DaggerCombo && w2 is DaggerCombo && w3 is GauntletCombo)
         {
@@ -180,5 +173,15 @@ public class GauntletCombo : ModularWeaponCombo
         comboStep = 0;
         isFinisherActive = false;
         suppressNormalFinisher = false;
+    }
+    private IEnumerator TemporarilyDisableMovement(float duration)
+    {
+        PlayerMovement movement = FindFirstObjectByType<PlayerMovement>();
+        if (movement != null)
+        {
+            movement.canMove = false;
+            yield return new WaitForSeconds(duration);
+            movement.canMove = true;
+        }
     }
 }

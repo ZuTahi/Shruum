@@ -42,15 +42,10 @@ GameObject:
   - component: {fileID: 4828993581939943657}
   - component: {fileID: 3429711735080038634}
   - component: {fileID: 3515338804663235668}
-  - component: {fileID: 7218426507057661094}
-  - component: {fileID: 4116426063815328597}
-  - component: {fileID: 8213224381686733858}
-  - component: {fileID: 8738348874810715030}
   - component: {fileID: 6248088132702084917}
-  - component: {fileID: 6071345491429444555}
   - component: {fileID: 7405174182266842741}
   - component: {fileID: 7203327792706244560}
-  - component: {fileID: 2972443854355543476}
+  - component: {fileID: 5852575716917606888}
   m_Layer: 6
   m_Name: TrainingDummy
   m_TagString: Enemy
@@ -128,74 +123,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &7218426507057661094
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3272993538290859593}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4116426063815328597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3272993538290859593}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8463124a51fe83b43a3901a29d473f07, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHP: 100
-  currentHP: 100
-  attackDamage: 20
-  isDummy: 0
---- !u!114 &8213224381686733858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3272993538290859593}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e7f3f21c51b84c48914bc168a9efe64, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &8738348874810715030
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3272993538290859593}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c46e6388b8bc3f944a044bf232de1a98, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitboxPrefab: {fileID: 1397579104473424997, guid: cf6cdacb1398e7a4d91f6a29bc2c5336, type: 3}
-  attackOrigin: {fileID: 7649893826513597187}
-  hitboxOffset: 1.2
-  windUpTime: 0.5
-  attackRecoveryTime: 0.5
 --- !u!114 &6248088132702084917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,23 +135,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f21c4c85eeee8844a961bb1563cfffb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 0
-  detectionRange: 6
-  attackRange: 2
-  deathPoofVFX: {fileID: 4105938874594104566, guid: 2c2428c397c74f04db7e9fbabe5fcef3, type: 3}
+  data: {fileID: 11400000, guid: c011735bc0b773e459d5d9babd977c53, type: 2}
   spawner: {fileID: 0}
---- !u!114 &6071345491429444555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3272993538290859593}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e7f3f21c51b84c48914bc168a9efe64, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!195 &7405174182266842741
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -269,23 +181,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2972443854355543476
+--- !u!114 &5852575716917606888
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3272993538290859593}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd13a05bad68c434d9ac433f80f22e0d, type: 3}
+  m_Script: {fileID: 11500000, guid: df7e0f5630bfb714f84dd088d52b3c27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  manaDropPrefab: {fileID: 778999980621331517, guid: ab3eab7289758284fa3b75a06bcc6405, type: 3}
-  natureForceDropPrefab: {fileID: 818231959689995300, guid: a21767df9feb2ff43ab3fdf2fc274a63, type: 3}
-  manaAmount: 1
-  natureForceAmount: 1
-  dropSpreadRadius: 0.5
+  damage: 10
+  lifetime: 0.2
 --- !u!1 &6648353494791572628
 GameObject:
   m_ObjectHideFlags: 0

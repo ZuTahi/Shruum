@@ -21,7 +21,11 @@ public class PlayerUIManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null) Destroy(gameObject);
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
     }
 
@@ -29,24 +33,41 @@ public class PlayerUIManager : MonoBehaviour
     public void UpdateSP(float current, float max) => UpdateStatBar(spBar, current, max);
     public void UpdateMP(float current, float max) => UpdateStatBar(mpBar, current, max);
 
+    /// <summary>
+    /// Refresh all stat bars to reflect current PlayerStats values.
+    /// </summary>
+    public void RefreshAllStats()
+    {
+        var stats = FindFirstObjectByType<PlayerStats>();
+        if (stats != null)
+        {
+            UpdateHP(stats.currentHP, stats.maxHP);
+            UpdateSP(stats.currentSP, stats.maxSP);
+            UpdateMP(stats.currentMP, stats.maxMP);
+            Debug.Log("[PlayerUIManager] Stats UI refreshed.");
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerUIManager] No PlayerStats found to refresh UI.");
+        }
+    }
+
     private void UpdateStatBar(StatBar bar, float current, float max)
     {
-        // ⬆️ How much the bar should grow for this max stat
+        if (bar == null) return;
+
         float scale = max / bar.baseStat;
         float fillHeight = bar.baseHeight * scale;
-        float backgroundHeight = fillHeight + 20f;     // Matches fill
+        float backgroundHeight = fillHeight + 20f;
 
-        // 🔲 Resize black background (scales with max stat)
         if (bar.background != null)
             bar.background.sizeDelta = new Vector2(bar.background.sizeDelta.x, backgroundHeight);
 
-        // 🟩 Resize fill to match usable area
         if (bar.fill != null)
             bar.fill.sizeDelta = new Vector2(bar.fill.sizeDelta.x, fillHeight);
 
-        // 🌊 Update fill amount based on current stat
-        Image fillImage = bar.fill.GetComponent<Image>();
+        Image fillImage = bar.fill?.GetComponent<Image>();
         if (fillImage != null)
-            fillImage.fillAmount = current / max;
+            fillImage.fillAmount = max > 0 ? current / max : 0;
     }
 }

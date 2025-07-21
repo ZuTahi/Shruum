@@ -25,7 +25,7 @@ public class SeedProjectile : MonoBehaviour
         if (other.TryGetComponent<IDamageable>(out var target))
         {
             int finalDamage = Mathf.CeilToInt(baseDamage * PlayerStats.Instance.attackMultiplier);
-            target.TakeDamage(baseDamage, transform.position, gameObject);
+            target.TakeDamage(finalDamage, transform.position, gameObject);
             Destroy(gameObject);
         }
         else

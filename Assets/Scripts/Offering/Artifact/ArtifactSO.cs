@@ -13,32 +13,43 @@ public class ArtifactSO : ScriptableObject
 
     public void ApplyEffect()
     {
-        Debug.Log("Applying effect of artifact: " + artifactName);
+        var playerStats = PlayerStats.Instance;
+        if (playerStats == null)
+        {
+            Debug.LogWarning("Cannot apply artifact effect: PlayerStats not found.");
+            return;
+        }
+
+        Debug.Log($"Applying effect of artifact: {artifactName}");
 
         switch (effectType)
         {
             case ArtifactType.IncreaseHP:
-                PlayerStats.Instance.maxHP += effectAmount;
-                Debug.Log("Increased Max HP by " + effectAmount);
+                playerStats.IncreaseMaxHP(effectAmount);
+                Debug.Log($"Increased Max HP by {effectAmount}");
                 break;
 
             case ArtifactType.IncreaseSP:
-                PlayerStats.Instance.maxSP += effectAmount;
-                Debug.Log("Increased Max SP by " + effectAmount);
+                playerStats.IncreaseMaxSP(effectAmount);
+                Debug.Log($"Increased Max SP by {effectAmount}");
                 break;
 
             case ArtifactType.IncreaseMP:
-                PlayerStats.Instance.attackMultiplier += effectAmount;
-                Debug.Log("Increased Max MP by " + effectAmount);
+                playerStats.IncreaseMaxMP(effectAmount);
+                Debug.Log($"Increased Max MP by {effectAmount}");
                 break;
+
             case ArtifactType.IncreaseAttack:
-                PlayerStats.Instance.attackMultiplier += effectAmount;
-                Debug.Log("Increased Attack Multiplier by " + effectAmount);
+                playerStats.attackMultiplier += effectAmount;
+                Debug.Log($"Increased Attack Multiplier by {effectAmount}");
                 break;
+
             case ArtifactType.IncreaseDefense:
-                PlayerStats.Instance.attackMultiplier += effectAmount;
-                Debug.Log("Increased Defense Multiplier by " + effectAmount);
+                playerStats.defenseMultiplier += effectAmount;
+                Debug.Log($"Increased Defense Multiplier by {effectAmount}");
                 break;
         }
+
+        playerStats.RefreshUI();
     }
 }

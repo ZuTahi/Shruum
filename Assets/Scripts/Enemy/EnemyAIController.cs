@@ -1,177 +1,116 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(EnemyStats))]
-[RequireComponent(typeof(EnemyAttack))]
-[RequireComponent(typeof(EnemyMovement))]
-[RequireComponent(typeof(Animator))]
 public class EnemyAIController : MonoBehaviour
 {
-    public enum EnemyState { Idle, Chase, WindUp, Attack, Recover, Death }
-    public EnemyState currentState = EnemyState.Idle;
-
-    public float detectionRange = 6f;
-    public float attackRange = 2f;
-    public GameObject deathPoofVFX;
+    public EnemyData data;
+    public EnemySpawner spawner;
 
     private Transform player;
-    private EnemyStats stats;
-    private EnemyAttack attack;
-    private EnemyMovement movement;
-    private Animator anim;
-
-    private Quaternion lockedRotation;
-    private bool isActing = false;
-    private bool isStaggered = false;
-
-    public EnemySpawner spawner;
+    private float health;
+    private Animator animator;
 
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
-        stats = GetComponent<EnemyStats>();
-        attack = GetComponent<EnemyAttack>();
-        movement = GetComponent<EnemyMovement>();
-        anim = GetComponent<Animator>();
-    }
+        animator = GetComponent<Animator>();
 
-    private void Update()
-    {
-        if (stats.IsDead || stats.isDummy || isActing || isStaggered || player == null) return;
-
-        float dist = Vector3.Distance(transform.position, player.position);
-
-        switch (currentState)
+        if (data == null)
         {
-            case EnemyState.Idle:
-                anim.SetBool("isWalking", false);
-                if (dist <= detectionRange)
-                    currentState = EnemyState.Chase;
-                break;
+            Debug.LogError($"[EnemyAIController] No EnemyData assigned on {gameObject.name}. Destroying self.");
+            Destroy(gameObject);
+            return;
+        }
 
-            case EnemyState.Chase:
-                anim.SetBool("isWalking", true);
-                movement.MoveTo(player.position);
-                FacePlayer();
-                if (dist <= attackRange)
-                {
-                    movement.Stop();
-                    currentState = EnemyState.WindUp;
-                }
-                break;
+        health = data.maxHealth;
 
-            case EnemyState.WindUp:
-                StartCoroutine(WindUpAttackSequence());
+        switch (data.aiType)
+        {
+            case EnemyAIType.Aggressive:
+                StartCoroutine(AggressiveAI());
                 break;
-
-            case EnemyState.Death:
+            case EnemyAIType.Ranged:
+                StartCoroutine(RangedAI());
+                break;
+            case EnemyAIType.CollisionRetaliate:
+                Debug.LogWarning($"{gameObject.name} AI type CollisionRetaliate not implemented yet.");
                 break;
         }
     }
 
-    private IEnumerator WindUpAttackSequence()
+    private IEnumerator AggressiveAI()
     {
-        isActing = true;
-        movement.Stop();
-        float timer = 0f;
-        anim.SetTrigger("attack");
-
-        while (timer < attack.windUpTime)
+        while (player != null)
         {
-            FacePlayer();
-            timer += Time.deltaTime;
+            float distance = Vector3.Distance(transform.position, player.position);
+
+            if (distance > data.attackRange)
+            {
+                MoveTowardsPlayer();
+            }
+            else
+            {
+                yield return AttackSequence();
+            }
+
             yield return null;
         }
-
-        lockedRotation = transform.rotation;
-        currentState = EnemyState.Attack;
-        StartCoroutine(AttackAndRecover());
     }
 
-    private IEnumerator AttackAndRecover()
+    private IEnumerator RangedAI()
     {
-        transform.rotation = lockedRotation;
-        attack.SpawnHitbox();
-        yield return new WaitForSeconds(0.1f);
+        while (player != null)
+        {
+            float distance = Vector3.Distance(transform.position, player.position);
 
-        yield return new WaitForSeconds(attack.attackRecoveryTime);
-        isActing = false;
-        currentState = EnemyState.Chase;
+            if (distance <= data.attackRange)
+            {
+                yield return AttackSequence();
+            }
+
+            yield return null;
+        }
     }
 
-    private void FacePlayer()
+    private void MoveTowardsPlayer()
     {
+        if (player == null) return;
+
         Vector3 dir = (player.position - transform.position).normalized;
-        dir.y = 0;
-        if (dir != Vector3.zero)
+        transform.position += dir * data.moveSpeed * Time.deltaTime;
+
+        transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
+    }
+
+    private IEnumerator AttackSequence()
+    {
+        yield return new WaitForSeconds(data.preAttackDuration);
+
+        if (data.weaponPrefab != null)
         {
-            Quaternion lookRot = Quaternion.LookRotation(dir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, Time.deltaTime * 20f);
+            GameObject hitbox = Instantiate(data.weaponPrefab, transform.position + transform.forward, transform.rotation);
+            EnemyHitbox hb = hitbox.GetComponent<EnemyHitbox>();
+            if (hb != null)
+            {
+                hb.damage = data.attackDamage;
+            }
+        }
+
+        yield return new WaitForSeconds(data.attackDuration + data.postAttackDuration);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            Die();
         }
     }
 
-    // 🔥 NEW: Stagger Reaction on Hit
-    public void OnHitReaction()
+    private void Die()
     {
-        if (currentState == EnemyState.Death || isStaggered) return;
-
-        // Cancel attack sequence if in WindUp
-        if (currentState == EnemyState.WindUp)
-        {
-            StopAllCoroutines();
-            isActing = false;
-            currentState = EnemyState.Chase;
-        }
-
-        StartCoroutine(HitStagger());
-    }
-
-    private IEnumerator HitStagger()
-    {
-        isStaggered = true;
-        movement.Stop();
-        anim.SetTrigger("hit"); // optional: add "hit" trigger in Animator
-        yield return new WaitForSeconds(0.15f);
-        isStaggered = false;
-    }
-
-    public void OnDeath()
-    {
-        if (stats.isDummy) return;
-        GetComponent<EnemyDrop>()?.DropItems();
-
-        currentState = EnemyState.Death;
-        movement.Stop();
-        anim.SetTrigger("die");
-
         spawner?.OnEnemyDeath(gameObject);
-
-        StartCoroutine(DisappearWithPoof());
-    }
-
-    private IEnumerator DisappearWithPoof()
-    {
-        yield return new WaitForSeconds(0.5f);
-        if (deathPoofVFX != null)
-            Instantiate(deathPoofVFX, transform.position, Quaternion.identity);
         Destroy(gameObject);
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
-
-        if (attack != null)
-        {
-            Gizmos.color = Color.magenta;
-            Vector3 pos = attack.attackOrigin
-                ? attack.attackOrigin.position
-                : transform.position + transform.forward * attack.hitboxOffset;
-            Gizmos.DrawWireSphere(pos, 0.5f);
-        }
     }
 }

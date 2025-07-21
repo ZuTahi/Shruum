@@ -19,8 +19,7 @@ public class EnemyHitbox : MonoBehaviour
             {
                 ps.TakeDamage(damage);
             }
-
-            Destroy(gameObject); // one-hit only
+            Destroy(gameObject);
         }
     }
 }

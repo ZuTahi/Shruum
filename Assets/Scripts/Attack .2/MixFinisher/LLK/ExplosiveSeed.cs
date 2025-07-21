@@ -30,7 +30,8 @@ public class ExplosiveSeed : MonoBehaviour
         // Deal direct hit damage if it's an enemy
         if (other.TryGetComponent<IDamageable>(out var target))
         {
-            target.TakeDamage(directDamage, other.ClosestPoint(transform.position), gameObject);
+            int finalDamage = Mathf.CeilToInt(directDamage * PlayerStats.Instance.attackMultiplier);
+            target.TakeDamage(finalDamage, other.ClosestPoint(transform.position), gameObject);
             Explode(other.gameObject);
         }
         else

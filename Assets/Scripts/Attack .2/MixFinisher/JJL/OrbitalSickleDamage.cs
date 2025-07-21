@@ -25,7 +25,8 @@ public class OrbitalSickleDamage : MonoBehaviour
         {
             if (hit.TryGetComponent<IDamageable>(out var target))
             {
-                target.TakeDamage(damage, hit.ClosestPoint(transform.position), gameObject);
+                int finalDamage = Mathf.CeilToInt(damage * PlayerStats.Instance.attackMultiplier);
+                target.TakeDamage(finalDamage, hit.ClosestPoint(transform.position), gameObject);
             }
         }
     }

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 [System.Serializable]
@@ -63,6 +63,17 @@ public class EnemySpawner : MonoBehaviour
                 if (ai != null)
                 {
                     ai.spawner = this;
+
+                    // Safely copy the data from the original prefab's EnemyAIController
+                    EnemyAIController prefabAI = entry.enemyPrefab.GetComponent<EnemyAIController>();
+                    if (prefabAI != null)
+                    {
+                        ai.data = prefabAI.data;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"{entry.enemyPrefab.name} has no EnemyAIController on prefab to copy data from.");
+                    }
                 }
             }
         }

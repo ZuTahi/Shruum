@@ -80,7 +80,8 @@ public class VineStrike : MonoBehaviour
         {
             if (hit.TryGetComponent<IDamageable>(out var target))
             {
-                target.TakeDamage(damage, hit.ClosestPoint(center), gameObject);
+                int finalDamage = Mathf.CeilToInt(damage * PlayerStats.Instance.attackMultiplier);
+                target.TakeDamage(finalDamage, hit.ClosestPoint(transform.position), gameObject);
             }
         }
     }

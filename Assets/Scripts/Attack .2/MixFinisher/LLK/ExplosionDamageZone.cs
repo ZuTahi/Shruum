@@ -15,7 +15,8 @@ public class ExplosionDamageZone : MonoBehaviour
         {
             if (hit.TryGetComponent<IDamageable>(out var dmg))
             {
-                dmg.TakeDamage(damage, hit.ClosestPoint(transform.position), gameObject);
+                int finalDamage = Mathf.CeilToInt(damage * PlayerStats.Instance.attackMultiplier);
+                dmg.TakeDamage(finalDamage, hit.ClosestPoint(transform.position), gameObject);
             }
         }
 

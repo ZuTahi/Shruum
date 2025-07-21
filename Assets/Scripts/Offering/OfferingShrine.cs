@@ -1,68 +1,75 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class OfferingShrine : MonoBehaviour
 {
-    [SerializeField] private int baseCost = 100;
-    [SerializeField] private float costMultiplier = 1.5f;
+    public int baseNatureForceCost = 100;
+    public float costMultiplier = 1.5f;
 
-    // Tracks how many times each stat has been upgraded
-    [SerializeField] private int[] offeringCounts = new int[5]; // Index by StatType
+    public int hpUpgradeAmount = 10;
+    public int spUpgradeAmount = 5;
+    public int mpUpgradeAmount = 5;
+    public float attackUpgradeMultiplier = 0.1f;
+    public float defenseUpgradePercent = 0.05f;
 
-    public void MakeOffering(StatType type)
+    private Dictionary<StatType, int> upgradeCounts = new();
+
+    public void UpgradePlayer(StatType type)
     {
-        int index = (int)type;
-        int cost = Mathf.RoundToInt(baseCost * Mathf.Pow(costMultiplier, offeringCounts[index]));
+        int cost = GetUpgradeCost(type);
 
-        // Check requirements
         if (PlayerInventory.Instance.natureForce < cost)
         {
-            Debug.LogWarning($"Not enough Nature Force to offer {type}. Needed: {cost}");
+            Debug.Log("Not enough Nature Force to upgrade.");
             return;
         }
 
-        // Deduct resources
         PlayerInventory.Instance.natureForce -= cost;
-        offeringCounts[index]++;
-
-        // === OPTION A: Apply flat upgrade ===
-        int upgradeAmount = 10;
 
         switch (type)
         {
             case StatType.HP:
-                PlayerStats.Instance.maxHP += upgradeAmount;
-                PlayerStats.Instance.currentHP = PlayerStats.Instance.maxHP;
+                PlayerData.maxHP += hpUpgradeAmount;
+                PlayerStats.Instance.IncreaseMaxHP(hpUpgradeAmount);
                 break;
-
             case StatType.SP:
-                PlayerStats.Instance.maxSP += upgradeAmount;
-                PlayerStats.Instance.currentSP = PlayerStats.Instance.maxSP;
+                PlayerData.maxSP += spUpgradeAmount;
+                PlayerStats.Instance.IncreaseMaxSP(spUpgradeAmount);
                 break;
-
             case StatType.MP:
-                PlayerStats.Instance.maxMP += upgradeAmount;
-                PlayerStats.Instance.currentMP = PlayerStats.Instance.maxMP;
+                PlayerData.maxMP += mpUpgradeAmount;
+                PlayerStats.Instance.IncreaseMaxMP(mpUpgradeAmount);
                 break;
-
             case StatType.ATK:
-                PlayerStats.Instance.attackMultiplier += 0.1f;
+                PlayerData.attackMultiplier += attackUpgradeMultiplier;
+                PlayerStats.Instance.attackMultiplier += attackUpgradeMultiplier;
                 break;
-
             case StatType.DEF:
-                PlayerStats.Instance.baseDefensePercent += 0.05f; // Add 5% per upgrade
+                PlayerData.baseDefensePercent += defenseUpgradePercent;
+                PlayerStats.Instance.baseDefensePercent += defenseUpgradePercent;
+                break;
+            default:
+                Debug.LogWarning("Unknown StatType for upgrade.");
                 break;
         }
 
-        // Refresh UI
-        PlayerStats.Instance.RecalculateStats();
+        if (!upgradeCounts.ContainsKey(type))
+            upgradeCounts[type] = 0;
+        upgradeCounts[type]++;
 
-        Debug.Log($"Offered {type}. Cost: {cost}. Total offerings: {offeringCounts[index]}");
+        Debug.Log($"Upgraded {type} at cost {cost}. Total upgrades for {type}: {upgradeCounts[type]}");
+
+        var playerStats = FindFirstObjectByType<PlayerStats>();
+        playerStats?.LoadFromData();
+
+        PlayerUIManager.Instance?.RefreshAllStats();
     }
-
-    public int GetOfferingCount(StatType type) => offeringCounts[(int)type];
 
     public int GetUpgradeCost(StatType type)
     {
-        return Mathf.RoundToInt(baseCost * Mathf.Pow(costMultiplier, offeringCounts[(int)type]));
+        if (!upgradeCounts.ContainsKey(type))
+            upgradeCounts[type] = 0;
+
+        return Mathf.RoundToInt(baseNatureForceCost * Mathf.Pow(costMultiplier, upgradeCounts[type]));
     }
 }

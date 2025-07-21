@@ -48,17 +48,18 @@ public class GameManager : MonoBehaviour
 
     public void SaveGame()
     {
-        SaveSystem.SavePlayer(playerStats, playerInventory);
+        SaveSystem.SavePlayer();
     }
 
     public void LoadGame()
     {
-        SaveSystem.LoadPlayer(playerStats, playerInventory);
+        SaveSystem.LoadPlayer();
     }
 
     public void RespawnAtHub()
     {
         Debug.Log("Player died, respawning at Hub...");
+        RunData.ClearRunData();   // <-- Clear buffs
         ResetCurrentRunData();
         SceneManager.LoadScene("HubScene");
         SaveGame();
@@ -67,6 +68,7 @@ public class GameManager : MonoBehaviour
     public void QuitGame()
     {
         Debug.Log("Quitting game...");
+        RunData.ClearRunData();   // <-- Clear buffs
         SaveGame();
         Application.Quit();
     }

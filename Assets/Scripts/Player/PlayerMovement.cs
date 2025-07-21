@@ -40,14 +40,16 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (!canMove) return; // ✅ prevent movement when disabled
+        if (!canMove) return;
 
-        // DASH COOLDOWN TIMER
         if (dashCooldownTimer > 0f)
             dashCooldownTimer -= Time.deltaTime;
 
-        // START DASH
-        if (Input.GetKeyDown(KeyCode.Space) && !isDashing && dashCooldownTimer <= 0f && PlayerStats.Instance.HasEnoughStamina(20))
+        if (Input.GetKeyDown(KeyCode.Space)
+            && !isDashing
+            && dashCooldownTimer <= 0f
+            && PlayerStats.Instance != null
+            && PlayerStats.Instance.HasEnoughStamina(20))
         {
             isDashing = true;
             PlayerStats.Instance.SpendStamina(20);
@@ -55,7 +57,6 @@ public class PlayerMovement : MonoBehaviour
             dashTimer = dashDuration;
             dashCooldownTimer = dashCooldown;
 
-            // Get input in camera-relative direction
             Vector3 dashInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
             Vector3 dashCamForward = Camera.main.transform.forward;
             Vector3 dashCamRight = Camera.main.transform.right;
@@ -68,7 +69,6 @@ public class PlayerMovement : MonoBehaviour
             dashDirection = dashIsoDir == Vector3.zero ? transform.forward : dashIsoDir;
         }
 
-        // DASH MOVEMENT
         if (isDashing)
         {
             controller.Move(dashDirection * dashSpeed * Time.deltaTime + Vector3.down * 0.1f);
@@ -80,10 +80,9 @@ public class PlayerMovement : MonoBehaviour
                 isInvincible = false;
             }
 
-            return; // skip regular movement while dashing
+            return;
         }
 
-        // REGULAR MOVEMENT
         Vector3 input = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
         Vector3 camForward = Camera.main.transform.forward;
         Vector3 camRight = Camera.main.transform.right;
@@ -94,16 +93,13 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 moveDir = (camRight * input.x + camForward * input.z).normalized;
 
-        // Sprint check
         bool isSprinting = Input.GetKey(KeyCode.LeftShift);
         float currentSpeed = isSprinting ? moveSpeed * sprintMultiplier : moveSpeed;
 
-        // Apply movement
         Vector3 finalMove = moveDir * currentSpeed * Time.deltaTime;
-        finalMove += Vector3.down * 0.1f; // stick to ground
+        finalMove += Vector3.down * 0.1f;
         controller.Move(finalMove);
 
-        // Rotate player toward movement
         if (moveDir != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(moveDir);
@@ -122,5 +118,4 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(duration);
         canMove = true;
     }
-
 }

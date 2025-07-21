@@ -11,17 +11,13 @@ public class OfferingUIManager : MonoBehaviour
     [SerializeField] private Color defaultColor = Color.white;
     [SerializeField] private Color selectedColor = Color.yellow;
 
-    [SerializeField] private int[] baseCosts = new int[5]; // HP → DEF
-    [SerializeField] private float costMultiplier = 1.5f;
-    private int[] offeringCounts = new int[5]; // One per StatType (HP → DEF)
-    private float inputBufferTime = 0.2f;
-    private float inputBufferTimer = 0f;
-
     [Header("Player Reference")]
     [SerializeField] private PlayerMovement playerMovement;
 
     private int selectedIndex = 0;
     private OfferingShrine currentShrine;
+    private float inputBufferTime = 0.2f;
+    private float inputBufferTimer = 0f;
 
     private void Update()
     {
@@ -29,9 +25,9 @@ public class OfferingUIManager : MonoBehaviour
         if (inputBufferTimer > 0f)
         {
             inputBufferTimer -= Time.deltaTime;
-            return; // skip inputs during buffer
+            return;
         }
-        // Navigate stat selection
+
         if (Input.GetKeyDown(KeyCode.A))
         {
             selectedIndex = (selectedIndex - 1 + statIcons.Length) % statIcons.Length;
@@ -42,17 +38,16 @@ public class OfferingUIManager : MonoBehaviour
             selectedIndex = (selectedIndex + 1) % statIcons.Length;
             UpdateUI();
         }
-        // Upgrade stat
         else if (Input.GetKeyDown(KeyCode.F))
         {
             TryUpgradeSelectedStat();
         }
-        // Exit panel
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
             HideOfferingPanel();
         }
     }
+
     private void TryUpgradeSelectedStat()
     {
         if (currentShrine == null)
@@ -61,40 +56,26 @@ public class OfferingUIManager : MonoBehaviour
             return;
         }
 
-        StatType type = (StatType)selectedIndex;
-        int cost = currentShrine.GetUpgradeCost(type);
+        int cost = currentShrine.GetUpgradeCost((StatType)selectedIndex);
 
         if (PlayerInventory.Instance.natureForce >= cost)
         {
-            currentShrine.MakeOffering(type);
+            currentShrine.UpgradePlayer((StatType)selectedIndex);
             UpdateUI();
         }
         else
         {
-            Debug.Log($"Not enough Nature Force for {type}. Needed: {cost}");
+            Debug.Log($"Not enough Nature Force. Needed: {cost}");
         }
-    }
-
-    public int GetUpgradeCost(StatType type)
-    {
-        int index = (int)type;
-
-        if (index < 0 || index >= baseCosts.Length)
-        {
-            Debug.LogError("Invalid stat index for base cost.");
-            return 999;
-        }
-
-        return Mathf.RoundToInt(baseCosts[index] * Mathf.Pow(costMultiplier, offeringCounts[index]));
     }
 
     public void ShowOfferingPanel(OfferingShrine shrine)
     {
         currentShrine = shrine;
-        selectedIndex = statIcons.Length / 2; // Center stat
+        selectedIndex = statIcons.Length / 2;
         offeringPanel.SetActive(true);
         playerMovement.canMove = false;
-        inputBufferTimer = inputBufferTime; // Start buffer
+        inputBufferTimer = inputBufferTime;
         UpdateUI();
     }
 
@@ -140,5 +121,4 @@ public class OfferingUIManager : MonoBehaviour
             }
         }
     }
-
 }

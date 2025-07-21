@@ -28,11 +28,12 @@ public class SlingShotWeapon : ModularWeaponCombo
         base.Awake();
         slotManager = FindFirstObjectByType<ModularWeaponSlotManager>();
     }
+
     void Update()
     {
         if (comboStep > 0 && Time.time - lastAttackTime > comboResetDelay)
         {
-            Debug.Log("[Dagger] Combo timed out, resetting.");
+            Debug.Log("[Slingshot] Combo timed out, resetting.");
             ResetCombo();
         }
     }
@@ -41,6 +42,7 @@ public class SlingShotWeapon : ModularWeaponCombo
     {
         if (!gameObject.activeInHierarchy)
             return;
+
         suppressNormalFinisher = false;
 
         if (Time.time - lastAttackTime < fixedAttackDelay)
@@ -92,11 +94,9 @@ public class SlingShotWeapon : ModularWeaponCombo
 
         ResetCombo();
 
-        // ✅ Clear combo buffer
         var buffer = FindFirstObjectByType<ModularComboBuffer>();
         buffer?.ClearBuffer();
 
-        // ✅ Reset all other weapons to avoid lingering combo state
         var slotManager = FindFirstObjectByType<ModularWeaponSlotManager>();
         foreach (var w in slotManager?.GetAllWeapons())
             w?.ResetCombo();
@@ -112,7 +112,7 @@ public class SlingShotWeapon : ModularWeaponCombo
         {
             Debug.Log("[InputBuffer] Processing buffered input");
             inputBuffered = false;
-            HandleInput(); // safely triggers next combo step
+            HandleInput();
         }
     }
 
@@ -138,7 +138,6 @@ public class SlingShotWeapon : ModularWeaponCombo
         if (w1 == null || w2 == null || w3 == null)
             return;
 
-        // OrbitalSickles
         if (w1 is DaggerCombo && w2 is DaggerCombo && w3 is SlingShotWeapon)
         {
             if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
@@ -152,13 +151,13 @@ public class SlingShotWeapon : ModularWeaponCombo
             suppressNormalFinisher = true;
             FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
         }
-        // VineStrike
         else if (w1 is GauntletCombo && w2 is GauntletCombo && w3 is SlingShotWeapon)
         {
             if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
             PlayerStats.Instance.SpendMana(manaCost);
 
             Instantiate(vineStrikePrefab, attackPoint.position, transform.rotation);
+
             ResetCombo();
             suppressNormalFinisher = true;
             FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
