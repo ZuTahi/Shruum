@@ -3,7 +3,7 @@
 public class WeaponDisplayInteractable : MonoBehaviour
 {
     public WeaponType weaponType;
-    public GameObject lockVisual; // Assign the padlock child object here
+    public GameObject lockVisual;
 
     [Header("Unlock Settings")]
     public bool isUnlocked = false;
@@ -13,7 +13,6 @@ public class WeaponDisplayInteractable : MonoBehaviour
 
     private void Start()
     {
-        // Sync with PlayerData to persist unlock status
         isUnlocked = PlayerData.IsWeaponUnlocked(weaponType);
         UpdateLockVisual();
     }
@@ -31,7 +30,7 @@ public class WeaponDisplayInteractable : MonoBehaviour
             else
             {
                 WeaponEquipUI.Instance.OpenEquipPrompt(weaponType);
-                ModularWeaponSlotManager.Instance?.SuppressInputForAllWeapons(true); // ✅ suppress input
+                LockPlayerInput();
             }
         }
     }
@@ -49,12 +48,17 @@ public class WeaponDisplayInteractable : MonoBehaviour
 
     private void UpdateLockVisual()
     {
-        if (lockVisual == null)
-        {
-            return;
-        }
+        if (lockVisual != null)
+            lockVisual.SetActive(!isUnlocked);
+    }
 
-        lockVisual.SetActive(!isUnlocked);
+    private void LockPlayerInput()
+    {
+        if (PlayerMovement.Instance != null)
+        {
+            PlayerMovement.Instance.canMove = false;
+            PlayerMovement.Instance.isInputGloballyLocked = true; // 🔒 Lock global input while assigning
+        }
     }
 
     private void OnTriggerEnter(Collider other)

@@ -31,7 +31,6 @@ public class WeaponEquipUI : MonoBehaviour
 
     public bool IsChoosingSlot => isChoosingSlot;
 
-
     private Dictionary<ModularWeaponSlotKey, WeaponType> equippedWeapons = new Dictionary<ModularWeaponSlotKey, WeaponType>
     {
         { ModularWeaponSlotKey.Slot1, WeaponType.None },
@@ -45,7 +44,7 @@ public class WeaponEquipUI : MonoBehaviour
         promptText.gameObject.SetActive(false);
     }
 
-    void Update()
+    private void Update()
     {
         if (!isChoosingSlot) return;
 
@@ -63,9 +62,47 @@ public class WeaponEquipUI : MonoBehaviour
         }
     }
 
+    public void OpenEquipPrompt(WeaponType weapon)
+    {
+        currentWeapon = weapon;
+        isChoosingSlot = true;
+        promptText.gameObject.SetActive(true);
+        promptText.text = $"Press J / K / L to equip {weapon}";
+
+        if (PlayerMovement.Instance != null)
+        {
+            PlayerMovement.Instance.canMove = false;
+            PlayerMovement.Instance.isInputGloballyLocked = true; // 🔒 lock global input
+        }
+    }
+
+    public void CloseEquipPrompt()
+    {
+        isChoosingSlot = false;
+        promptText.gameObject.SetActive(false);
+
+        if (PlayerMovement.Instance != null)
+        {
+            PlayerMovement.Instance.canMove = true;
+            PlayerMovement.Instance.isInputGloballyLocked = false; // ✅ unlock input globally
+        }
+
+        ModularWeaponSlotManager.Instance?.SuppressInputForAllWeapons(false);
+
+        StartCoroutine(TemporarilyBlockInputAfterEquip());
+    }
+
+    private IEnumerator TemporarilyBlockInputAfterEquip()
+    {
+        ModularWeaponInputHandler inputHandler = FindFirstObjectByType<ModularWeaponInputHandler>();
+        if (inputHandler != null)
+            inputHandler.SuppressInputTemporarily(0.15f);  // ~150ms delay
+
+        yield return null;
+    }
+
     private void EquipToSlot(ModularWeaponSlotKey slotKey)
     {
-        // Remove currentWeapon from any existing slot
         foreach (var kvp in equippedWeapons)
         {
             if (kvp.Value == currentWeapon)
@@ -76,7 +113,6 @@ public class WeaponEquipUI : MonoBehaviour
             }
         }
 
-        // Equip the new weapon
         equippedWeapons[slotKey] = currentWeapon;
         ModularWeaponSlotManager.Instance.AssignWeaponToSlot(currentWeapon, slotKey);
         UpdateSlotVisual(slotKey, currentWeapon);
@@ -115,26 +151,4 @@ public class WeaponEquipUI : MonoBehaviour
             _ => null,
         };
     }
-    public void OpenEquipPrompt(WeaponType weapon)
-    {
-        currentWeapon = weapon;
-        isChoosingSlot = true;
-        promptText.gameObject.SetActive(true);
-        promptText.text = $"Press J / K / L to equip {weapon}";
-
-        if (PlayerMovement.Instance != null)
-            PlayerMovement.Instance.canMove = false;
-    }
-
-    public void CloseEquipPrompt()
-    {
-        isChoosingSlot = false;
-        promptText.gameObject.SetActive(false);
-
-        PlayerMovement.Instance.canMove = true;
-
-        // ✅ Re-enable weapon inputs after assigning
-        ModularWeaponSlotManager.Instance?.SuppressInputForAllWeapons(false);
-    }
-
 }

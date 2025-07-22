@@ -10,10 +10,12 @@ public class ModularWeaponInputHandler : MonoBehaviour
 
     private void Update()
     {
-        if (WeaponEquipUI.Instance != null && WeaponEquipUI.Instance.IsChoosingSlot)
+        if (PlayerMovement.Instance.isInputGloballyLocked)
             return;
 
-        if (inputSuppressedTemporarily)
+        if (inputSuppressedTemporarily) return;
+
+        if (WeaponEquipUI.Instance != null && WeaponEquipUI.Instance.IsChoosingSlot)
             return;
 
         if (Input.GetKeyDown(KeyCode.J))
@@ -99,7 +101,6 @@ public class ModularWeaponInputHandler : MonoBehaviour
         }
     }
 
-    // Call this externally (like after equipping a weapon) to suppress input briefly
     public void SuppressInputTemporarily(float duration)
     {
         StartCoroutine(SuppressInputRoutine(duration));

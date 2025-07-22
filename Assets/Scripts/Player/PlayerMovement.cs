@@ -24,6 +24,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 dashDirection;
 
     public bool canMove = true;
+    public bool isInputGloballyLocked = false;
 
     public static PlayerMovement Instance { get; private set; }
 
