@@ -3920,6 +3920,10 @@ PrefabInstance:
       propertyPath: suppressInput
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 381676998158350765, guid: d4331c7cb2b73c540aef37bce070239c, type: 3}
+      propertyPath: enemyLayers.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 2635949621105547584, guid: d4331c7cb2b73c540aef37bce070239c, type: 3}
       propertyPath: m_Name
       value: Player

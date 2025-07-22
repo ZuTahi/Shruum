@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyAIController : MonoBehaviour
+public class EnemyAIController : MonoBehaviour, IDamageable
 {
     public EnemyData data;
     public EnemySpawner spawner;
@@ -10,10 +10,20 @@ public class EnemyAIController : MonoBehaviour
     private float health;
     private Animator animator;
 
+    // ✅ Added fields
+    private bool isStaggered = false;
+    private float staggerDuration = 0.2f;
+
+    private Renderer rend;
+    private Color originalColor;
+
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
         animator = GetComponent<Animator>();
+        rend = GetComponentInChildren<Renderer>();
+        if (rend != null)
+            originalColor = rend.material.color;
 
         if (data == null)
         {
@@ -42,6 +52,12 @@ public class EnemyAIController : MonoBehaviour
     {
         while (player != null)
         {
+            if (isStaggered)
+            {
+                yield return null;
+                continue;
+            }
+
             float distance = Vector3.Distance(transform.position, player.position);
 
             if (distance > data.attackRange)
@@ -61,6 +77,12 @@ public class EnemyAIController : MonoBehaviour
     {
         while (player != null)
         {
+            if (isStaggered)
+            {
+                yield return null;
+                continue;
+            }
+
             float distance = Vector3.Distance(transform.position, player.position);
 
             if (distance <= data.attackRange)
@@ -99,13 +121,46 @@ public class EnemyAIController : MonoBehaviour
         yield return new WaitForSeconds(data.attackDuration + data.postAttackDuration);
     }
 
-    public void TakeDamage(float damage)
+    // ===== IDamageable Implementation =====
+    public void TakeDamage(int amount, Vector3 hitPoint, GameObject source)
     {
-        health -= damage;
+        health -= amount;
+        Debug.Log($"{gameObject.name} took {amount} damage from {source.name}");
+
+        StartCoroutine(OnHitReaction());
+
         if (health <= 0)
         {
             Die();
         }
+    }
+
+    private IEnumerator OnHitReaction()
+    {
+        isStaggered = true;
+
+        StartCoroutine(FlickerRed());
+
+        yield return new WaitForSeconds(staggerDuration);
+
+        isStaggered = false;
+    }
+
+    private IEnumerator FlickerRed()
+    {
+        if (rend == null) yield break;
+
+        Color red = Color.red;
+        rend.material.color = red;
+        yield return new WaitForSeconds(0.05f);
+
+        rend.material.color = originalColor;
+        yield return new WaitForSeconds(0.05f);
+
+        rend.material.color = red;
+        yield return new WaitForSeconds(0.05f);
+
+        rend.material.color = originalColor;
     }
 
     private void Die()

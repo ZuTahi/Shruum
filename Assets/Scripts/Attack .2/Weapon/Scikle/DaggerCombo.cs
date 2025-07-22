@@ -86,9 +86,10 @@ public class DaggerCombo : ModularWeaponCombo
         if (vfx != null)
             Instantiate(vfx, attackPoint.position, Quaternion.Euler(90, transform.eulerAngles.y, 0));
 
-        Collider[] hits = Physics.OverlapSphere(attackPoint.position, 0.6f, enemyLayers);
+        Collider[] hits = Physics.OverlapSphere(attackPoint.position, 1f, enemyLayers);
         foreach (var enemy in hits)
         {
+            Debug.Log($"[Dagger] Hit {enemy.name} at {enemy.transform.position}");
             if (enemy.TryGetComponent<IDamageable>(out var target))
             {
                 float dmg = attackDamage * PlayerStats.Instance.attackMultiplier;
@@ -130,18 +131,17 @@ public class DaggerCombo : ModularWeaponCombo
         Collider[] hits = Physics.OverlapCapsule(start, end, 0.6f, enemyLayers);
         foreach (var enemy in hits)
         {
-            if (enemy.TryGetComponent<IDamageable>(out var target))
+            if (enemy.GetComponentInParent<IDamageable>() is IDamageable target)
             {
-                float dmg = attackDamage * 1.5f * PlayerStats.Instance.attackMultiplier;
+                Debug.Log($"[Dagger] Damaging {enemy.name} via parent {target}");
+                float dmg = attackDamage * PlayerStats.Instance.attackMultiplier;
                 target.TakeDamage((int)dmg, enemy.ClosestPoint(attackPoint.position), gameObject);
-
-                if (finisherPrefab != null)
-                {
-                    Vector3 vfxPos = enemy.transform.position;
-                    Quaternion vfxRot = Quaternion.LookRotation(transform.forward);
-                    Instantiate(finisherPrefab, vfxPos, vfxRot);
-                }
             }
+            else
+            {
+                Debug.LogWarning($"[Dagger] {enemy.name} and its parents do NOT have IDamageable");
+            }
+
         }
 
         yield return new WaitForSeconds(0.1f);
