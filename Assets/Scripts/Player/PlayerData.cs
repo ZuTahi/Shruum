@@ -45,6 +45,8 @@ public static class PlayerData
         baseDefensePercent = data.baseDefensePercent;
         defenseMultiplier = data.defenseMultiplier;
         loreNotes = data.loreNotes.ToList();
+
+        unlockedWeapons = new HashSet<WeaponType>(data.unlockedWeapons);
     }
 
     public static void UnlockWeapon(WeaponType weapon)

@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9db7931153e7f9b4c95719e090965e3c, type: 3}
-  m_Name: Spider
+  m_Name: Ghost
   m_EditorClassIdentifier: 
-  enemyName: Spider
+  enemyName: 
   aiType: 0
-  maxHealth: 100
-  moveSpeed: 5
+  maxHealth: 10
+  moveSpeed: 7
   attackRange: 1
   preAttackDuration: 0.5
-  attackDuration: 0.2
+  attackDuration: 0.5
   postAttackDuration: 0.5
   weaponPrefab: {fileID: 1397579104473424997, guid: cf6cdacb1398e7a4d91f6a29bc2c5336, type: 3}
-  attackDamage: 10
+  attackDamage: 20
   icon: {fileID: 0}
   animatorController: {fileID: 0}
   aggroSound: {fileID: 0}

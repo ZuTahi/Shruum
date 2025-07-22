@@ -59,10 +59,20 @@ public class GameManager : MonoBehaviour
     public void RespawnAtHub()
     {
         Debug.Log("Player died, respawning at Hub...");
-        RunData.ClearRunData();   // <-- Clear buffs
+        RunData.ClearRunData();   // Clear temporary buffs
         ResetCurrentRunData();
+        SceneManager.sceneLoaded += OnHubLoaded;
         SceneManager.LoadScene("HubScene");
         SaveGame();
+    }
+    private void OnHubLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "HubScene")
+        {
+            PlayerStats.Instance?.RevivePlayer();
+            ModularWeaponSlotManager.Instance?.ApplyEquippedWeaponsFromPlayerData();
+        }
+        SceneManager.sceneLoaded -= OnHubLoaded; // Unsubscribe
     }
 
     public void QuitGame()

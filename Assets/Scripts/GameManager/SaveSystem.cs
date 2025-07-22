@@ -71,6 +71,8 @@ public class PlayerSaveData
     public float defenseMultiplier;
     public string[] loreNotes;
 
+    public WeaponType[] unlockedWeapons;   // ✅ Add this
+
     public PlayerSaveData()
     {
         natureForce = PlayerData.natureForce;
@@ -81,5 +83,9 @@ public class PlayerSaveData
         baseDefensePercent = PlayerData.baseDefensePercent;
         defenseMultiplier = PlayerData.defenseMultiplier;
         loreNotes = PlayerData.loreNotes.ToArray();
+
+        unlockedWeapons = new WeaponType[PlayerData.unlockedWeapons.Count];
+        PlayerData.unlockedWeapons.CopyTo(unlockedWeapons);
     }
 }
+

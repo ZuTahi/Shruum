@@ -43,6 +43,8 @@ public class WeaponDisplayInteractable : MonoBehaviour
             PlayerData.UnlockWeapon(weaponType);
             isUnlocked = true;
             UpdateLockVisual();
+
+            GameManager.Instance.SaveGame();
         }
     }
 
@@ -72,4 +74,10 @@ public class WeaponDisplayInteractable : MonoBehaviour
         if (other.CompareTag("Player"))
             playerInRange = false;
     }
+    public void RefreshLockStatus()
+    {
+        isUnlocked = PlayerData.IsWeaponUnlocked(weaponType);
+        UpdateLockVisual();
+    }
+
 }

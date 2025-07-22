@@ -543,13 +543,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c48fb3c763bf884fb75e2a3a757a9fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 10
   sprintMultiplier: 1.5
   dashSpeed: 20
   dashDuration: 0.2
   dashCooldown: 1
   isInvincible: 0
   canMove: 1
+  isInputGloballyLocked: 0
 --- !u!114 &3800781015587835401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -596,7 +597,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 406eec2855544314997d98fec09c2a88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxComboLength: 3
+  inputTimeout: 1.5
 --- !u!114 &4416985053351932215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -730,6 +731,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29703621c7be72641bc4ba745121bfc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  suppressInput: 0
   suppressNormalFinisher: 0
   weaponType: 1
   fixedAttackDelay: 0.5
@@ -789,6 +791,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 576006abb4e40224bba6fc09dabe9acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  suppressInput: 0
   suppressNormalFinisher: 0
   weaponType: 3
   fixedAttackDelay: 0.5
@@ -1159,6 +1162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67b95c8c26d20394e85360911b1275b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  suppressInput: 0
   suppressNormalFinisher: 0
   weaponType: 2
   fixedAttackDelay: 0.3

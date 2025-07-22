@@ -33,7 +33,7 @@ public class ModularWeaponSlotManager : MonoBehaviour
         ApplyEquippedWeaponsFromPlayerData();
     }
 
-    private void ApplyEquippedWeaponsFromPlayerData()
+    public void ApplyEquippedWeaponsFromPlayerData()
     {
         if (PlayerData.equippedWeapons == null || PlayerData.equippedWeapons.Length == 0)
         {
@@ -52,7 +52,9 @@ public class ModularWeaponSlotManager : MonoBehaviour
             if (weapon != null)
             {
                 weapon.gameObject.SetActive(true);
+                weapon.suppressInput = false;
                 EquipWeaponToSlot(weapon, (ModularWeaponSlotKey)i);
+                WeaponEquipUI.Instance?.UpdateSlotVisual((ModularWeaponSlotKey)i, type);
             }
         }
     }

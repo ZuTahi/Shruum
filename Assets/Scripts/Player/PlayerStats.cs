@@ -21,7 +21,7 @@ public class PlayerStats : MonoBehaviour
     private float spRegenBuffer = 0f;
 
     public float TotalDefensePercent => Mathf.Clamp01(baseDefensePercent * defenseMultiplier);
-
+    private bool isDead = false;
     public static PlayerStats Instance { get; private set; }
 
     private void Awake()
@@ -39,6 +39,10 @@ public class PlayerStats : MonoBehaviour
         LoadFromData();
         RunData.ApplyRunBuffs(this);
         RefreshUI();
+
+        ModularWeaponSlotManager.Instance?.ApplyEquippedWeaponsFromPlayerData();
+        WeaponEquipUI.Instance?.RefreshAllSlots();
+
         Debug.Log("[PlayerStats] Loaded data and applied run buffs.");
     }
     private void Update()
@@ -67,6 +71,8 @@ public class PlayerStats : MonoBehaviour
 
     public void TakeDamage(int rawDamage)
     {
+        if (isDead) return;  // Already dead
+
         float damageReduction = TotalDefensePercent;
         int finalDamage = Mathf.CeilToInt(rawDamage * (1f - damageReduction));
         finalDamage = Mathf.Max(finalDamage, 1);
@@ -75,7 +81,9 @@ public class PlayerStats : MonoBehaviour
         if (currentHP <= 0)
         {
             currentHP = 0;
+            isDead = true;
             Debug.Log("Player has died.");
+            GameManager.Instance.RespawnAtHub();
         }
         PlayerUIManager.Instance.UpdateHP(currentHP, maxHP);
     }
@@ -141,4 +149,15 @@ public class PlayerStats : MonoBehaviour
     {
         PlayerUIManager.Instance?.RefreshAllStats();
     }
+
+    public void RevivePlayer()
+    {
+        isDead = false;
+        currentHP = maxHP;
+        currentSP = maxSP;
+        currentMP = maxMP;
+        RefreshUI();
+        Debug.Log("[PlayerStats] Player revived.");
+    }
+
 }

@@ -120,7 +120,7 @@ public class WeaponEquipUI : MonoBehaviour
         CloseEquipPrompt();
     }
 
-    private void UpdateSlotVisual(ModularWeaponSlotKey slotKey, WeaponType weapon)
+    public void UpdateSlotVisual(ModularWeaponSlotKey slotKey, WeaponType weapon)
     {
         Image slotImage = slotKey switch
         {
@@ -150,5 +150,13 @@ public class WeaponEquipUI : MonoBehaviour
             ModularWeaponSlotKey.Slot3 => KeySpriteL,
             _ => null,
         };
+    }
+    public void RefreshAllSlots()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            var type = PlayerData.equippedWeapons[i];
+            UpdateSlotVisual((ModularWeaponSlotKey)i, type);
+        }
     }
 }
