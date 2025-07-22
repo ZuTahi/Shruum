@@ -1,42 +1,48 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class ModularComboBuffer : MonoBehaviour
 {
-    [SerializeField] private int maxComboLength = 3;
-    private Queue<ModularWeaponInput> inputBuffer = new();
+    private struct ComboInput
+    {
+        public ModularWeaponInput input;
+        public float time;
+
+        public ComboInput(ModularWeaponInput input, float time)
+        {
+            this.input = input;
+            this.time = time;
+        }
+    }
+
+    private List<ComboInput> buffer = new();
+    public float inputTimeout = 1.5f; // maximum allowed time between first and last input
 
     public void RegisterInput(ModularWeaponInput input)
     {
-        inputBuffer.Enqueue(input);
+        buffer.Add(new ComboInput(input, Time.time));
 
-        while (inputBuffer.Count > maxComboLength)
-        {
-            inputBuffer.Dequeue();
-        }
+        if (buffer.Count > 3)
+            buffer.RemoveAt(0);
     }
 
     public ModularWeaponInput[] GetCombo()
     {
-        ModularWeaponInput[] combo = new ModularWeaponInput[maxComboLength];
-        for (int i = 0; i < maxComboLength; i++)
-        {
-            combo[i] = ModularWeaponInput.None; // Default padding
-        }
+        return buffer.ConvertAll(c => c.input).ToArray();
+    }
 
-        ModularWeaponInput[] bufferArray = inputBuffer.ToArray();
-        int offset = maxComboLength - bufferArray.Length;
+    public bool HasValidCombo()
+    {
+        if (buffer.Count < 3) return false;
 
-        for (int i = 0; i < bufferArray.Length; i++)
-        {
-            combo[i + offset] = bufferArray[i]; // Pad from the back
-        }
+        float firstTime = buffer[0].time;
+        float lastTime = buffer[buffer.Count - 1].time;
 
-        return combo;
+        return (lastTime - firstTime) <= inputTimeout;
     }
 
     public void ClearBuffer()
     {
-        inputBuffer.Clear();
+        buffer.Clear();
     }
 }

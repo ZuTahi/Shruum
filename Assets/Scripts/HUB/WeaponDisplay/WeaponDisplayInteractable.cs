@@ -31,9 +31,9 @@ public class WeaponDisplayInteractable : MonoBehaviour
             else
             {
                 WeaponEquipUI.Instance.OpenEquipPrompt(weaponType);
+                ModularWeaponSlotManager.Instance?.SuppressInputForAllWeapons(true); // ✅ suppress input
             }
         }
-
     }
 
     private void TryUnlockWeapon()

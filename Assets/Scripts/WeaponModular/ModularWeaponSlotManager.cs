@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class ModularWeaponSlotManager : MonoBehaviour
 {
@@ -43,11 +45,7 @@ public class ModularWeaponSlotManager : MonoBehaviour
         {
             WeaponType type = PlayerData.equippedWeapons[i];
 
-            if (type == WeaponType.None)
-            {
-                Debug.Log($"[WeaponSlotManager] Slot {i} is empty (None). Skipping.");
-                continue;
-            }
+            if (type == WeaponType.None) continue;
 
             ModularWeaponCombo weapon = System.Array.Find(allWeapons, w => w.weaponType == type);
 
@@ -57,10 +55,11 @@ public class ModularWeaponSlotManager : MonoBehaviour
                 EquipWeaponToSlot(weapon, (ModularWeaponSlotKey)i);
             }
         }
-
-        Debug.Log("[WeaponSlotManager] Equipped weapons from PlayerData.");
     }
 
+    /// <summary>
+    /// Assigns weapon to slot, removing it from any previous slot first.
+    /// </summary>
     public void AssignWeaponToSlot(WeaponType type, ModularWeaponSlotKey slot)
     {
         if (type == WeaponType.None)
@@ -77,36 +76,23 @@ public class ModularWeaponSlotManager : MonoBehaviour
         }
 
         weapon.gameObject.SetActive(true);
+        StartCoroutine(EnableInputWithDelay(weapon, 0.5f));
+
         EquipWeaponToSlot(weapon, slot);
 
         PlayerData.equippedWeapons[(int)slot] = type;
         Debug.Log($"[WeaponSlotManager] Assigned {type} to slot {slot} and saved to PlayerData.");
     }
+    private IEnumerator EnableInputWithDelay(ModularWeaponCombo weapon, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        weapon.suppressInput = false;
+        Debug.Log($"[WeaponSlotManager] Input enabled for {weapon.weaponType} after delay.");
+    }
 
     public void EquipWeaponToSlot(ModularWeaponCombo weapon, ModularWeaponSlotKey slot)
     {
-        int index = (int)slot;
-        weaponSlots[index] = weapon;
-        Debug.Log($"Equipped {weapon.weaponType} to slot {slot}");
-    }
-
-    public void EquipWeaponToSlot(ModularWeaponSlotKey slot, WeaponType weaponType)
-    {
-        if (weaponType == WeaponType.None)
-        {
-            Debug.LogWarning("Cannot equip WeaponType.None.");
-            return;
-        }
-
-        ModularWeaponCombo weapon = System.Array.Find(allWeapons, w => w.weaponType == weaponType);
-        if (weapon == null)
-        {
-            Debug.LogWarning($"Weapon of type {weaponType} not found in allWeapons.");
-            return;
-        }
-
-        weapon.gameObject.SetActive(true);
-        EquipWeaponToSlot(weapon, slot);
+        weaponSlots[(int)slot] = weapon;
     }
 
     public ModularWeaponCombo GetWeaponInSlot(ModularWeaponSlotKey slot)
@@ -126,4 +112,26 @@ public class ModularWeaponSlotManager : MonoBehaviour
     }
 
     public ModularWeaponCombo[] GetAllWeapons() => weaponSlots;
+
+    /// <summary>
+    /// Suppress input across all weapons
+    /// </summary>
+    public void SuppressInputForAllWeapons(bool suppress)
+    {
+        foreach (var weapon in weaponSlots)
+        {
+            if (weapon != null)
+                weapon.suppressInput = suppress;
+        }
+    }
+
+    public ModularWeaponCombo GetWeaponByType(WeaponType type)
+    {
+        foreach (var weapon in allWeapons)
+        {
+            if (weapon != null && weapon.weaponType == type)
+                return weapon;
+        }
+        return null;
+    }
 }

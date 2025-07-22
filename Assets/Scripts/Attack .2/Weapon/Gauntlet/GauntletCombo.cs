@@ -34,19 +34,33 @@ public class GauntletCombo : ModularWeaponCombo
     {
         base.Awake();
         slotManager = FindFirstObjectByType<ModularWeaponSlotManager>();
+        suppressInput = true;
     }
 
     void Update()
     {
+        if (suppressInput) return;
         if (comboStep > 0 && Time.time - lastAttackTime > comboResetDelay)
         {
             Debug.Log("[Gauntlet] Combo timed out, resetting.");
             ResetCombo();
         }
     }
+    public void EnableInputWithDelay(float delay)
+    {
+        StartCoroutine(EnableInputAfterDelay(delay));
+    }
+
+    private IEnumerator EnableInputAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        suppressInput = false;
+        Debug.Log("[Gauntlet] Input re-enabled after equip delay.");
+    }
 
     public override void HandleInput()
     {
+        if (suppressInput) return;
         if (suppressNormalFinisher || isFinisherActive || Time.time - lastAttackTime < fixedAttackDelay)
             return;
 
