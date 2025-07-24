@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6878041596841415569}
   - component: {fileID: 860313769233898883}
   - component: {fileID: 4025354473518196181}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: ExplosiveSeed
   m_TagString: SeedProjectile
   m_Icon: {fileID: 0}
@@ -126,7 +126,6 @@ MonoBehaviour:
   maxLifetime: 3
   directDamage: 10
   explosionEffectPrefab: {fileID: 5418464250865169476, guid: 2c6a017e80c26234ba24e58022ff665e, type: 3}
-  damageZonePrefab: {fileID: 5418464250865169476, guid: 2c6a017e80c26234ba24e58022ff665e, type: 3}
 --- !u!54 &4025354473518196181
 Rigidbody:
   m_ObjectHideFlags: 0

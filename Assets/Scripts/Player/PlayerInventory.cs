@@ -12,28 +12,52 @@ public class PlayerInventory : MonoBehaviour
     {
         if (Instance != null) Destroy(gameObject);
         Instance = this;
+        natureForce = PlayerData.natureForce;
     }
 
     public void AddNatureForce(int amount)
     {
         natureForce += amount;
-        Debug.Log("Nature Force: " + natureForce);
-        // Update UI if needed
+        PlayerData.natureForce = natureForce;
+        // Optional: Clamp to non-negative values
+        if (natureForce < 0)
+            natureForce = 0;
+
+        NatureForceUI.Instance?.UpdateNatureUI(natureForce);
     }
 
-    public void AddLoreNote(string note)
+    public void AddRandomLoreNote()
     {
-        if (!loreNotes.Contains(note))
+        if (PlayerData.loreNotes.Count == 0)
         {
-            loreNotes.Add(note);
-            Debug.Log("Collected Lore Note: " + note);
-            // Update UI if needed
+            Debug.Log("No lore notes available to collect.");
+            return;
         }
+
+        // Pick a random lore note not already owned
+        var availableNotes = new List<string>(PlayerData.loreNotes);
+        availableNotes.RemoveAll(note => loreNotes.Contains(note));
+
+        if (availableNotes.Count == 0)
+        {
+            Debug.Log("All lore notes already collected.");
+            return;
+        }
+
+        int randomIndex = Random.Range(0, availableNotes.Count);
+        string randomNote = availableNotes[randomIndex];
+        loreNotes.Add(randomNote);
+        Debug.Log("Collected Random Lore Note: " + randomNote);
+
+        // Optionally update UI here
     }
 
     public void LoadData(PlayerSaveData data)
     {
         natureForce = data.natureForce;
+        PlayerData.natureForce = natureForce;
+
         loreNotes = new List<string>(data.loreNotes);
+        NatureForceUI.Instance?.UpdateNatureUI(natureForce);
     }
 }

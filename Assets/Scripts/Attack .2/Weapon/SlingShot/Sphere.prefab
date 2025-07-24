@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7826657832898717125}
   - component: {fileID: 4457532266559539773}
   - component: {fileID: -7264373326410224831}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: Sphere
   m_TagString: SeedProjectile
   m_Icon: {fileID: 0}

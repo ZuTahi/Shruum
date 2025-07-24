@@ -44,7 +44,6 @@ public class RoomManager : MonoBehaviour
     public void InitializeRoom()
     {
         Debug.Log("RoomManager: Initializing Room...");
-        LockDoors();
 
         if (enemySpawner != null)
         {
@@ -55,14 +54,6 @@ public class RoomManager : MonoBehaviour
         {
             Debug.LogWarning("No EnemySpawner assigned. Room is instantly cleared.");
             OnRoomCleared();
-        }
-    }
-
-    private void LockDoors()
-    {
-        foreach (DoorController door in doors)
-        {
-            door.Lock();
         }
     }
 
@@ -82,6 +73,12 @@ public class RoomManager : MonoBehaviour
         Debug.Log("RoomManager: Room Cleared!");
         UnlockDoors();
 
+        StartCoroutine(ShowArtifactChoicesAfterDelay());
+    }
+
+    private IEnumerator ShowArtifactChoicesAfterDelay()
+    {
+        yield return new WaitForSeconds(1.2f); // match door open animation duration
         if (artifactManager != null)
         {
             artifactManager.ShowArtifactChoices(this);

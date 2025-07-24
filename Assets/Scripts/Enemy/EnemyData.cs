@@ -22,6 +22,8 @@ public class EnemyData : ScriptableObject
     public AudioClip deathSound;
 
     public EnemyEliteAttribute[] eliteAttributes;
+    public bool usesNavMesh = false;
+
 }
 
 public enum EnemyAIType

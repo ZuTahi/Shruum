@@ -10,11 +10,15 @@ public class WeaponDisplayInteractable : MonoBehaviour
     public int unlockCost = 50;
 
     private bool playerInRange = false;
+    private InteractionPromptUI promptUI;
 
     private void Start()
     {
         isUnlocked = PlayerData.IsWeaponUnlocked(weaponType);
         UpdateLockVisual();
+        promptUI = FindFirstObjectByType<InteractionPromptUI>();
+        if (promptUI == null)
+            Debug.LogError("❌ InteractionPromptUI not found in the scene!");
     }
 
     private void Update()
@@ -39,7 +43,7 @@ public class WeaponDisplayInteractable : MonoBehaviour
     {
         if (PlayerInventory.Instance.natureForce >= unlockCost)
         {
-            PlayerInventory.Instance.natureForce -= unlockCost;
+            PlayerInventory.Instance.AddNatureForce(-unlockCost);
             PlayerData.UnlockWeapon(weaponType);
             isUnlocked = true;
             UpdateLockVisual();
@@ -66,13 +70,24 @@ public class WeaponDisplayInteractable : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
+        { 
             playerInRange = true;
+            if (promptUI != null)
+            {
+                string promptText = isUnlocked ? "Press [F] to Interact" : $"Press [F] to Unlock ({unlockCost})";
+                promptUI.ShowPrompt(promptText);
+            }
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
+        {
             playerInRange = false;
+            if (promptUI != null)
+                promptUI.HidePrompt();
+        }   
     }
     public void RefreshLockStatus()
     {

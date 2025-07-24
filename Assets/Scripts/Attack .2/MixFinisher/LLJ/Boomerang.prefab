@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6168755179188646909}
   - component: {fileID: 5694456013871757260}
   - component: {fileID: -2195959524003201973}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: Boomerang
   m_TagString: SeedProjectile
   m_Icon: {fileID: 0}
@@ -125,11 +125,15 @@ MonoBehaviour:
   speed: 12
   returnSpeed: 14
   travelTime: 0.7
+  extraLifetime: 1.2
   damageRadius: 0.5
   damage: 10
   enemyLayers:
     serializedVersion: 2
     m_Bits: 64
+  obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!54 &-2195959524003201973
 Rigidbody:
   m_ObjectHideFlags: 0

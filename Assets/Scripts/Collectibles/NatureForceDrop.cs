@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class NatureForceDrop : MonoBehaviour
 {
@@ -6,37 +6,42 @@ public class NatureForceDrop : MonoBehaviour
     public float magnetRadius = 2.5f;
     public float pullSpeed = 5f;
     public float collectDistance = 0.3f;
+    public float pickupDelay = 0.3f;  // prevent instant pickup
 
     private Transform player;
+    private bool isPickupEnabled = false;
+
+    private void Start()
+    {
+        player = GameObject.FindWithTag("Player")?.transform;
+        Invoke(nameof(EnablePickup), pickupDelay);
+    }
+
+    private void EnablePickup()
+    {
+        isPickupEnabled = true;
+    }
 
     private void Update()
     {
-        if (player == null)
+        if (player == null || !isPickupEnabled) return;
+
+        float distance = Vector3.Distance(transform.position, player.position);
+
+        if (distance < magnetRadius)
         {
-            GameObject found = GameObject.FindWithTag("Player");
-            if (found != null)
-                player = found.transform;
+            Vector3 targetPos = player.position;
+            transform.position = Vector3.Lerp(transform.position, targetPos, pullSpeed * Time.deltaTime);
         }
 
-        if (player != null)
+        if (distance < collectDistance)
         {
-            float distance = Vector3.Distance(transform.position, player.position);
-
-            if (distance < magnetRadius)
+            PlayerInventory inventory = player.GetComponent<PlayerInventory>();
+            if (inventory != null)
             {
-                Vector3 direction = (player.position - transform.position).normalized;
-                transform.position += direction * pullSpeed * Time.deltaTime;
-            }
-
-            if (distance < collectDistance)
-            {
-                PlayerInventory inventory = player.GetComponent<PlayerInventory>();
-                if (inventory != null)
-                {
-                    inventory.AddNatureForce(value);
-                    Debug.Log("Collected Nature Force: " + value);
-                    Destroy(gameObject);
-                }
+                inventory.AddNatureForce(value);
+                Debug.Log($"Collected Nature Force: {value}");
+                Destroy(gameObject);
             }
         }
     }

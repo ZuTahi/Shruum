@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 3418502073703050154}
   - component: {fileID: 8866040733480651475}
   - component: {fileID: 807841945450750415}
-  - component: {fileID: 1075716977408483704}
   - component: {fileID: -1611270257404335919}
   - component: {fileID: -7428894151564368218}
+  - component: {fileID: -422579904663034191}
   m_Layer: 0
   m_Name: NatureF
   m_TagString: Untagged
@@ -89,27 +89,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &1075716977408483704
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 818231959689995300}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &-1611270257404335919
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -151,5 +130,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   value: 1
   magnetRadius: 2.5
-  pullSpeed: 5
+  pullSpeed: 10
   collectDistance: 1
+  pickupDelay: 0.3
+--- !u!65 &-422579904663034191
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 818231959689995300}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

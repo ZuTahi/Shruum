@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyAIController : MonoBehaviour, IDamageable
 {
@@ -16,9 +17,27 @@ public class EnemyAIController : MonoBehaviour, IDamageable
 
     private Renderer rend;
     private Color originalColor;
+    private NavMeshAgent agent;
+
+    [Header("Drop Settings")]
+    public EnemyDrop enemyDropPrefab;
+    public int minNatureForceDrop = 1;
+    public int maxNatureForceDrop = 3;
+    public int minManaDrop = 0;
+    public int maxManaDrop = 2;
+    [Range(0f, 1f)] public float loreNoteDropChance = 0.15f;
 
     private void Start()
     {
+        if (data.usesNavMesh)
+        {
+            agent = GetComponent<NavMeshAgent>();
+            if (agent != null)
+            {
+                agent.speed = data.moveSpeed;
+            }
+        }
+
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
         animator = GetComponent<Animator>();
         rend = GetComponentInChildren<Renderer>();
@@ -98,10 +117,17 @@ public class EnemyAIController : MonoBehaviour, IDamageable
     {
         if (player == null) return;
 
-        Vector3 dir = (player.position - transform.position).normalized;
-        transform.position += dir * data.moveSpeed * Time.deltaTime;
-
-        transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
+        if (data.usesNavMesh && agent != null)
+        {
+            agent.SetDestination(player.position);
+        }
+        else
+        {
+            // Direct move for ghosts
+            Vector3 dir = (player.position - transform.position).normalized;
+            transform.position += dir * data.moveSpeed * Time.deltaTime;
+            transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
+        }
     }
 
     private IEnumerator AttackSequence()
@@ -165,7 +191,26 @@ public class EnemyAIController : MonoBehaviour, IDamageable
 
     private void Die()
     {
+        DropRewards();
         spawner?.OnEnemyDeath(gameObject);
         Destroy(gameObject);
+    }
+    private void DropRewards()
+    {
+        if (enemyDropPrefab != null)
+        {
+            var drop = Instantiate(enemyDropPrefab, transform.position, Quaternion.identity);
+            int natureForce = Random.Range(minNatureForceDrop, maxNatureForceDrop + 1);
+            int mana = Random.Range(minManaDrop, maxManaDrop + 1);
+
+            drop.SetDropValues(mana, natureForce);
+            drop.DropItems();
+        }
+
+        if (Random.value < loreNoteDropChance)
+        {
+            PlayerInventory.Instance?.AddRandomLoreNote();
+            Debug.Log($"[EnemyAI] Dropped Lore Note.");
+        }
     }
 }

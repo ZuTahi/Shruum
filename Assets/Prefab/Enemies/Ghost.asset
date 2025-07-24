@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9db7931153e7f9b4c95719e090965e3c, type: 3}
   m_Name: Ghost
   m_EditorClassIdentifier: 
-  enemyName: 
+  enemyName: Ghost
   aiType: 0
   maxHealth: 10
   moveSpeed: 7
@@ -27,3 +27,4 @@ MonoBehaviour:
   aggroSound: {fileID: 0}
   deathSound: {fileID: 0}
   eliteAttributes: []
+  usesNavMesh: 0

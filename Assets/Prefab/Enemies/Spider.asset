@@ -27,3 +27,4 @@ MonoBehaviour:
   aggroSound: {fileID: 0}
   deathSound: {fileID: 0}
   eliteAttributes: []
+  usesNavMesh: 1

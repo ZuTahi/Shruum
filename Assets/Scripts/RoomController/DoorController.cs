@@ -3,31 +3,18 @@ using UnityEngine;
 public class DoorController : MonoBehaviour
 {
     [Header("Door Components")]
-    public Collider doorCollider; // The collider that blocks the player
-    public Animator doorAnimator; // Optional: Animator for door open/close animations
+    public Animator doorAnimator; // Animator with isLocked bool controlling open/close
 
     /// <summary>
     /// Lock the door: activate collider and play lock animation.
     /// </summary>
-    public void Lock()
-    {
-        if (doorCollider != null)
-            doorCollider.enabled = true;
-
-        if (doorAnimator != null)
-            doorAnimator.SetBool("isLocked", true);
-
-        Debug.Log($"{gameObject.name} is now Locked.");
-    }
 
     /// <summary>
-    /// Unlock the door: disable collider and play unlock animation.
+    /// Unlock the door: play open animation. Collider stays enabled if it's animated.
     /// </summary>
     public void Unlock()
     {
-        if (doorCollider != null)
-            doorCollider.enabled = false;
-
+        // We no longer disable the collider, since the animated mesh moves away
         if (doorAnimator != null)
             doorAnimator.SetBool("isLocked", false);
 

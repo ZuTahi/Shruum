@@ -14,6 +14,7 @@ public class OfferingShrine : MonoBehaviour
 
     private Dictionary<StatType, int> upgradeCounts = new();
 
+
     public void UpgradePlayer(StatType type)
     {
         int cost = GetUpgradeCost(type);
@@ -24,7 +25,7 @@ public class OfferingShrine : MonoBehaviour
             return;
         }
 
-        PlayerInventory.Instance.natureForce -= cost;
+        PlayerInventory.Instance.AddNatureForce(-cost);
 
         switch (type)
         {
