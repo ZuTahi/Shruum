@@ -4,14 +4,13 @@ using UnityEngine.UI;
 
 public class OfferingUIManager : MonoBehaviour
 {
-    [Header("UI Elements")]
+    [Header("UI References")]
     [SerializeField] private GameObject offeringPanel;
-    [SerializeField] private Image[] statIcons; // HP → DEF
-    [SerializeField] private TextMeshProUGUI[] costTexts;
-    [SerializeField] private Color defaultColor = Color.white;
-    [SerializeField] private Color selectedColor = Color.yellow;
-
-    [Header("Player Reference")]
+    [SerializeField] private StatBlockUI[] statBlocks;
+    [SerializeField] private Transform slidingBorder;               // moves between selections
+    [SerializeField] private Transform[] statBlockTargets;         // assign from Editor
+    [SerializeField] private Sprite[] statIcons;                   // assign sprites in order: HP → SP → MP → ATK → DEF
+    [SerializeField] private TextMeshProUGUI upgradePromptText;
     [SerializeField] private PlayerMovement playerMovement;
 
     private int selectedIndex = 0;
@@ -22,6 +21,7 @@ public class OfferingUIManager : MonoBehaviour
     private void Update()
     {
         if (!offeringPanel.activeSelf) return;
+
         if (inputBufferTimer > 0f)
         {
             inputBufferTimer -= Time.deltaTime;
@@ -30,12 +30,12 @@ public class OfferingUIManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.A))
         {
-            selectedIndex = (selectedIndex - 1 + statIcons.Length) % statIcons.Length;
+            selectedIndex = (selectedIndex - 1 + statBlocks.Length) % statBlocks.Length;
             UpdateUI();
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            selectedIndex = (selectedIndex + 1) % statIcons.Length;
+            selectedIndex = (selectedIndex + 1) % statBlocks.Length;
             UpdateUI();
         }
         else if (Input.GetKeyDown(KeyCode.F))
@@ -46,22 +46,40 @@ public class OfferingUIManager : MonoBehaviour
         {
             HideOfferingPanel();
         }
+
+        // Smooth sliding effect for border
+        if (slidingBorder && selectedIndex < statBlockTargets.Length)
+        {
+            Vector3 targetPos = statBlockTargets[selectedIndex].position;
+            float distance = Vector3.Distance(slidingBorder.position, targetPos);
+
+            if (distance > 0.1f)
+            {
+                slidingBorder.position = Vector3.Lerp
+                (
+                    slidingBorder.position,
+                    targetPos,
+                    Time.deltaTime * 50f
+                );
+            }
+            else
+            {
+                slidingBorder.position = targetPos; // snap when close enough
+            }
+        }
     }
 
     private void TryUpgradeSelectedStat()
     {
-        if (currentShrine == null)
-        {
-            Debug.LogWarning("No active shrine selected.");
-            return;
-        }
+        if (currentShrine == null) return;
 
-        int cost = currentShrine.GetUpgradeCost((StatType)selectedIndex);
+        StatType type = (StatType)selectedIndex;
+        int cost = PlayerData.GetUpgradeCost(type);
 
         if (PlayerInventory.Instance.natureForce >= cost)
         {
-            currentShrine.UpgradePlayer((StatType)selectedIndex);
-            UpdateUI();
+            currentShrine.UpgradePlayer(type);
+            UpdateUI(); // refresh cost + visuals
         }
         else
         {
@@ -72,11 +90,18 @@ public class OfferingUIManager : MonoBehaviour
     public void ShowOfferingPanel(OfferingShrine shrine)
     {
         currentShrine = shrine;
-        selectedIndex = statIcons.Length / 2;
+        selectedIndex = statBlocks.Length / 2; // start in the middle
         offeringPanel.SetActive(true);
         playerMovement.canMove = false;
         inputBufferTimer = inputBufferTime;
+
         UpdateUI();
+
+        // Snap border immediately to middle selection
+        if (slidingBorder && selectedIndex < statBlockTargets.Length)
+        {
+            slidingBorder.position = statBlockTargets[selectedIndex].position;
+        }
     }
 
     public void HideOfferingPanel()
@@ -90,35 +115,22 @@ public class OfferingUIManager : MonoBehaviour
 
     private void UpdateUI()
     {
-        if (statIcons == null || costTexts == null)
+        for (int i = 0; i < statBlocks.Length; i++)
         {
-            Debug.LogError("Stat icons or cost texts not assigned in OfferingUIManager.");
-            return;
+            StatType type = (StatType)i;
+            string label = type.ToString();
+            int upgradeCount = PlayerData.GetUpgradeCount(type);
+            int maxCount = PlayerData.maxUpgradeCount;
+            int upgradeCost = PlayerData.GetUpgradeCost(type);
+            Sprite icon = (i < statIcons.Length) ? statIcons[i] : null;
+            bool selected = i == selectedIndex;
+
+            // ✅ Show cost instead of stat value
+            statBlocks[i].SetData(label, upgradeCost, upgradeCount, maxCount, icon, selected);
         }
 
-        if (statIcons.Length == 0 || costTexts.Length == 0)
-        {
-            Debug.LogError("Stat icon or cost text arrays are empty.");
-            return;
-        }
-
-        for (int i = 0; i < statIcons.Length; i++)
-        {
-            if (statIcons[i] != null)
-                statIcons[i].color = (i == selectedIndex) ? selectedColor : defaultColor;
-
-            if (i < costTexts.Length && costTexts[i] != null)
-            {
-                if (currentShrine != null)
-                {
-                    int cost = currentShrine.GetUpgradeCost((StatType)i);
-                    costTexts[i].text = $"{cost}";
-                }
-                else
-                {
-                    costTexts[i].text = "?";
-                }
-            }
-        }
+        // Show upgrade prompt only if panel active
+        if (upgradePromptText != null)
+            upgradePromptText.gameObject.SetActive(true);
     }
 }

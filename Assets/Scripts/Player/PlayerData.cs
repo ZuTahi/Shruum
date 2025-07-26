@@ -4,14 +4,15 @@ using UnityEngine;
 
 public static class PlayerData
 {
-    public static int maxHP = 100;
-    public static int currentHP = 100;
+    // Core Stats
+    public static int maxHP = 50;
+    public static int currentHP = 50;
 
-    public static int maxSP = 100;
-    public static int currentSP = 100;
+    public static int maxSP = 50;
+    public static int currentSP = 50;
 
-    public static int maxMP = 100;
-    public static int currentMP = 100;
+    public static int maxMP = 50;
+    public static int currentMP = 50;
 
     public static float attackDamage = 10f;
     public static float baseDefensePercent = 0f;
@@ -24,11 +25,24 @@ public static class PlayerData
 
     public static float staminaRegenRate = 15f;
 
+    // Currency & Progression
     public static int natureForce = 0;
     public static List<string> loreNotes = new List<string>();
 
+    // Equipment
     public static WeaponType[] equippedWeapons = new WeaponType[3];
     public static HashSet<WeaponType> unlockedWeapons = new HashSet<WeaponType>();
+
+    // Upgrade Tracking
+    public static int hpUpgradeCount = 0;
+    public static int spUpgradeCount = 0;
+    public static int mpUpgradeCount = 0;
+    public static int atkUpgradeCount = 0;
+    public static int defUpgradeCount = 0;
+
+    public static int maxUpgradeCount = 10;              // Cap per stat
+    public static int baseUpgradeCost = 100;             // Cost of first upgrade
+    public static int costIncreasePerUpgrade = 50;       // Linear increase per upgrade
 
     static PlayerData()
     {
@@ -47,6 +61,12 @@ public static class PlayerData
         loreNotes = data.loreNotes.ToList();
 
         unlockedWeapons = new HashSet<WeaponType>(data.unlockedWeapons);
+
+        hpUpgradeCount = data.hpUpgradeCount;
+        spUpgradeCount = data.spUpgradeCount;
+        mpUpgradeCount = data.mpUpgradeCount;
+        atkUpgradeCount = data.atkUpgradeCount;
+        defUpgradeCount = data.defUpgradeCount;
     }
 
     public static void UnlockWeapon(WeaponType weapon)
@@ -65,14 +85,25 @@ public static class PlayerData
 
     public static void ResetToDefault()
     {
-        maxHP = 100;
-        maxSP = 100;
-        maxMP = 100;
+        maxHP = 50;
+        maxSP = 50;
+        maxMP = 50;
+        currentHP = maxHP;
+        currentSP = maxSP;
+        currentMP = maxMP;
+
         attackMultiplier = 1f;
         baseDefensePercent = 0f;
         defenseMultiplier = 1f;
+
         natureForce = 0;
         loreNotes.Clear();
+
+        hpUpgradeCount = 0;
+        spUpgradeCount = 0;
+        mpUpgradeCount = 0;
+        atkUpgradeCount = 0;
+        defUpgradeCount = 0;
 
         ResetWeapons();
 
@@ -85,5 +116,42 @@ public static class PlayerData
             equippedWeapons[i] = WeaponType.None;
 
         unlockedWeapons = new HashSet<WeaponType>();
+    }
+
+    // Upgrade Tracking Utilities
+    public static int GetUpgradeCount(StatType type)
+    {
+        return type switch
+        {
+            StatType.HP => hpUpgradeCount,
+            StatType.SP => spUpgradeCount,
+            StatType.MP => mpUpgradeCount,
+            StatType.ATK => atkUpgradeCount,
+            StatType.DEF => defUpgradeCount,
+            _ => 0
+        };
+    }
+
+    public static void IncrementUpgradeCount(StatType type)
+    {
+        switch (type)
+        {
+            case StatType.HP: hpUpgradeCount++; break;
+            case StatType.SP: spUpgradeCount++; break;
+            case StatType.MP: mpUpgradeCount++; break;
+            case StatType.ATK: atkUpgradeCount++; break;
+            case StatType.DEF: defUpgradeCount++; break;
+        }
+    }
+
+    public static int GetUpgradeCost(StatType type)
+    {
+        int count = GetUpgradeCount(type);
+        return baseUpgradeCost + (count * costIncreasePerUpgrade);
+    }
+
+    public static bool HasReachedMaxUpgrades(StatType type)
+    {
+        return GetUpgradeCount(type) >= maxUpgradeCount;
     }
 }

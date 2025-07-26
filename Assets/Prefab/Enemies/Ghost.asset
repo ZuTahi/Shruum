@@ -16,7 +16,7 @@ MonoBehaviour:
   aiType: 0
   maxHealth: 10
   moveSpeed: 7
-  attackRange: 1
+  attackRange: 1.5
   preAttackDuration: 0.5
   attackDuration: 0.5
   postAttackDuration: 0.5

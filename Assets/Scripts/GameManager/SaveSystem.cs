@@ -71,7 +71,18 @@ public class PlayerSaveData
     public float defenseMultiplier;
     public string[] loreNotes;
 
-    public WeaponType[] unlockedWeapons;   // ✅ Add this
+    public WeaponType[] unlockedWeapons;
+
+    // 🆕 Upgrade counts
+    public int hpUpgradeCount;
+    public int spUpgradeCount;
+    public int mpUpgradeCount;
+    public int atkUpgradeCount;
+    public int defUpgradeCount;
+
+    public int currentHP;
+    public int currentSP;
+    public int currentMP;
 
     public PlayerSaveData()
     {
@@ -82,10 +93,18 @@ public class PlayerSaveData
         attackMultiplier = PlayerData.attackMultiplier;
         baseDefensePercent = PlayerData.baseDefensePercent;
         defenseMultiplier = PlayerData.defenseMultiplier;
+
         loreNotes = PlayerData.loreNotes.ToArray();
 
         unlockedWeapons = new WeaponType[PlayerData.unlockedWeapons.Count];
         PlayerData.unlockedWeapons.CopyTo(unlockedWeapons);
+
+        // 🧠 Save upgrade counts
+        hpUpgradeCount = PlayerData.hpUpgradeCount;
+        spUpgradeCount = PlayerData.spUpgradeCount;
+        mpUpgradeCount = PlayerData.mpUpgradeCount;
+        atkUpgradeCount = PlayerData.atkUpgradeCount;
+        defUpgradeCount = PlayerData.defUpgradeCount;
     }
 }
 
