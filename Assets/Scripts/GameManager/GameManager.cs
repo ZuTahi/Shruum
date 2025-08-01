@@ -64,12 +64,12 @@ public class GameManager : MonoBehaviour
         RunData.ClearRunData();   // Clear temporary buffs
         ResetCurrentRunData();
         SceneManager.sceneLoaded += OnHubLoaded;
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("HubScene");
         SaveGame();
     }
     private void OnHubLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "SampleScene")
+        if (scene.name == "HubScene")
         {
             PlayerStats.Instance?.RevivePlayer();
             ModularWeaponSlotManager.Instance?.ApplyEquippedWeaponsFromPlayerData();

@@ -5,33 +5,25 @@ public class ModularWeaponInputHandler : MonoBehaviour
 {
     [SerializeField] private ModularWeaponSlotManager slotManager;
     [SerializeField] private ModularComboBuffer comboBuffer;
+
     private ModularWeaponSlotKey? lastSlotUsed = null;
     private bool inputSuppressedTemporarily = false;
 
     private void Update()
     {
-        if (PlayerMovement.Instance.isInputGloballyLocked)
+        if (PlayerMovement.Instance.isInputGloballyLocked || inputSuppressedTemporarily)
             return;
-
-        if (inputSuppressedTemporarily) return;
 
         if (WeaponEquipUI.Instance != null && WeaponEquipUI.Instance.IsChoosingSlot)
             return;
 
-        if (Input.GetKeyDown(KeyCode.J))
-            HandleInput(KeyCode.J, ModularWeaponInput.J);
-        else if (Input.GetKeyDown(KeyCode.K))
-            HandleInput(KeyCode.K, ModularWeaponInput.K);
-        else if (Input.GetKeyDown(KeyCode.L))
-            HandleInput(KeyCode.L, ModularWeaponInput.L);
+        if (Input.GetKeyDown(KeyCode.J)) HandleInput(KeyCode.J, ModularWeaponInput.J);
+        else if (Input.GetKeyDown(KeyCode.K)) HandleInput(KeyCode.K, ModularWeaponInput.K);
+        else if (Input.GetKeyDown(KeyCode.L)) HandleInput(KeyCode.L, ModularWeaponInput.L);
     }
 
     private void HandleInput(KeyCode key, ModularWeaponInput input)
     {
-        Debug.Log($"[InputHandler] Key Pressed: {key}, Input Enum: {input}");
-
-        comboBuffer.RegisterInput(input);
-
         ModularWeaponCombo weapon = slotManager.GetWeaponByKeyCode(key);
         if (weapon == null || !weapon.gameObject.activeInHierarchy)
         {
@@ -47,58 +39,59 @@ public class ModularWeaponInputHandler : MonoBehaviour
             _ => throw new System.Exception("Unknown key")
         };
 
-        // Reset combo if switching weapons
         if (lastSlotUsed != null && lastSlotUsed != currentSlot)
         {
-            ModularWeaponCombo lastWeapon = slotManager.GetWeaponInSlot(lastSlotUsed.Value);
-            if (lastWeapon != null)
-            {
-                lastWeapon.ResetCombo();
-                Debug.Log($"[InputHandler] Switched slot from {lastSlotUsed} to {currentSlot}, resetting previous weapon combo.");
-            }
+            var lastWeapon = slotManager.GetWeaponInSlot(lastSlotUsed.Value);
+            lastWeapon?.ResetCombo();
+            Debug.Log($"[InputHandler] Switched slot from {lastSlotUsed} to {currentSlot}, resetting previous weapon combo.");
         }
 
         lastSlotUsed = currentSlot;
 
-        // Check mix finisher
+        comboBuffer.RegisterInput(input);
         var combo = comboBuffer.GetCombo();
-        if (combo.Length == 3 && combo[2] == input)
+
+        bool isFullCombo = combo.Length == 3 && combo[2] == input;
+        bool isMixCombo = isFullCombo && comboBuffer.HasValidCombo();
+
+        if (isMixCombo)
         {
-            if (!comboBuffer.HasValidCombo())
+            if (weapon.suppressMixFinisher)
             {
-                Debug.Log("[InputHandler] Combo expired due to timeout. Resetting weapons.");
+                Debug.Log("[InputHandler] Mix finisher suppressed.");
                 comboBuffer.ClearBuffer();
-
-                foreach (var w in slotManager.GetAllWeapons())
-                    w?.ResetCombo();
-
-                // Proceed with normal input
-                weapon.HandleInput();
+                ResetAllWeapons();
                 return;
             }
 
-            Debug.Log("[InputHandler] 3-input combo detected: checking for mix finisher...");
-            weapon.suppressNormalFinisher = false;
             weapon.HandleMixFinisher(combo);
+            comboBuffer.ClearBuffer(); // ⬅️ make sure this happens regardless
+            ResetAllWeapons();
 
             if (weapon.suppressNormalFinisher)
             {
-                Debug.Log("[InputHandler] Mix finisher accepted. Suppressing normal input.");
-                comboBuffer.ClearBuffer();
-                foreach (var w in slotManager.GetAllWeapons()) w?.ResetCombo();
-                return;
+                Debug.Log("[InputHandler] Mix finisher triggered. Skipping normal input.");
+                return; // 🛑 Stop right here!
             }
-            else
-            {
-                Debug.Log("[InputHandler] Not a valid mix finisher. Proceeding with normal input.");
-                weapon.HandleInput();
-            }
+
+            Debug.Log("[InputHandler] Mix combo fallback → running normal input.");
+            weapon.HandleInput(); // only runs if mix finisher didn't go through
+            return;
         }
-        else
+
+        if (weapon.suppressNormalFinisher)
         {
-            Debug.Log("[InputHandler] Triggering weapon.HandleInput()");
-            weapon.HandleInput();
+            Debug.Log("[InputHandler] Normal finisher suppressed. Ignoring input.");
+            return;
         }
+
+        weapon.HandleInput();
+    }
+
+    private void ResetAllWeapons()
+    {
+        foreach (var w in slotManager.GetAllWeapons())
+            w?.ResetCombo();
     }
 
     public void SuppressInputTemporarily(float duration)

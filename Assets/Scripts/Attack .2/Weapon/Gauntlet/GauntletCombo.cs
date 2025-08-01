@@ -97,13 +97,17 @@ public class GauntletCombo : ModularWeaponCombo
             }
         }
 
-        if (comboStep == 3)
+        if (comboStep == 3 && !suppressNormalFinisher)
+        {
+            FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer(); // ← Add this line
             StartCoroutine(PerformFinisher());
+        }
     }
 
     IEnumerator PerformFinisher()
     {
         isFinisherActive = true;
+        suppressMixFinisher = true;
         hitEnemies.Clear();
 
         Vector3 slamPos = transform.root.position;
@@ -187,6 +191,7 @@ public class GauntletCombo : ModularWeaponCombo
         comboStep = 0;
         isFinisherActive = false;
         suppressNormalFinisher = false;
+        suppressMixFinisher = false;
     }
     private IEnumerator TemporarilyDisableMovement(float duration)
     {

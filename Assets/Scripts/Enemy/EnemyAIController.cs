@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,14 +11,15 @@ public class EnemyAIController : MonoBehaviour, IDamageable
     private Transform player;
     private float health;
     private Animator animator;
-
-    // ✅ Added fields
-    private bool isStaggered = false;
-    private float staggerDuration = 0.2f;
-
     private Renderer rend;
     private Color originalColor;
     private NavMeshAgent agent;
+
+    private bool isAggroed = false;
+    private bool isStaggered = false;
+    private float staggerDuration = 0.2f;
+
+    private bool IsBloomedSpider => data.enemyName.ToLower().Contains("spider");
 
     [Header("Drop Settings")]
     public EnemyDrop enemyDropPrefab;
@@ -53,18 +55,64 @@ public class EnemyAIController : MonoBehaviour, IDamageable
 
         health = data.maxHealth;
 
-        switch (data.aiType)
+        StartCoroutine(IdleWanderUntilAggro());
+    }
+
+    private IEnumerator IdleWanderUntilAggro()
+    {
+        if (!data.enableWanderInIdle || agent == null)
+            yield break;
+
+        while (!isAggroed && player != null)
         {
-            case EnemyAIType.Aggressive:
-                StartCoroutine(AggressiveAI());
-                break;
-            case EnemyAIType.Ranged:
-                StartCoroutine(RangedAI());
-                break;
-            case EnemyAIType.CollisionRetaliate:
-                Debug.LogWarning($"{gameObject.name} AI type CollisionRetaliate not implemented yet.");
-                break;
+            float distance = Vector3.Distance(transform.position, player.position);
+            if (distance <= data.awarenessRadius)
+            {
+                Aggro();
+                yield break;
+            }
+
+            // Wander near spawn
+            Vector2 offset = Random.insideUnitCircle * data.idleWanderRadius;
+            Vector3 target = transform.position + new Vector3(offset.x, 0f, offset.y);
+
+            agent.speed = data.moveSpeed;
+            agent.SetDestination(target);
+
+            float timer = 0f;
+            while (timer < data.idleWanderInterval && !isAggroed)
+            {
+                timer += Time.deltaTime;
+                yield return null;
+            }
+
+            agent.ResetPath();
         }
+    }
+
+    private void Aggro()
+    {
+        isAggroed = true;
+        animator?.SetTrigger("Alert");
+
+        // Group awareness
+        if (data.groupAwarenessRadius > 0f)
+        {
+            Collider[] nearby = Physics.OverlapSphere(transform.position, data.groupAwarenessRadius);
+            foreach (var col in nearby)
+            {
+                EnemyAIController other = col.GetComponent<EnemyAIController>();
+                if (other != null && !other.isAggroed)
+                {
+                    other.Aggro();
+                }
+            }
+        }
+
+        if (data.aiType == EnemyAIType.Aggressive)
+            StartCoroutine(AggressiveAI());
+        else if (data.aiType == EnemyAIType.Ranged)
+            StartCoroutine(RangedAI());
     }
 
     private IEnumerator AggressiveAI()
@@ -85,7 +133,10 @@ public class EnemyAIController : MonoBehaviour, IDamageable
             }
             else
             {
-                yield return AttackSequence();
+                if (IsBloomedSpider)
+                    yield return LaunchAttackSequence();
+                else
+                    yield return AttackSequence();
             }
 
             yield return null;
@@ -123,7 +174,6 @@ public class EnemyAIController : MonoBehaviour, IDamageable
         }
         else
         {
-            // Direct move for ghosts
             Vector3 dir = (player.position - transform.position).normalized;
             transform.position += dir * data.moveSpeed * Time.deltaTime;
             transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
@@ -139,20 +189,76 @@ public class EnemyAIController : MonoBehaviour, IDamageable
             GameObject hitbox = Instantiate(data.weaponPrefab, transform.position + transform.forward, transform.rotation);
             EnemyHitbox hb = hitbox.GetComponent<EnemyHitbox>();
             if (hb != null)
-            {
                 hb.damage = data.attackDamage;
+        }
+
+        // Wander slightly during post attack
+        if (data.enableWanderInIdle)
+        {
+            Vector2 offset = Random.insideUnitCircle * 0.75f;
+            Vector3 target = transform.position + new Vector3(offset.x, 0, offset.y);
+            if (agent != null)
+            {
+                agent.speed = data.moveSpeed;
+                agent.SetDestination(target);
             }
         }
 
-        yield return new WaitForSeconds(data.attackDuration + data.postAttackDuration);
+        yield return new WaitForSeconds(data.postAttackDuration);
     }
 
-    // ===== IDamageable Implementation =====
+    private IEnumerator LaunchAttackSequence()
+    {
+        animator?.SetTrigger("Lunge");
+
+        if (agent != null)
+            agent.updateRotation = false;
+
+        Vector3 direction = (player.position - transform.position).normalized;
+
+        float launchSpeed = 18f;
+        float launchDuration = 0.5f;
+        float timer = 0f;
+        bool damageApplied = false;
+
+        transform.rotation = Quaternion.LookRotation(direction);
+
+        while (timer < launchDuration)
+        {
+            transform.position += direction * launchSpeed * Time.deltaTime;
+
+            if (!damageApplied)
+            {
+                Collider[] hits = Physics.OverlapSphere(transform.position, 1.0f);
+                foreach (var hit in hits)
+                {
+                    if (hit.CompareTag("Player"))
+                    {
+                        PlayerStats ps = hit.GetComponent<PlayerStats>();
+                        if (ps != null)
+                        {
+                            ps.TakeDamage(data.attackDamage);
+                            damageApplied = true;
+                            break;
+                        }
+                    }
+                }
+                if (damageApplied) break;
+            }
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        if (agent != null)
+            agent.updateRotation = true;
+
+        yield return new WaitForSeconds(data.postAttackDuration);
+    }
+
     public void TakeDamage(int amount, Vector3 hitPoint, GameObject source)
     {
         health -= amount;
-        Debug.Log($"{gameObject.name} took {amount} damage from {source.name}");
-
         StartCoroutine(OnHitReaction());
 
         if (health <= 0)
@@ -164,11 +270,8 @@ public class EnemyAIController : MonoBehaviour, IDamageable
     private IEnumerator OnHitReaction()
     {
         isStaggered = true;
-
         StartCoroutine(FlickerRed());
-
         yield return new WaitForSeconds(staggerDuration);
-
         isStaggered = false;
     }
 
@@ -176,16 +279,12 @@ public class EnemyAIController : MonoBehaviour, IDamageable
     {
         if (rend == null) yield break;
 
-        Color red = Color.red;
-        rend.material.color = red;
+        rend.material.color = Color.red;
         yield return new WaitForSeconds(0.05f);
-
         rend.material.color = originalColor;
         yield return new WaitForSeconds(0.05f);
-
-        rend.material.color = red;
+        rend.material.color = Color.red;
         yield return new WaitForSeconds(0.05f);
-
         rend.material.color = originalColor;
     }
 
@@ -195,6 +294,7 @@ public class EnemyAIController : MonoBehaviour, IDamageable
         spawner?.OnEnemyDeath(gameObject);
         Destroy(gameObject);
     }
+
     private void DropRewards()
     {
         if (enemyDropPrefab != null)
@@ -202,7 +302,6 @@ public class EnemyAIController : MonoBehaviour, IDamageable
             var drop = Instantiate(enemyDropPrefab, transform.position, Quaternion.identity);
             int natureForce = Random.Range(minNatureForceDrop, maxNatureForceDrop + 1);
             int mana = Random.Range(minManaDrop, maxManaDrop + 1);
-
             drop.SetDropValues(mana, natureForce);
             drop.DropItems();
         }
@@ -210,7 +309,27 @@ public class EnemyAIController : MonoBehaviour, IDamageable
         if (Random.value < loreNoteDropChance)
         {
             PlayerInventory.Instance?.AddRandomLoreNote();
-            Debug.Log($"[EnemyAI] Dropped Lore Note.");
         }
     }
+    private void OnDrawGizmosSelected()
+    {
+        if (data == null)
+            return;
+
+        // Awareness radius (red)
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, data.awarenessRadius);
+
+        // Group awareness (yellow)
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, data.groupAwarenessRadius);
+
+        // Idle wander (cyan)
+        if (data.enableWanderInIdle)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(transform.position, data.idleWanderRadius);
+        }
+    }
+
 }

@@ -99,6 +99,7 @@ public class DaggerCombo : ModularWeaponCombo
 
         if (comboStep == 3 && !suppressNormalFinisher)
         {
+            FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer(); // ← Add this line
             StartCoroutine(PerformFinisher());
         }
     }
@@ -106,6 +107,7 @@ public class DaggerCombo : ModularWeaponCombo
     private IEnumerator PerformFinisher()
     {
         isFinisherActive = true;
+        suppressMixFinisher = true; // ← ADD THIS LINE
 
         float dashDistance = 4f;
         float dashDuration = 0.15f;
@@ -235,6 +237,7 @@ public class DaggerCombo : ModularWeaponCombo
         comboStep = 0;
         isFinisherActive = false;
         suppressNormalFinisher = false;
+        suppressMixFinisher = false;
     }
 
     private IEnumerator TemporarilyDisableMovement(float duration)
