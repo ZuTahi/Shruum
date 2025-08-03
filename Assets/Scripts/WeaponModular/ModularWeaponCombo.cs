@@ -4,8 +4,6 @@ public abstract class ModularWeaponCombo : MonoBehaviour
 {
     public bool suppressInput = false;  // ✅ Added this
     public bool suppressNormalFinisher = false;
-    public bool suppressMixFinisher = false;
-
     public WeaponType weaponType;
 
     public abstract void HandleInput();

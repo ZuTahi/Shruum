@@ -37,11 +37,6 @@ public class WeaponDisplayInteractable : MonoBehaviour
                 LockPlayerInput();
             }
         }
-
-        if (playerInRange && WeaponEquipUI.Instance != null && WeaponEquipUI.Instance.IsChoosingSlot)
-        {
-            promptUI?.HidePrompt();
-        }
     }
 
     private void TryUnlockWeapon()
@@ -75,9 +70,9 @@ public class WeaponDisplayInteractable : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
-        {
+        { 
             playerInRange = true;
-            if (promptUI != null && (WeaponEquipUI.Instance == null || !WeaponEquipUI.Instance.IsChoosingSlot))
+            if (promptUI != null)
             {
                 string promptText = isUnlocked ? "Press [F] to Interact" : $"Press [F] to Unlock ({unlockCost})";
                 promptUI.ShowPrompt(promptText);

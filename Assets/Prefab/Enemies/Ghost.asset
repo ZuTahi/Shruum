@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9db7931153e7f9b4c95719e090965e3c, type: 3}
+  m_Name: Ghost
+  m_EditorClassIdentifier: 
+  enemyName: Ghost
+  aiType: 0
+  maxHealth: 10
+  moveSpeed: 7
+  attackRange: 1.5
+  preAttackDuration: 0.5
+  attackDuration: 0.5
+  postAttackDuration: 0.5
+  weaponPrefab: {fileID: 1397579104473424997, guid: cf6cdacb1398e7a4d91f6a29bc2c5336, type: 3}
+  attackDamage: 20
+  icon: {fileID: 0}
+  animatorController: {fileID: 0}
+  aggroSound: {fileID: 0}
+  deathSound: {fileID: 0}
+  eliteAttributes: []
+  usesNavMesh: 0

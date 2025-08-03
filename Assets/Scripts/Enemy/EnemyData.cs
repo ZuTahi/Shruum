@@ -3,35 +3,27 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewEnemyData", menuName = "Enemies/Enemy Data")]
 public class EnemyData : ScriptableObject
 {
-    [Header("Basic Info")]
     public string enemyName;
     public EnemyAIType aiType;
+    public float maxHealth;
+    public float moveSpeed;
 
-    [Header("Combat Stats")]
-    public int maxHealth = 10;
-    public int attackDamage = 1;
-    public float attackRange = 2f;
-    public float preAttackDuration = 0.3f;
-    public float attackDuration = 0.2f;
-    public float postAttackDuration = 0.4f;
+    public float attackRange;
+    public float preAttackDuration;
+    public float attackDuration;
+    public float postAttackDuration;
 
-    [Header("Movement")]
-    public bool usesNavMesh = true;
-    public float moveSpeed = 3f;
-
-    [Header("Weapon")]
     public GameObject weaponPrefab;
+    public int attackDamage;
 
-    [Header("Awareness Settings")]
-    public float awarenessRadius = 6f;
+    public Sprite icon;
+    public RuntimeAnimatorController animatorController;
+    public AudioClip aggroSound;
+    public AudioClip deathSound;
 
-    [Header("Idle Wander Settings")]
-    public bool enableWanderInIdle = true;
-    public float idleWanderRadius = 2f;
-    public float idleWanderInterval = 2f;
+    public EnemyEliteAttribute[] eliteAttributes;
+    public bool usesNavMesh = false;
 
-    [Header("Group Awareness")]
-    public float groupAwarenessRadius = 5f;
 }
 
 public enum EnemyAIType

@@ -106,10 +106,10 @@ public class SlingShotWeapon : ModularWeaponCombo
                 rb.linearVelocity = rot * Vector3.forward * projectileSpeed;
         }
 
+        ResetCombo();
+
         var buffer = FindFirstObjectByType<ModularComboBuffer>();
         buffer?.ClearBuffer();
-        suppressMixFinisher = true;
-        ResetCombo();
 
         var slotManager = FindFirstObjectByType<ModularWeaponSlotManager>();
         foreach (var w in slotManager?.GetAllWeapons())
@@ -183,6 +183,5 @@ public class SlingShotWeapon : ModularWeaponCombo
         comboStep = 0;
         inputBuffered = false;
         suppressNormalFinisher = false;
-        suppressMixFinisher = false;
     }
 }

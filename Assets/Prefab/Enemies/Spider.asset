@@ -14,18 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Spider
   aiType: 0
-  maxHealth: 15
-  attackDamage: 5
-  attackRange: 5
-  preAttackDuration: 0.7
-  attackDuration: 0.2
-  postAttackDuration: 5
-  usesNavMesh: 1
+  maxHealth: 100
   moveSpeed: 5
+  attackRange: 1.5
+  preAttackDuration: 0.5
+  attackDuration: 0.2
+  postAttackDuration: 0.5
   weaponPrefab: {fileID: 1397579104473424997, guid: cf6cdacb1398e7a4d91f6a29bc2c5336, type: 3}
-  awarenessRadius: 5
-  enableWanderInIdle: 1
-  idleWanderRadius: 2
-  idleWanderInterval: 2
-  idleWanderSpeed: 5
-  groupAwarenessRadius: 7
+  attackDamage: 10
+  icon: {fileID: 0}
+  animatorController: {fileID: 0}
+  aggroSound: {fileID: 0}
+  deathSound: {fileID: 0}
+  eliteAttributes: []
+  usesNavMesh: 1
