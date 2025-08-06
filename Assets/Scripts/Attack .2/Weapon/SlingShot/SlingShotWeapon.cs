@@ -14,7 +14,7 @@ public class SlingShotWeapon : ModularWeaponCombo
 
     [Header("Mix Finisher: OrbitalSickles")]
     public GameObject orbitalSicklePrefab;
-    [Header("Mix Finisher: VineStrinke")]
+    [Header("Mix Finisher: VineStrike")]
     public GameObject vineStrikePrefab;
 
     private int comboStep = 0;
@@ -33,12 +33,14 @@ public class SlingShotWeapon : ModularWeaponCombo
     void Update()
     {
         if (suppressInput) return;
+
         if (comboStep > 0 && Time.time - lastAttackTime > comboResetDelay)
         {
             Debug.Log("[Slingshot] Combo timed out, resetting.");
             ResetCombo();
         }
     }
+
     public void EnableInputWithDelay(float delay)
     {
         StartCoroutine(EnableInputAfterDelay(delay));
@@ -54,8 +56,7 @@ public class SlingShotWeapon : ModularWeaponCombo
     public override void HandleInput()
     {
         if (suppressInput) return;
-        if (!gameObject.activeInHierarchy)
-            return;
+        if (!gameObject.activeInHierarchy) return;
 
         suppressNormalFinisher = false;
 
@@ -72,6 +73,10 @@ public class SlingShotWeapon : ModularWeaponCombo
         PerformAttackStep();
     }
 
+    /// <summary>
+    /// Increment combo step and play correct animation.
+    /// Movement locks while aiming/firing.
+    /// </summary>
     private void PerformAttackStep()
     {
         lastAttackTime = Time.time;
@@ -80,54 +85,50 @@ public class SlingShotWeapon : ModularWeaponCombo
 
         Debug.Log($"[PerformAttackStep] Combo Step: {comboStep}");
 
+        // Lock movement like dagger/gauntlet
+        PlayerMovement playerMove = GetComponentInParent<PlayerMovement>();
+        if (playerMove != null)
+            playerMove.TemporarilyLockMovement(0.25f);
+
+        // Force reset attack bool before playing to avoid spam-stuck bug
+        PlayerAnimationHandler.Instance.StopAttackAnimation();
+
+        // Play correct animation for combo step
+        PlayerAnimationHandler.Instance.PlayAttackAnimation(3, comboStep, this);
+    }
+
+    /// <summary>
+    /// Called from animation event at projectile release frame.
+    /// </summary>
+    public override void SpawnAttackVFX()
+    {
         if (comboStep == 3)
-            FireScatterShot();
+        {
+            // Scatter shot
+            float[] angles = { -15f, 0f, 15f };
+            foreach (float angle in angles)
+            {
+                Quaternion rot = Quaternion.Euler(0, angle, 0) * attackPoint.rotation;
+                GameObject proj = Instantiate(scatterSeedPrefab, attackPoint.position, rot);
+                if (proj.TryGetComponent<Rigidbody>(out var rb))
+                    rb.linearVelocity = rot * Vector3.forward * projectileSpeed;
+            }
+
+            // After scatter shot, reset combo
+            ResetCombo();
+        }
         else
-            FireSingleSeed();
-    }
-
-    private void FireSingleSeed()
-    {
-        GameObject proj = Instantiate(seedProjectilePrefab, attackPoint.position, attackPoint.rotation);
-        if (proj.TryGetComponent<Rigidbody>(out var rb))
-            rb.linearVelocity = attackPoint.forward * projectileSpeed;
-
-        StartCoroutine(CheckBufferedInput());
-    }
-
-    private void FireScatterShot()
-    {
-        float[] angles = { -15f, 0f, 15f };
-        foreach (float angle in angles)
         {
-            Quaternion rot = Quaternion.Euler(0, angle, 0) * attackPoint.rotation;
-            GameObject proj = Instantiate(scatterSeedPrefab, attackPoint.position, rot);
+            // Single seed
+            GameObject proj = Instantiate(seedProjectilePrefab, attackPoint.position, attackPoint.rotation);
             if (proj.TryGetComponent<Rigidbody>(out var rb))
-                rb.linearVelocity = rot * Vector3.forward * projectileSpeed;
+                rb.linearVelocity = attackPoint.forward * projectileSpeed;
         }
-
-        ResetCombo();
-
-        var buffer = FindFirstObjectByType<ModularComboBuffer>();
-        buffer?.ClearBuffer();
-
-        var slotManager = FindFirstObjectByType<ModularWeaponSlotManager>();
-        foreach (var w in slotManager?.GetAllWeapons())
-            w?.ResetCombo();
-
-        StartCoroutine(CheckBufferedInput());
     }
 
-    private IEnumerator CheckBufferedInput()
+    public override void DoHitDetection()
     {
-        yield return new WaitForSeconds(fixedAttackDelay * 0.5f);
-
-        if (inputBuffered)
-        {
-            Debug.Log("[InputBuffer] Processing buffered input");
-            inputBuffered = false;
-            HandleInput();
-        }
+        // No melee hit detection for slingshot
     }
 
     public override void HandleMixFinisher(ModularWeaponInput[] combo)
@@ -135,7 +136,6 @@ public class SlingShotWeapon : ModularWeaponCombo
         if (combo == null || combo.Length < 3 || slotManager == null) return;
 
         var weapons = slotManager.GetAllWeapons();
-
         int i0 = (int)combo[0];
         int i1 = (int)combo[1];
         int i2 = (int)combo[2];

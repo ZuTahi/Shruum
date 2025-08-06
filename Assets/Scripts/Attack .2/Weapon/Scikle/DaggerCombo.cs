@@ -72,10 +72,20 @@ public class DaggerCombo : ModularWeaponCombo
         comboStep++;
         if (comboStep > 3) comboStep = 1;
 
+        PlayerAnimationHandler.Instance.StopAttackAnimation();
+        PlayerAnimationHandler.Instance.PlayAttackAnimation(1, comboStep, this);
+
         // 🔒 Freeze player movement briefly
         if (PlayerMovement.Instance != null)
             StartCoroutine(TemporarilyDisableMovement(0.1f));
 
+        if (comboStep == 3 && !suppressNormalFinisher)
+        {
+            StartCoroutine(PerformFinisher());
+        }
+    }
+    public override void SpawnAttackVFX()
+    {
         GameObject vfx = comboStep switch
         {
             1 => slashRedPrefab,
@@ -85,21 +95,18 @@ public class DaggerCombo : ModularWeaponCombo
 
         if (vfx != null)
             Instantiate(vfx, attackPoint.position, Quaternion.Euler(90, transform.eulerAngles.y, 0));
+    }
 
+    public override void DoHitDetection()
+    {
         Collider[] hits = Physics.OverlapSphere(attackPoint.position, 1f, enemyLayers);
         foreach (var enemy in hits)
         {
-            Debug.Log($"[Dagger] Hit {enemy.name} at {enemy.transform.position}");
             if (enemy.TryGetComponent<IDamageable>(out var target))
             {
                 float dmg = attackDamage * PlayerStats.Instance.attackMultiplier;
                 target.TakeDamage((int)dmg, enemy.ClosestPoint(attackPoint.position), gameObject);
             }
-        }
-
-        if (comboStep == 3 && !suppressNormalFinisher)
-        {
-            StartCoroutine(PerformFinisher());
         }
     }
 

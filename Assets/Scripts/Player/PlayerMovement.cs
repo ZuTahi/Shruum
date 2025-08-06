@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isInvincible = false;
 
     private CharacterController controller;
+    private Animator animator;
 
     // Dash state
     private bool isDashing = false;
@@ -37,11 +38,17 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     void Update()
     {
-        if (!canMove) return;
+        if (!canMove)
+        {
+            // If player can't move, make Speed 0 in animator
+            animator?.SetFloat("Speed", 0f);
+            return;
+        }
 
         if (dashCooldownTimer > 0f)
             dashCooldownTimer -= Time.deltaTime;
@@ -106,6 +113,8 @@ public class PlayerMovement : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(moveDir);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.1f);
         }
+        float normalizedSpeed = controller.velocity.magnitude / moveSpeed;
+        animator?.SetFloat("Speed", normalizedSpeed);
     }
 
     public void TemporarilyLockMovement(float duration)

@@ -73,10 +73,21 @@ public class GauntletCombo : ModularWeaponCombo
         comboStep++;
         if (comboStep > 3) comboStep = 1;
 
+        // Lock movement briefly
         PlayerMovement playerMove = GetComponentInParent<PlayerMovement>();
         if (playerMove != null)
             playerMove.TemporarilyLockMovement(0.25f);
 
+        // Tell animator to play attack animation
+        PlayerAnimationHandler.Instance.PlayAttackAnimation(2, comboStep, this); // 2 = Gauntlet
+
+        // Finisher check stays here so combo logic is untouched
+        if (comboStep == 3)
+            StartCoroutine(PerformFinisher());
+    }
+
+    public override void SpawnAttackVFX()
+    {
         GameObject vfx = comboStep switch
         {
             1 => punchRedPrefab,
@@ -86,7 +97,9 @@ public class GauntletCombo : ModularWeaponCombo
 
         if (vfx != null)
             Instantiate(vfx, attackPoint.position, Quaternion.Euler(90, transform.eulerAngles.y, 0));
-
+    }
+    public override void DoHitDetection()
+    {
         Collider[] hits = Physics.OverlapSphere(attackPoint.position, 0.6f, enemyLayers);
         foreach (var enemy in hits)
         {
@@ -96,9 +109,6 @@ public class GauntletCombo : ModularWeaponCombo
                 target.TakeDamage((int)finalDamage, enemy.ClosestPoint(attackPoint.position), gameObject);
             }
         }
-
-        if (comboStep == 3)
-            StartCoroutine(PerformFinisher());
     }
 
     IEnumerator PerformFinisher()

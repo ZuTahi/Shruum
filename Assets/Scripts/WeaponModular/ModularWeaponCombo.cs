@@ -12,4 +12,6 @@ public abstract class ModularWeaponCombo : MonoBehaviour
     public virtual void ResetCombo() { }
     protected virtual void Awake() { }
 
+    public abstract void SpawnAttackVFX();
+    public abstract void DoHitDetection();
 }
