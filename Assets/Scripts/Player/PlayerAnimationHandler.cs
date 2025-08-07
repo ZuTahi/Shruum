@@ -33,6 +33,7 @@ public class PlayerAnimationHandler : MonoBehaviour
     public void StopAttackAnimation()
     {
         animator.SetBool("IsAttacking", false);
+        // Reset combo when we fully stop attacking
     }
 
     /// <summary>

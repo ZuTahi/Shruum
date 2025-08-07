@@ -73,10 +73,12 @@ public class GauntletCombo : ModularWeaponCombo
         comboStep++;
         if (comboStep > 3) comboStep = 1;
 
+        PlayerAnimationHandler.Instance.StopAttackAnimation();
+        PlayerAnimationHandler.Instance.PlayAttackAnimation(2, comboStep, this);
+
         // Lock movement briefly
-        PlayerMovement playerMove = GetComponentInParent<PlayerMovement>();
-        if (playerMove != null)
-            playerMove.TemporarilyLockMovement(0.25f);
+        if (PlayerMovement.Instance != null)
+            StartCoroutine(TemporarilyDisableMovement(0.1f));
 
         // Tell animator to play attack animation
         PlayerAnimationHandler.Instance.PlayAttackAnimation(2, comboStep, this); // 2 = Gauntlet
