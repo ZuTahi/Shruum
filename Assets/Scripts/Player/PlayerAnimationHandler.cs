@@ -44,7 +44,14 @@ public class PlayerAnimationHandler : MonoBehaviour
         currentWeapon?.SpawnAttackVFX();
         currentWeapon?.DoHitDetection();
     }
-
+    
+/// <summary>
+/// Animation Event — finisher visual effect only
+/// </summary>
+public void OnFinisherVFX()
+{
+    currentWeapon?.SpawnFinisherVFX();
+}
     /// <summary>
     /// Animation Event — show selected weapon and hide others
     /// </summary>

@@ -4,17 +4,19 @@ using System.Collections.Generic;
 
 public class GauntletCombo : ModularWeaponCombo
 {
-    [Header("Basic Combo")]
+    [Header("Basic Settings")]
     public float fixedAttackDelay = 0.3f;
     public float comboResetDelay = 1.5f;
     public Transform attackPoint;
     public LayerMask enemyLayers;
+    public float attackDamage = 15f;
+
+    [Header("VFX Prefabs")]
     public GameObject punchRedPrefab;
     public GameObject punchBluePrefab;
     public GameObject slamAoEPrefab;
-    public float attackDamage = 15f;
 
-    [Header("Finisher")]
+    [Header("Finisher Settings")]
     public float finisherRadius = 1.5f;
     public float finisherMultiplier = 1.5f;
 
@@ -64,7 +66,6 @@ public class GauntletCombo : ModularWeaponCombo
     {
         if (suppressInput) return;
 
-        // Block if animation still playing
         var currentState = PlayerAnimationHandler.Instance.animator.GetCurrentAnimatorStateInfo(0);
         if (currentState.IsTag("Gauntlet") && currentState.normalizedTime < 1f)
         {
@@ -83,20 +84,17 @@ public class GauntletCombo : ModularWeaponCombo
 
         Debug.Log($"[GauntletCombo] Playing Attack Animation -> AttackIndex: {comboStep}");
 
-        // Stop any ongoing attack anim, then play the new one
         PlayerAnimationHandler.Instance.StopAttackAnimation();
         PlayerAnimationHandler.Instance.PlayAttackAnimation(2, comboStep, this); // 2 = Gauntlet
 
-        // Temporarily lock movement
         StartCoroutine(TemporarilyDisableMovement(0.1f));
 
-        // Finisher trigger
         if (comboStep == 3 && !suppressNormalFinisher)
         {
-            StartCoroutine(PerformFinisher());
+            isFinisherActive = true;
+            // No VFX or damage here — will happen in animation event
         }
 
-        // Block input until animation finishes
         suppressInput = true;
         StartCoroutine(EnableInputAfterAnimation());
     }
@@ -111,22 +109,24 @@ public class GauntletCombo : ModularWeaponCombo
         suppressInput = false;
     }
 
-    // ✅ Only triggered via animation event
+    // Called from Animation Event for normal punches
     public override void SpawnAttackVFX()
     {
-        Debug.Log($"[VFX SPAWN] Weapon: {weaponType}, ComboStep: {comboStep}, Time: {Time.time}, Caller: {new System.Diagnostics.StackTrace()}");
-
         GameObject vfx = comboStep switch
         {
-        1 => punchRedPrefab,
-        2 => punchBluePrefab,
-        _ => null
+            1 => punchRedPrefab,
+            2 => punchBluePrefab,
+            _ => null
         };
 
         if (vfx != null)
-        Instantiate(vfx, attackPoint.position, Quaternion.Euler(90, transform.eulerAngles.y, 0));
+        {
+            Instantiate(vfx, attackPoint.position, Quaternion.Euler(90, transform.eulerAngles.y, 0));
+            Debug.Log($"[Gauntlet VFX] Spawned combo step {comboStep}");
+        }
     }
 
+    // Called from Animation Event for normal punches
     public override void DoHitDetection()
     {
         Collider[] hits = Physics.OverlapSphere(attackPoint.position, 0.6f, enemyLayers);
@@ -140,10 +140,10 @@ public class GauntletCombo : ModularWeaponCombo
         }
     }
 
-    IEnumerator PerformFinisher()
+    // Called from Animation Event for Finisher Impact
+    public void OnFinisherImpact()
     {
-        isFinisherActive = true;
-        hitEnemies.Clear();
+        if (!isFinisherActive) return;
 
         Vector3 slamPos = transform.root.position;
 
@@ -164,13 +164,22 @@ public class GauntletCombo : ModularWeaponCombo
             }
         }
 
-        yield return new WaitForSeconds(0.3f);
+        // Finisher complete — reset everything
         ResetCombo();
         FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
-
         foreach (var w in FindFirstObjectByType<ModularWeaponSlotManager>()?.GetAllWeapons())
             w?.ResetCombo();
+
+        isFinisherActive = false;
     }
+public override void SpawnFinisherVFX()
+{
+    if (slamAoEPrefab != null)
+    {
+        Instantiate(slamAoEPrefab, transform.root.position, Quaternion.identity);
+        Debug.Log("[Gauntlet VFX] Spawned finisher slam AoE");
+    }
+}
 
     public override void HandleMixFinisher(ModularWeaponInput[] combo)
     {
@@ -191,7 +200,6 @@ public class GauntletCombo : ModularWeaponCombo
         ModularWeaponCombo w2 = weapons[i1];
         ModularWeaponCombo w3 = weapons[i2];
 
-        // Blade Spike
         if (w1 is DaggerCombo && w2 is DaggerCombo && w3 is GauntletCombo)
         {
             if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
@@ -205,7 +213,6 @@ public class GauntletCombo : ModularWeaponCombo
             suppressNormalFinisher = true;
             FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
         }
-        // Explosive Seed
         else if (w1 is SlingShotWeapon && w2 is SlingShotWeapon && w3 is GauntletCombo)
         {
             if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
@@ -226,15 +233,18 @@ public class GauntletCombo : ModularWeaponCombo
         comboStep = 0;
         suppressInput = false;
         suppressNormalFinisher = false;
+        isFinisherActive = false;
+        hitEnemies.Clear();
     }
 
     private IEnumerator TemporarilyDisableMovement(float duration)
     {
-        if (PlayerMovement.Instance != null)
+        PlayerMovement movement = FindFirstObjectByType<PlayerMovement>();
+        if (movement != null)
         {
-            PlayerMovement.Instance.canMove = false;
+            movement.canMove = false;
             yield return new WaitForSeconds(duration);
-            PlayerMovement.Instance.canMove = true;
+            movement.canMove = true;
         }
     }
 }

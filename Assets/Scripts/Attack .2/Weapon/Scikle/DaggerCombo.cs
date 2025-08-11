@@ -97,7 +97,8 @@ public class DaggerCombo : ModularWeaponCombo
     private IEnumerator EnableInputAfterAnimation()
     {
         // Wait for the current animation to finish before enabling input
-        while (PlayerAnimationHandler.Instance.animator.GetCurrentAnimatorStateInfo(0).IsTag("Dagger") && PlayerAnimationHandler.Instance.animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+        while (PlayerAnimationHandler.Instance.animator.GetCurrentAnimatorStateInfo(0).IsTag("Dagger") && 
+               PlayerAnimationHandler.Instance.animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
         {
             yield return null;
         }
@@ -186,6 +187,21 @@ public class DaggerCombo : ModularWeaponCombo
         foreach (var w in FindFirstObjectByType<ModularWeaponSlotManager>()?.GetAllWeapons())
             w?.ResetCombo();
     }
+public override void SpawnFinisherVFX()
+{
+    // This is the Eclipse Blades finisher — spawn X-cross slashes at enemies hit during dash
+    Collider[] hits = Physics.OverlapCapsule(
+        transform.root.position,
+        transform.root.position + transform.root.forward * 4f, // dash distance
+        0.6f, enemyLayers);
+
+    foreach (var enemy in hits)
+    {
+        Instantiate(finisherPrefab, enemy.transform.position, Quaternion.identity);
+    }
+
+    Debug.Log("[Dagger VFX] Spawned finisher slashes");
+}
 
     public override void HandleMixFinisher(ModularWeaponInput[] combo)
     {

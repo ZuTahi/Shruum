@@ -14,4 +14,5 @@ public abstract class ModularWeaponCombo : MonoBehaviour
 
     public abstract void SpawnAttackVFX();
     public abstract void DoHitDetection();
+    public virtual void SpawnFinisherVFX() { }
 }
