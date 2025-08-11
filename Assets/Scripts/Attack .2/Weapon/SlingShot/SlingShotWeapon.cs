@@ -64,9 +64,16 @@ public class SlingShotWeapon : ModularWeaponCombo
         {
             if (!inputBuffered)
             {
-                Debug.Log("[InputBuffer] Queued input during cooldown");
                 inputBuffered = true;
+                return;
             }
+        }
+
+        // Check if animation is still playing, block input until done
+        var currentState = PlayerAnimationHandler.Instance.animator.GetCurrentAnimatorStateInfo(0);
+        if (currentState.IsTag("Sling") && currentState.normalizedTime < 1f)
+        {
+            Debug.Log("[SlingShotWeapon] Animation still playing, blocking input.");
             return;
         }
 
@@ -83,18 +90,30 @@ public class SlingShotWeapon : ModularWeaponCombo
         comboStep++;
         if (comboStep > 3) comboStep = 1;
 
-        Debug.Log($"[PerformAttackStep] Combo Step: {comboStep}");
+        Debug.Log($"[SlingShotWeapon] Combo Step: {comboStep}");
 
-        // Lock movement like dagger/gauntlet
         PlayerMovement playerMove = GetComponentInParent<PlayerMovement>();
         if (playerMove != null)
             playerMove.TemporarilyLockMovement(0.25f);
 
         // Force reset attack bool before playing to avoid spam-stuck bug
         PlayerAnimationHandler.Instance.StopAttackAnimation();
+        PlayerAnimationHandler.Instance.PlayAttackAnimation(3, comboStep, this); // 3 = SlingShot
 
-        // Play correct animation for combo step
-        PlayerAnimationHandler.Instance.PlayAttackAnimation(3, comboStep, this);
+        suppressInput = true;
+        StartCoroutine(EnableInputAfterAnimation());
+    }
+    private IEnumerator EnableInputAfterAnimation()
+    {
+        // Wait until the current animation state has finished playing
+        while (PlayerAnimationHandler.Instance.animator.GetCurrentAnimatorStateInfo(0).IsTag("Sling") &&
+               PlayerAnimationHandler.Instance.animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+        {
+            yield return null;
+        }
+
+        // Re-enable input after the animation finishes
+        suppressInput = false;
     }
 
     /// <summary>

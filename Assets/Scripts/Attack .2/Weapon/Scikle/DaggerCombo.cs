@@ -55,35 +55,57 @@ public class DaggerCombo : ModularWeaponCombo
     public override void HandleInput()
     {
         if (suppressInput) return;
-        if (suppressNormalFinisher || isFinisherActive || Time.time - lastAttackTime < fixedAttackDelay)
+
+        // Check if animation is still playing and block input if so
+        var currentState = PlayerAnimationHandler.Instance.animator.GetCurrentAnimatorStateInfo(0);
+        if (currentState.IsTag("Dagger") && currentState.normalizedTime < 1f)
         {
-            Debug.Log("[Dagger] Input blocked due to suppression or cooldown.");
-            return;
+            Debug.Log("[InputHandler] Animation still playing, blocking input.");
+            return; // Don't process input if the animation is still playing
         }
 
-        Debug.Log("[Dagger] HandleInput → Performing basic dagger attack");
+        // If it's time to process a new combo step, execute the attack
         ProcessAttack();
     }
 
     private void ProcessAttack()
     {
-        PlayerMovement.Instance.canMove = false;
         lastAttackTime = Time.time;
         comboStep++;
         if (comboStep > 3) comboStep = 1;
 
+        Debug.Log($"[Attack] Playing Attack Animation -> AttackIndex: {comboStep}, WeaponType: {weaponType}");
+
+        // Ensure the combo only progresses after the animation is complete.
         PlayerAnimationHandler.Instance.StopAttackAnimation();
         PlayerAnimationHandler.Instance.PlayAttackAnimation(1, comboStep, this);
 
-        // 🔒 Freeze player movement briefly
-        if (PlayerMovement.Instance != null)
-            StartCoroutine(TemporarilyDisableMovement(0.1f));
+        // Temporarily disable player movement during the attack animation
+        StartCoroutine(TemporarilyDisableMovement(0.1f));
 
+        // If it's combo step 3 and a finisher is needed, start the finisher
         if (comboStep == 3 && !suppressNormalFinisher)
         {
             StartCoroutine(PerformFinisher());
         }
+
+        // Block input until animation finishes
+        suppressInput = true;
+        StartCoroutine(EnableInputAfterAnimation());
     }
+
+    private IEnumerator EnableInputAfterAnimation()
+    {
+        // Wait for the current animation to finish before enabling input
+        while (PlayerAnimationHandler.Instance.animator.GetCurrentAnimatorStateInfo(0).IsTag("Dagger") && PlayerAnimationHandler.Instance.animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+        {
+            yield return null;
+        }
+
+        // Re-enable input after the animation finishes
+        suppressInput = false;
+    }
+
     public override void SpawnAttackVFX()
     {
         GameObject vfx = comboStep switch
@@ -237,12 +259,12 @@ public class DaggerCombo : ModularWeaponCombo
         FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
     }
 
-    public override void ResetCombo()
-    {
-        comboStep = 0;
-        isFinisherActive = false;
-        suppressNormalFinisher = false;
-    }
+public override void ResetCombo()
+{
+    comboStep = 0;
+    suppressInput = false;  // Reset suppressInput here to ensure it doesn't carry over.
+    suppressNormalFinisher = false;
+}
 
     private IEnumerator TemporarilyDisableMovement(float duration)
     {
