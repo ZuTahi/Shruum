@@ -3,25 +3,27 @@ using System.Collections;
 
 public class SlingShotWeapon : ModularWeaponCombo
 {
+    [Header("Basic Settings")]
     public float comboResetDelay = 1.5f;
     public Transform attackPoint;
-    public GameObject seedProjectilePrefab;
-    public GameObject scatterSeedPrefab;
-
     public float projectileSpeed = 20f;
     public int manaCost = 30;
+
+    [Header("Projectile Prefabs")]
+    public GameObject seedProjectilePrefab;
+    public GameObject scatterSeedPrefab;
 
     [Header("Finisher Settings")]
     public GameObject explosiveSeedPrefab; // Normal finisher (LLK)
     public float explosiveSeedSpeed = 18f;
 
-    [Header("Mix Finisher: OrbitalSickles")]
-    public GameObject orbitalSicklePrefab;
-    [Header("Mix Finisher: VineStrike")]
-    public GameObject vineStrikePrefab;
+    [Header("Mix Finishers")]
+    public GameObject orbitalSicklePrefab; // JJK
+    public GameObject vineStrikePrefab;    // KKJ
 
     private int comboStep = 0;
     private float lastAttackTime = 0f;
+    private float nextAttackAllowedTime = 0f;
 
     protected ModularWeaponSlotManager slotManager;
 
@@ -29,7 +31,7 @@ public class SlingShotWeapon : ModularWeaponCombo
     {
         base.Awake();
         slotManager = FindFirstObjectByType<ModularWeaponSlotManager>();
-        suppressInput = true; // disable input until equipped
+        suppressInput = true; // Disable input until equipped
     }
 
     void Update()
@@ -58,65 +60,76 @@ public class SlingShotWeapon : ModularWeaponCombo
     public override void HandleInput()
     {
         if (suppressInput) return;
-        if (!gameObject.activeInHierarchy) return;
+        if (Time.time < nextAttackAllowedTime) return; // Prevent spam
 
-        // Check if animation is still playing, block input entirely
         var currentState = PlayerAnimationHandler.Instance.animator.GetCurrentAnimatorStateInfo(0);
-        if (currentState.IsTag("Sling") && currentState.normalizedTime < 1f)
+
+        if (currentState.IsTag("Sling"))
         {
-            Debug.Log("[Slingshot] Animation still playing, blocking input.");
-            return;
+            if (PlayerAnimationHandler.Instance.animator.IsInTransition(0) ||
+                currentState.normalizedTime < 0.85f)
+                return;
         }
 
-        // Process next attack only after animation fully ends
         ProcessAttack();
     }
 
     private void ProcessAttack()
     {
         lastAttackTime = Time.time;
+
+        if (comboStep >= 3)
+            comboStep = 0; // Always restart after third attack
+
         comboStep++;
-        if (comboStep > 3) comboStep = 1;
 
-        Debug.Log($"[Slingshot] Combo Step: {comboStep}");
+        Debug.Log($"[Slingshot] Playing Attack {comboStep}");
 
-        // Play animation
         PlayerAnimationHandler.Instance.StopAttackAnimation();
         PlayerAnimationHandler.Instance.PlayAttackAnimation(3, comboStep, this);
-        
+
         if (PlayerMovement.Instance != null)
             PlayerMovement.Instance.TemporarilyLockMovement(0.1f);
 
-        // Normal finisher trigger (scatter shot) handled via animation event
         if (comboStep == 3 && !suppressNormalFinisher)
         {
-            // Finisher handled via SpawnAttackVFX
+            // Scatter shot or explosive seed handled in SpawnFinisherVFX()
         }
 
-        // Block input until animation finishes
         suppressInput = true;
         StartCoroutine(EnableInputAfterAnimation());
     }
 
     private IEnumerator EnableInputAfterAnimation()
     {
-        // Wait for current attack animation to finish completely
-        while (PlayerAnimationHandler.Instance.animator.GetCurrentAnimatorStateInfo(0).IsTag("Sling") &&
-               PlayerAnimationHandler.Instance.animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+        var anim = PlayerAnimationHandler.Instance.animator;
+
+        while (anim.GetCurrentAnimatorStateInfo(0).IsTag("Sling") &&
+               anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
         {
             yield return null;
         }
 
-        // Re-enable input after the animation finishes
         suppressInput = false;
     }
 
-    // Animation Event — Normal Attack projectile spawn
+    // Animation Event — Normal shot spawn
     public override void SpawnAttackVFX()
+    {
+        if (comboStep < 3)
+        {
+            GameObject proj = Instantiate(seedProjectilePrefab, attackPoint.position, attackPoint.rotation);
+            if (proj.TryGetComponent<Rigidbody>(out var rb))
+                rb.linearVelocity = attackPoint.forward * projectileSpeed;
+        }
+    }
+
+    // Animation Event — Finisher spawn
+    public override void SpawnFinisherVFX()
     {
         if (comboStep == 3 && !suppressNormalFinisher)
         {
-            // Scatter shot
+            // Scatter shot (normal finisher)
             float[] angles = { -15f, 0f, 15f };
             foreach (float angle in angles)
             {
@@ -127,20 +140,9 @@ public class SlingShotWeapon : ModularWeaponCombo
             }
             ResetCombo();
         }
-        else
+        else if (explosiveSeedPrefab != null)
         {
-            // Single seed
-            GameObject proj = Instantiate(seedProjectilePrefab, attackPoint.position, attackPoint.rotation);
-            if (proj.TryGetComponent<Rigidbody>(out var rb))
-                rb.linearVelocity = attackPoint.forward * projectileSpeed;
-        }
-    }
-
-    // Animation Event — Finisher projectile spawn
-    public override void SpawnFinisherVFX()
-    {
-        if (explosiveSeedPrefab != null)
-        {
+            // Explosive seed
             GameObject proj = Instantiate(explosiveSeedPrefab, attackPoint.position, attackPoint.rotation);
             if (proj.TryGetComponent<Rigidbody>(out var rb))
                 rb.linearVelocity = attackPoint.forward * explosiveSeedSpeed;
@@ -151,7 +153,7 @@ public class SlingShotWeapon : ModularWeaponCombo
 
     public override void DoHitDetection()
     {
-        // No melee hit detection for slingshot
+        // Slingshot is projectile only
     }
 
     public override void HandleMixFinisher(ModularWeaponInput[] combo)
@@ -202,6 +204,7 @@ public class SlingShotWeapon : ModularWeaponCombo
     {
         comboStep = 0;
         suppressNormalFinisher = false;
+        suppressInput = false;
 
         PlayerAnimationHandler.Instance.StopAttackAnimation();
         PlayerAnimationHandler.Instance.animator.SetInteger("AttackIndex", 0);
