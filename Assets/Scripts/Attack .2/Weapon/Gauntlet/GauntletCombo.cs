@@ -5,7 +5,6 @@ using System.Collections.Generic;
 public class GauntletCombo : ModularWeaponCombo
 {
     [Header("Basic Settings")]
-    public float fixedAttackDelay = 0.3f;
     public float comboResetDelay = 1.5f;
     public Transform attackPoint;
     public LayerMask enemyLayers;
@@ -25,6 +24,10 @@ public class GauntletCombo : ModularWeaponCombo
     public GameObject bladeSpikePrefab;
     public GameObject explosiveSeedPrefab;
     public float projectileSpeed = 20f;
+
+    [Header("Spam protection")]
+    [Tooltip("Minimum seconds between accepting attacks (helps prevent instant spam advancing).")]
+    public float minAttackGap = 0.12f;
 
     private int comboStep = 0;
     private float lastAttackTime = 0f;
@@ -50,10 +53,8 @@ public class GauntletCombo : ModularWeaponCombo
         }
     }
 
-    public void EnableInputWithDelay(float delay)
-    {
+    public void EnableInputWithDelay(float delay) =>
         StartCoroutine(EnableInputAfterDelay(delay));
-    }
 
     private IEnumerator EnableInputAfterDelay(float delay)
     {
@@ -65,7 +66,10 @@ public class GauntletCombo : ModularWeaponCombo
 public override void HandleInput()
 {
     if (suppressInput) return;
-    if (Time.time < nextAttackAllowedTime) return; // ⛔ Wait after last attack
+
+    // ✅ Stop here if still cooling down — don't even call ProcessAttack()
+    if (Time.time < nextAttackAllowedTime) 
+        return;
 
     var currentState = PlayerAnimationHandler.Instance.animator.GetCurrentAnimatorStateInfo(0);
 
@@ -76,6 +80,7 @@ public override void HandleInput()
             return;
     }
 
+    // ✅ Only called if no cooldown and anim ready
     ProcessAttack();
 }
 
@@ -83,49 +88,47 @@ private void ProcessAttack()
 {
     lastAttackTime = Time.time;
 
-    // If we just finished Attack3 previously, reset to start fresh
     if (comboStep >= 3)
-    {
         comboStep = 0;
-    }
 
     comboStep++;
 
     Debug.Log($"[GauntletCombo] Playing Attack Animation -> AttackIndex: {comboStep}");
 
     PlayerAnimationHandler.Instance.StopAttackAnimation();
-    PlayerAnimationHandler.Instance.PlayAttackAnimation(2, comboStep, this); // 2 = Gauntlet
+    PlayerAnimationHandler.Instance.PlayAttackAnimation(2, comboStep, this);
 
+    // ✅ Only disable movement if attack actually triggers
     StartCoroutine(TemporarilyDisableMovement(0.1f));
 
     if (comboStep == 3 && !suppressNormalFinisher)
-    {
         isFinisherActive = true;
-        // No VFX or damage here — will happen in animation event
-    }
 
     suppressInput = true;
+
+    // ✅ Set cooldown AFTER movement disable — ensures next spam won’t re-trigger it
+    nextAttackAllowedTime = Time.time + minAttackGap;
+
     StartCoroutine(EnableInputAfterAnimation());
 }
 
-private IEnumerator EnableInputAfterAnimation()
-{
-    var anim = PlayerAnimationHandler.Instance.animator;
-
-    while (anim.GetCurrentAnimatorStateInfo(0).IsTag("Gauntlet") &&
-           anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+    private IEnumerator EnableInputAfterAnimation()
     {
-        yield return null;
-    }
+        var anim = PlayerAnimationHandler.Instance.animator;
 
-    // If last attack was Attack3, always reset so next press starts at Attack1
-    if (comboStep == 3)
-    {
-        comboStep = 0;
-    }
+        // wait until the current gauntlet attack animation is finished
+        while (anim.GetCurrentAnimatorStateInfo(0).IsTag("Gauntlet") &&
+               anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+        {
+            yield return null;
+        }
 
-    suppressInput = false;
-}
+        // After animation ends, if the last attack was Attack3 reset comboStep
+        if (comboStep == 3)
+            comboStep = 0;
+
+        suppressInput = false;
+    }
 
     // Called from animation event for normal punches
     public override void SpawnAttackVFX()
@@ -138,10 +141,7 @@ private IEnumerator EnableInputAfterAnimation()
         };
 
         if (vfx != null)
-        {
             Instantiate(vfx, attackPoint.position, Quaternion.Euler(90, transform.eulerAngles.y, 0));
-            Debug.Log($"[Gauntlet VFX] Spawned combo step {comboStep}");
-        }
     }
 
     // Called from animation event for normal punches
@@ -158,8 +158,8 @@ private IEnumerator EnableInputAfterAnimation()
         }
     }
 
-    // Called from Animation Event for Finisher Impact
-    public void OnFinisherImpact()
+    // Called from Animation Event for Finisher Impact (must be called by animation)
+    public override  void ExecuteFinisher()
     {
         if (!isFinisherActive) return;
 
@@ -183,21 +183,12 @@ private IEnumerator EnableInputAfterAnimation()
         }
 
         // Finisher complete — reset everything
-        ResetCombo();
         FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
         foreach (var w in FindFirstObjectByType<ModularWeaponSlotManager>()?.GetAllWeapons())
             w?.ResetCombo();
 
         isFinisherActive = false;
-    }
-
-    public override void SpawnFinisherVFX()
-    {
-        if (slamAoEPrefab != null)
-        {
-            Instantiate(slamAoEPrefab, transform.root.position, Quaternion.identity);
-            Debug.Log("[Gauntlet VFX] Spawned finisher slam AoE");
-        }
+        ResetCombo();
     }
 
     public override void HandleMixFinisher(ModularWeaponInput[] combo)
@@ -254,6 +245,9 @@ private IEnumerator EnableInputAfterAnimation()
         suppressNormalFinisher = false;
         isFinisherActive = false;
         hitEnemies.Clear();
+
+        if (PlayerAnimationHandler.Instance != null)
+            PlayerAnimationHandler.Instance.animator.SetInteger("AttackIndex", 0);
     }
 
     private IEnumerator TemporarilyDisableMovement(float duration)

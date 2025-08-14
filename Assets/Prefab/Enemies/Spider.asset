@@ -12,18 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9db7931153e7f9b4c95719e090965e3c, type: 3}
   m_Name: Spider
   m_EditorClassIdentifier: 
-  enemyName: Spider
+  enemyName: GrassHopper
   aiType: 0
+  attackStyle: 1
   maxHealth: 100
   moveSpeed: 5
-  attackRange: 1.5
+  awarenessRadius: 6
+  groupAwarenessRadius: 4
+  attackRange: 2.5
   preAttackDuration: 0.5
   attackDuration: 0.2
   postAttackDuration: 0.5
   weaponPrefab: {fileID: 1397579104473424997, guid: cf6cdacb1398e7a4d91f6a29bc2c5336, type: 3}
   attackDamage: 10
   icon: {fileID: 0}
-  animatorController: {fileID: 0}
+  animatorController: {fileID: 9100000, guid: 0f5cb57059ace6b42a550f0dc48a727c, type: 2}
   aggroSound: {fileID: 0}
   deathSound: {fileID: 0}
   eliteAttributes: []

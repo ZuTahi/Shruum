@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class DaggerCombo : ModularWeaponCombo
@@ -181,19 +181,6 @@ public class DaggerCombo : ModularWeaponCombo
         FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
         foreach (var w in FindFirstObjectByType<ModularWeaponSlotManager>()?.GetAllWeapons())
             w?.ResetCombo();
-    }
-
-    public override void SpawnFinisherVFX()
-    {
-        Collider[] hits = Physics.OverlapCapsule(
-            transform.root.position,
-            transform.root.position + transform.root.forward * 4f,
-            0.6f, enemyLayers);
-
-        foreach (var enemy in hits)
-            Instantiate(finisherPrefab, enemy.transform.position, Quaternion.identity);
-
-        Debug.Log("[Dagger VFX] Spawned finisher slashes");
     }
 
     public override void HandleMixFinisher(ModularWeaponInput[] combo)

@@ -125,7 +125,7 @@ public class SlingShotWeapon : ModularWeaponCombo
     }
 
     // Animation Event — Finisher spawn
-    public override void SpawnFinisherVFX()
+    public override void ExecuteFinisher()
     {
         if (comboStep == 3 && !suppressNormalFinisher)
         {

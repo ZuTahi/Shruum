@@ -15,24 +15,34 @@ public class PlayerAnimationHandler : MonoBehaviour
     [HideInInspector] public ModularWeaponCombo currentWeapon;
     private WeaponType currentWeaponType = WeaponType.None;
 
-    void Awake() => Instance = this;
+    // Cached Animator parameter hashes (faster than string lookups)
+    private static readonly int HashWeaponType        = Animator.StringToHash("WeaponType");
+    private static readonly int HashAttackIndex       = Animator.StringToHash("AttackIndex");
+    private static readonly int HashMixFinisherIndex  = Animator.StringToHash("MixFinisherIndex");
+    private static readonly int HashIsAttacking       = Animator.StringToHash("IsAttacking");
+
+    void Awake()
+    {
+        Instance = this;
+    }
 
     /// <summary>
     /// Called by attack scripts to start animation
     /// </summary>
-    public void PlayAttackAnimation(int weaponType, int attackIndex, ModularWeaponCombo weapon)
+    public void PlayAttackAnimation(int weaponType, int attackIndex, ModularWeaponCombo weapon, int mixFinisherIndex = 0)
     {
         currentWeapon = weapon;
         currentWeaponType = (WeaponType)weaponType;
 
-        animator.SetInteger("WeaponType", weaponType);
-        animator.SetInteger("AttackIndex", attackIndex);
-        animator.SetBool("IsAttacking", true);
+        animator.SetInteger(HashWeaponType, weaponType);
+        animator.SetInteger(HashAttackIndex, attackIndex);
+        animator.SetInteger(HashMixFinisherIndex, mixFinisherIndex); // harmless if parameter not in Animator
+        animator.SetBool(HashIsAttacking, true);
     }
 
     public void StopAttackAnimation()
     {
-        animator.SetBool("IsAttacking", false);
+        animator.SetBool(HashIsAttacking, false);
         // Reset combo when we fully stop attacking
     }
 
@@ -44,14 +54,16 @@ public class PlayerAnimationHandler : MonoBehaviour
         currentWeapon?.SpawnAttackVFX();
         currentWeapon?.DoHitDetection();
     }
-    
-/// <summary>
-/// Animation Event — finisher visual effect only
-/// </summary>
-public void OnFinisherVFX()
+
+    /// <summary>
+    /// Animation Event — finisher visual effect only
+    /// </summary>
+public void OnFinisherEvent()
 {
-    currentWeapon?.SpawnFinisherVFX();
+    currentWeapon?.ExecuteFinisher();
 }
+
+
     /// <summary>
     /// Animation Event — show selected weapon and hide others
     /// </summary>
