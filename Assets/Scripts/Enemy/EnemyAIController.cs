@@ -10,15 +10,15 @@ public class EnemyAIController : MonoBehaviour, IDamageable
     private Transform player;
     private float health;
     private Animator animator;
-
-    private bool isStaggered = false;
-    private float staggerDuration = 0.2f;
-
+    private NavMeshAgent agent;
     private Renderer rend;
     private Color originalColor;
-    private NavMeshAgent agent;
 
-    [Header("Drop Settings")]
+    [Header("UI")]
+    public EnemyHealthBar healthBarPrefab;
+    private EnemyHealthBar healthBarInstance;
+
+    [Header("Drops")]
     public EnemyDrop enemyDropPrefab;
     public int minNatureForceDrop = 1;
     public int maxNatureForceDrop = 3;
@@ -26,223 +26,277 @@ public class EnemyAIController : MonoBehaviour, IDamageable
     public int maxManaDrop = 2;
     [Range(0f, 1f)] public float loreNoteDropChance = 0.15f;
 
-    // Animator parameters
-    private static readonly int WALK_PARAM = Animator.StringToHash("isWalking");
-    private static readonly int ATTACK_PARAM = Animator.StringToHash("attack");
-    private static readonly int DIE_PARAM = Animator.StringToHash("die");
+    private bool isStaggered = false;
+    private float staggerDuration = 0.2f;
+
+    private EnemyState currentState;
+    private float stateTimer;
+    private bool damageApplied;
+
+    private enum EnemyState
+    {
+        Wander,
+        Chase,
+        Windup,
+        Attack,
+        PostAttack
+    }
 
     private void Start()
     {
+        if (data == null)
+        {
+            Debug.LogError($"[EnemyAIController] No EnemyData on {name}");
+            Destroy(gameObject);
+            return;
+        }
+
         if (data.usesNavMesh)
         {
             agent = GetComponent<NavMeshAgent>();
-            if (agent != null)
-            {
-                agent.speed = data.moveSpeed;
-            }
+            if (agent != null) agent.speed = data.moveSpeed;
         }
 
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
         animator = GetComponent<Animator>();
         rend = GetComponentInChildren<Renderer>();
-        if (rend != null)
-            originalColor = rend.material.color;
-
-        if (data == null)
-        {
-            Debug.LogError($"[EnemyAIController] No EnemyData assigned on {gameObject.name}. Destroying self.");
-            Destroy(gameObject);
-            return;
-        }
+        if (rend != null) originalColor = rend.material.color;
 
         health = data.maxHealth;
 
-        switch (data.aiType)
+        if (healthBarPrefab != null)
         {
-            case EnemyAIType.Aggressive:
-                StartCoroutine(WanderUntilAggro());
+            healthBarInstance = Instantiate(healthBarPrefab);
+            healthBarInstance.AttachTo(transform, new Vector3(0f, 2f, 0f));
+            healthBarInstance.SetMaxHealth(health);
+        }
+
+        currentState = EnemyState.Wander;
+    }
+
+    private void Update()
+    {
+        if (player == null || isStaggered) return;
+
+        switch (currentState)
+        {
+            case EnemyState.Wander:
+                UpdateWander();
                 break;
-            case EnemyAIType.Ranged:
-                StartCoroutine(RangedAI());
+            case EnemyState.Chase:
+                UpdateChase();
                 break;
-            case EnemyAIType.CollisionRetaliate:
-                Debug.LogWarning($"{gameObject.name} AI type CollisionRetaliate not implemented yet.");
+            case EnemyState.Windup:
+                UpdateWindup();
+                break;
+            case EnemyState.Attack:
+                UpdateAttack();
+                break;
+            case EnemyState.PostAttack:
+                UpdatePostAttack();
                 break;
         }
     }
 
-    private IEnumerator WanderUntilAggro()
-    {
-        while (player != null)
-        {
-            float dist = Vector3.Distance(transform.position, player.position);
-            if (dist <= data.awarenessRadius)
-            {
-                StartCoroutine(AggressiveAI());
-                yield break;
-            }
+    // ------------------- STATE UPDATES -------------------
 
-            Wander();
-            yield return null;
+    private void UpdateWander()
+    {
+        animator.SetBool("isWalking", true);
+
+        float distToPlayer = Vector3.Distance(transform.position, player.position);
+        if (distToPlayer <= data.awarenessRadius)
+        {
+            currentState = EnemyState.Chase;
+            return;
         }
+
+        WanderMovement();
     }
 
-    private IEnumerator AggressiveAI()
+    private void UpdateChase()
     {
-        while (player != null)
+        animator.SetBool("isWalking", true);
+
+        float distToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distToPlayer <= data.attackRange)
         {
-            if (isStaggered)
-            {
-                yield return null;
-                continue;
-            }
+            currentState = EnemyState.Windup;
+            stateTimer = data.preAttackDuration;
+            animator.SetBool("isWalking", false);
 
-            float distance = Vector3.Distance(transform.position, player.position);
+            if (data.attackStyle == EnemyAttackStyle.Lunge)
+                animator.SetTrigger("windup");
+            else
+                animator.SetTrigger("attack"); // normal melee windup (optional trigger)
+            return;
+        }
 
-            if (distance > data.attackRange)
+        MoveTowards(player.position);
+    }
+
+    private void UpdateWindup()
+    {
+        FacePlayer();
+        stateTimer -= Time.deltaTime;
+
+        if (stateTimer <= 0f)
+        {
+            currentState = EnemyState.Attack;
+            stateTimer = data.attackDuration;
+            damageApplied = false;
+
+            if (data.attackStyle == EnemyAttackStyle.Lunge)
             {
-                MoveTowardsPlayer();
+                if (agent != null)
+                {
+                    agent.isStopped = true;
+                    agent.updatePosition = false;
+                    agent.updateRotation = false;
+                }
+                animator.SetTrigger("attack");
             }
             else
             {
-                animator?.SetBool(WALK_PARAM, false);
-
-                if (data.attackStyle == EnemyAttackStyle.Lunge)
-                    yield return LungeAttackSequence();
-                else
-                    yield return NormalAttackSequence();
+                animator.SetTrigger("attack");
             }
-
-            yield return null;
         }
     }
 
-    private IEnumerator RangedAI()
+    private void UpdateAttack()
     {
-        while (player != null)
-        {
-            if (isStaggered)
-            {
-                yield return null;
-                continue;
-            }
-
-            float distance = Vector3.Distance(transform.position, player.position);
-
-            if (distance <= data.attackRange)
-            {
-                animator?.SetBool(WALK_PARAM, false);
-                yield return NormalAttackSequence();
-            }
-
-            yield return null;
-        }
-    }
-
-    private void MoveTowardsPlayer()
-    {
-        if (player == null) return;
-
-        animator?.SetBool(WALK_PARAM, true);
-
-        if (data.usesNavMesh && agent != null)
-        {
-            agent.SetDestination(player.position);
-        }
+        if (data.attackStyle == EnemyAttackStyle.Lunge)
+            LungeForward();
         else
+            MeleeAttack();
+
+        stateTimer -= Time.deltaTime;
+        if (stateTimer <= 0f)
         {
-            Vector3 dir = (player.position - transform.position).normalized;
-            transform.position += dir * data.moveSpeed * Time.deltaTime;
-            transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
+            currentState = EnemyState.PostAttack;
+            stateTimer = data.postAttackDuration;
+            animator.SetBool("isWalking", false);
+
+            if (agent != null)
+            {
+                agent.Warp(transform.position);
+                agent.isStopped = false;
+                agent.updatePosition = true;
+                agent.updateRotation = true;
+            }
         }
     }
 
-    private void Wander()
+    private void UpdatePostAttack()
     {
-        animator?.SetBool(WALK_PARAM, true);
+        stateTimer -= Time.deltaTime;
+        if (stateTimer <= 0f)
+            currentState = EnemyState.Chase;
+    }
 
+    // ------------------- MOVEMENT -------------------
+
+    private void WanderMovement()
+    {
         if (agent != null && data.usesNavMesh)
         {
             if (!agent.hasPath || agent.remainingDistance < 0.5f)
             {
-                Vector3 randomDir = Random.insideUnitSphere * 3f;
-                randomDir += transform.position;
-                if (NavMesh.SamplePosition(randomDir, out NavMeshHit hit, 3f, NavMesh.AllAreas))
-                {
+                Vector3 random = Random.insideUnitSphere * 3f + transform.position;
+                if (NavMesh.SamplePosition(random, out NavMeshHit hit, 3f, NavMesh.AllAreas))
                     agent.SetDestination(hit.position);
-                }
             }
         }
         else
         {
-            transform.position += Random.insideUnitSphere * data.moveSpeed * Time.deltaTime;
-        }
-    }
-
-    private IEnumerator NormalAttackSequence()
-    {
-        animator?.SetTrigger(ATTACK_PARAM);
-        yield return new WaitForSeconds(data.preAttackDuration);
-
-        if (data.weaponPrefab != null)
-        {
-            GameObject hitbox = Instantiate(data.weaponPrefab, transform.position + transform.forward, transform.rotation);
-            EnemyHitbox hb = hitbox.GetComponent<EnemyHitbox>();
-            if (hb != null) hb.damage = data.attackDamage;
-        }
-
-        yield return new WaitForSeconds(data.attackDuration + data.postAttackDuration);
-    }
-
-    private IEnumerator LungeAttackSequence()
-    {
-        animator?.SetTrigger(ATTACK_PARAM);
-
-        if (agent != null) agent.updateRotation = false;
-
-        Vector3 direction = (player.position - transform.position).normalized;
-        float launchSpeed = 18f;
-        float launchDuration = 0.4f;
-        float timer = 0f;
-        bool damageApplied = false;
-
-        transform.rotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-
-        while (timer < launchDuration)
-        {
-            transform.position += direction * launchSpeed * Time.deltaTime;
-
-            if (!damageApplied)
+            Vector3 dir = Random.insideUnitSphere;
+            dir.y = 0f;
+            if (dir.sqrMagnitude > 0.01f)
             {
-                Collider[] hits = Physics.OverlapSphere(transform.position, 1.0f);
-                foreach (var hit in hits)
+                Quaternion targetRot = Quaternion.LookRotation(dir);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 180f * Time.deltaTime);
+                transform.position += transform.forward * data.moveSpeed * 0.25f * Time.deltaTime;
+            }
+        }
+    }
+
+    private void MoveTowards(Vector3 target)
+    {
+        if (agent != null && data.usesNavMesh)
+        {
+            agent.SetDestination(target);
+        }
+        else
+        {
+            Vector3 dir = (target - transform.position);
+            dir.y = 0f;
+            Quaternion targetRot = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 360f * Time.deltaTime);
+            transform.position += transform.forward * data.moveSpeed * Time.deltaTime;
+        }
+    }
+
+    private void FacePlayer()
+    {
+        Vector3 dir = player.position - transform.position;
+        dir.y = 0f;
+        if (dir.sqrMagnitude > 0.001f)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 360f * Time.deltaTime);
+        }
+    }
+
+    // ------------------- ATTACK METHODS -------------------
+
+    private void LungeForward()
+    {
+        transform.position += transform.forward * 18f * Time.deltaTime;
+
+        if (!damageApplied)
+        {
+            Collider[] hits = Physics.OverlapSphere(transform.position, 1f);
+            foreach (var hit in hits)
+            {
+                if (hit.CompareTag("Player"))
                 {
-                    if (hit.CompareTag("Player"))
-                    {
-                        PlayerStats ps = hit.GetComponent<PlayerStats>();
-                        if (ps != null)
-                        {
-                            ps.TakeDamage(data.attackDamage);
-                            damageApplied = true;
-                        }
-                    }
+                    var ps = hit.GetComponent<PlayerStats>();
+                    if (ps != null) ps.TakeDamage(data.attackDamage);
+                    damageApplied = true;
+                    break;
                 }
             }
-
-            timer += Time.deltaTime;
-            yield return null;
         }
-
-        if (agent != null) agent.updateRotation = true;
-        yield return new WaitForSeconds(data.postAttackDuration);
     }
+
+    private void MeleeAttack()
+    {
+        if (!damageApplied)
+        {
+            Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward, 1f);
+            foreach (var hit in hits)
+            {
+                if (hit.CompareTag("Player"))
+                {
+                    var ps = hit.GetComponent<PlayerStats>();
+                    if (ps != null) ps.TakeDamage(data.attackDamage);
+                    damageApplied = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    // ------------------- DAMAGE -------------------
 
     public void TakeDamage(int amount, Vector3 hitPoint, GameObject source)
     {
         health -= amount;
+        healthBarInstance?.SetHealth(health);
         StartCoroutine(OnHitReaction());
 
-        if (health <= 0) Die();
+        if (health <= 0f) Die();
     }
 
     private IEnumerator OnHitReaction()
@@ -257,17 +311,25 @@ public class EnemyAIController : MonoBehaviour, IDamageable
     {
         if (rend == null) yield break;
         Color red = Color.red;
-        rend.material.color = red;
-        yield return new WaitForSeconds(0.05f);
-        rend.material.color = originalColor;
+        for (int i = 0; i < 2; i++)
+        {
+            rend.material.color = red;
+            yield return new WaitForSeconds(0.05f);
+            rend.material.color = originalColor;
+            yield return new WaitForSeconds(0.05f);
+        }
     }
 
     private void Die()
     {
-        animator?.SetTrigger(DIE_PARAM);
+        animator?.SetTrigger("die");
+
+        if (healthBarInstance != null)
+            Destroy(healthBarInstance.gameObject, 0.5f);
+
         DropRewards();
         spawner?.OnEnemyDeath(gameObject);
-        Destroy(gameObject, 0.5f); // allow death anim to play
+        Destroy(gameObject, 0.5f);
     }
 
     private void DropRewards()
@@ -282,17 +344,15 @@ public class EnemyAIController : MonoBehaviour, IDamageable
         }
 
         if (Random.value < loreNoteDropChance)
-        {
             PlayerInventory.Instance?.AddRandomLoreNote();
-        }
     }
 
     private void OnDrawGizmosSelected()
     {
-        if (data != null)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, data.awarenessRadius);
-        }
+        if (data == null) return;
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, data.awarenessRadius);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, data.attackRange);
     }
 }
