@@ -133,7 +133,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2
+      value: -1.87
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -172,6 +172,10 @@ PrefabInstance:
       value: DeadGrass2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -207,7 +211,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9156b26beeda1d84a926782f24837f66, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2
+      value: -1.87
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9156b26beeda1d84a926782f24837f66, type: 3}
       propertyPath: m_LocalPosition.z
@@ -244,6 +248,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 9156b26beeda1d84a926782f24837f66, type: 3}
       propertyPath: m_Name
       value: DeadGrass1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9156b26beeda1d84a926782f24837f66, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9156b26beeda1d84a926782f24837f66, type: 3}
       propertyPath: m_IsActive
@@ -362,7 +370,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 255
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_GenerateLinks: 0
@@ -373,7 +381,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: f9f387d9059f68a4bae4ec552c7da640, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: df80fbd34e40c90428b733298ebfc100, type: 2}
   m_BuildHeightMesh: 0
 --- !u!64 &90538323
 MeshCollider:
@@ -993,7 +1001,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de8c0152ad9de65449b6611e05d4e2c7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2
+      value: -1.87
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de8c0152ad9de65449b6611e05d4e2c7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1032,6 +1040,10 @@ PrefabInstance:
       value: DeadGrass4 (1)
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: de8c0152ad9de65449b6611e05d4e2c7, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: de8c0152ad9de65449b6611e05d4e2c7, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -1059,7 +1071,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a7e0c09416a200f4db577c1db22ff329, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2
+      value: -1.87
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a7e0c09416a200f4db577c1db22ff329, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1096,6 +1108,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: a7e0c09416a200f4db577c1db22ff329, type: 3}
       propertyPath: m_Name
       value: DeadGrass3
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a7e0c09416a200f4db577c1db22ff329, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a7e0c09416a200f4db577c1db22ff329, type: 3}
       propertyPath: m_IsActive
@@ -1819,7 +1835,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2
+      value: -1.87
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1858,6 +1874,10 @@ PrefabInstance:
       value: DeadGrass2 (3)
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -1885,7 +1905,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2
+      value: -1.87
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1922,6 +1942,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_Name
       value: DeadGrass2 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_IsActive
@@ -1988,7 +2012,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 80d7e4dc11f196044b93347c3762ba84, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2
+      value: -1.87
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 80d7e4dc11f196044b93347c3762ba84, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2029,6 +2053,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 80d7e4dc11f196044b93347c3762ba84, type: 3}
       propertyPath: m_Name
       value: DeadGrass5
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 80d7e4dc11f196044b93347c3762ba84, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 80d7e4dc11f196044b93347c3762ba84, type: 3}
       propertyPath: m_IsActive
@@ -2284,6 +2312,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 42498a6ff5e6a6848868cbcf33bc49cb, type: 3}
       propertyPath: m_Name
       value: Stone4 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 42498a6ff5e6a6848868cbcf33bc49cb, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 42498a6ff5e6a6848868cbcf33bc49cb, type: 3}
       propertyPath: m_IsActive
@@ -2881,7 +2913,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a7e0c09416a200f4db577c1db22ff329, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2
+      value: -1.87
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a7e0c09416a200f4db577c1db22ff329, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2920,6 +2952,10 @@ PrefabInstance:
       value: DeadGrass3 (1)
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a7e0c09416a200f4db577c1db22ff329, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a7e0c09416a200f4db577c1db22ff329, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -2947,7 +2983,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2
+      value: -1.87
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2984,6 +3020,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_Name
       value: DeadGrass2 (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_IsActive
@@ -3343,6 +3383,10 @@ PrefabInstance:
       value: Stone10
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 85311a3a452d3e8488711758e397f2bc, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 85311a3a452d3e8488711758e397f2bc, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -3401,7 +3445,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a7e0c09416a200f4db577c1db22ff329, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2
+      value: -1.87
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a7e0c09416a200f4db577c1db22ff329, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3438,6 +3482,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: a7e0c09416a200f4db577c1db22ff329, type: 3}
       propertyPath: m_Name
       value: DeadGrass3 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a7e0c09416a200f4db577c1db22ff329, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a7e0c09416a200f4db577c1db22ff329, type: 3}
       propertyPath: m_IsActive
@@ -3615,7 +3663,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de8c0152ad9de65449b6611e05d4e2c7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2
+      value: -1.87
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de8c0152ad9de65449b6611e05d4e2c7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3654,6 +3702,10 @@ PrefabInstance:
       value: DeadGrass4 (2)
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: de8c0152ad9de65449b6611e05d4e2c7, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: de8c0152ad9de65449b6611e05d4e2c7, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -3681,7 +3733,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2
+      value: -1.87
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3718,6 +3770,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_Name
       value: DeadGrass2 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_IsActive
@@ -4073,7 +4129,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 80d7e4dc11f196044b93347c3762ba84, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2
+      value: -1.87
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 80d7e4dc11f196044b93347c3762ba84, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4114,6 +4170,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 80d7e4dc11f196044b93347c3762ba84, type: 3}
       propertyPath: m_Name
       value: DeadGrass5 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 80d7e4dc11f196044b93347c3762ba84, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 80d7e4dc11f196044b93347c3762ba84, type: 3}
       propertyPath: m_IsActive
@@ -4337,6 +4397,10 @@ PrefabInstance:
       value: Stone4
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 42498a6ff5e6a6848868cbcf33bc49cb, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 42498a6ff5e6a6848868cbcf33bc49cb, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -4368,7 +4432,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de8c0152ad9de65449b6611e05d4e2c7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2
+      value: -1.87
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de8c0152ad9de65449b6611e05d4e2c7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4405,6 +4469,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: de8c0152ad9de65449b6611e05d4e2c7, type: 3}
       propertyPath: m_Name
       value: DeadGrass4
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: de8c0152ad9de65449b6611e05d4e2c7, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: de8c0152ad9de65449b6611e05d4e2c7, type: 3}
       propertyPath: m_IsActive
@@ -4660,7 +4728,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9156b26beeda1d84a926782f24837f66, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2
+      value: -1.87
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9156b26beeda1d84a926782f24837f66, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4697,6 +4765,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 9156b26beeda1d84a926782f24837f66, type: 3}
       propertyPath: m_Name
       value: DeadGrass1 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9156b26beeda1d84a926782f24837f66, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9156b26beeda1d84a926782f24837f66, type: 3}
       propertyPath: m_IsActive
@@ -4921,19 +4993,19 @@ MonoBehaviour:
   waves:
   - enemies:
     - enemyPrefab: {fileID: 3272993538290859593, guid: 370a8bf438d5e5b4dad39dfb7e8d2e44, type: 3}
-      count: 2
+      count: 1
     - enemyPrefab: {fileID: 3272993538290859593, guid: 16d5f1fe034bef447881cc89ac25e128, type: 3}
-      count: 2
+      count: 4
   - enemies:
     - enemyPrefab: {fileID: 3272993538290859593, guid: 370a8bf438d5e5b4dad39dfb7e8d2e44, type: 3}
-      count: 3
-    - enemyPrefab: {fileID: 3272993538290859593, guid: 16d5f1fe034bef447881cc89ac25e128, type: 3}
       count: 2
-  - enemies:
-    - enemyPrefab: {fileID: 3272993538290859593, guid: 370a8bf438d5e5b4dad39dfb7e8d2e44, type: 3}
-      count: 3
     - enemyPrefab: {fileID: 3272993538290859593, guid: 16d5f1fe034bef447881cc89ac25e128, type: 3}
       count: 5
+  - enemies:
+    - enemyPrefab: {fileID: 3272993538290859593, guid: 370a8bf438d5e5b4dad39dfb7e8d2e44, type: 3}
+      count: 1
+    - enemyPrefab: {fileID: 3272993538290859593, guid: 16d5f1fe034bef447881cc89ac25e128, type: 3}
+      count: 6
   spawnPoints:
   - {fileID: 1414032058}
   - {fileID: 1885096380}
@@ -5520,7 +5592,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 80d7e4dc11f196044b93347c3762ba84, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2
+      value: -1.87
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 80d7e4dc11f196044b93347c3762ba84, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5561,6 +5633,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 80d7e4dc11f196044b93347c3762ba84, type: 3}
       propertyPath: m_Name
       value: DeadGrass5 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 80d7e4dc11f196044b93347c3762ba84, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 80d7e4dc11f196044b93347c3762ba84, type: 3}
       propertyPath: m_IsActive
@@ -5652,7 +5728,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2
+      value: -1.87
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5689,6 +5765,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_Name
       value: DeadGrass2 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2d70ec4e2cbbd884e891e4b88effd1a9, type: 3}
       propertyPath: m_IsActive
@@ -5763,6 +5843,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 2834ae8b787e41d46878034b4c7085e6, type: 3}
       propertyPath: m_Name
       value: Stone5
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2834ae8b787e41d46878034b4c7085e6, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2834ae8b787e41d46878034b4c7085e6, type: 3}
       propertyPath: m_IsActive
@@ -6075,11 +6159,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9156b26beeda1d84a926782f24837f66, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2
+      value: -1.83
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9156b26beeda1d84a926782f24837f66, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.6000004
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9156b26beeda1d84a926782f24837f66, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6112,6 +6196,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 9156b26beeda1d84a926782f24837f66, type: 3}
       propertyPath: m_Name
       value: DeadGrass1 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9156b26beeda1d84a926782f24837f66, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9156b26beeda1d84a926782f24837f66, type: 3}
       propertyPath: m_IsActive
@@ -6186,6 +6274,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 2834ae8b787e41d46878034b4c7085e6, type: 3}
       propertyPath: m_Name
       value: Stone5 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2834ae8b787e41d46878034b4c7085e6, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2834ae8b787e41d46878034b4c7085e6, type: 3}
       propertyPath: m_IsActive

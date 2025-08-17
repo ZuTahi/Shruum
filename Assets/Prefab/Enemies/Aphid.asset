@@ -10,21 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9db7931153e7f9b4c95719e090965e3c, type: 3}
-  m_Name: Ghost
+  m_Name: Aphid
   m_EditorClassIdentifier: 
-  enemyName: Ghost
+  enemyName: Aphid
   aiType: 0
+  attackStyle: 0
   maxHealth: 10
   moveSpeed: 7
+  awarenessRadius: 6
+  groupAwarenessRadius: 4
   attackRange: 1.5
-  preAttackDuration: 0.5
+  preAttackDuration: 0.2
   attackDuration: 0.5
-  postAttackDuration: 0.5
+  postAttackDuration: 0.2
   weaponPrefab: {fileID: 1397579104473424997, guid: cf6cdacb1398e7a4d91f6a29bc2c5336, type: 3}
-  attackDamage: 20
+  attackDamage: 5
   icon: {fileID: 0}
-  animatorController: {fileID: 0}
+  animatorController: {fileID: 9100000, guid: 0f5cb57059ace6b42a550f0dc48a727c, type: 2}
   aggroSound: {fileID: 0}
   deathSound: {fileID: 0}
   eliteAttributes: []
-  usesNavMesh: 0
+  usesNavMesh: 1

@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 6248088132702084917}
   - component: {fileID: 7203327792706244560}
   - component: {fileID: 9214330130950238702}
-  - component: {fileID: -1032446433864770634}
+  - component: {fileID: 4337902635430692731}
   m_Layer: 6
-  m_Name: GrassHopper
+  m_Name: Aphid
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33,7 +33,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8124904838024670003}
+  - {fileID: 9107542271233488470}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6248088132702084917
@@ -48,15 +48,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f21c4c85eeee8844a961bb1563cfffb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: c011735bc0b773e459d5d9babd977c53, type: 2}
+  data: {fileID: 11400000, guid: a60f3e949635f2940bacb22619d7fe67, type: 2}
   spawner: {fileID: 0}
   healthBarPrefab: {fileID: 7591295072350178841, guid: 05f5b3be33dc06b4f953eab7d4525326, type: 3}
   enemyDropPrefab: {fileID: 8459696941023806976, guid: e7826a83c0474f74886104c63c8a3d44, type: 3}
-  minNatureForceDrop: 1
-  maxNatureForceDrop: 3
-  minManaDrop: 0
-  maxManaDrop: 2
+  minNatureForceDrop: 5
+  maxNatureForceDrop: 15
+  minManaDrop: 3
+  maxManaDrop: 10
   loreNoteDropChance: 0.15
+  minWanderWait: 1
+  maxWanderWait: 3
+  wanderRadius: 3.5
+  minWanderDistance: 1
+  turnSpeedDegPerSec: 360
+  arriveTolerance: 0.15
 --- !u!95 &7203327792706244560
 Animator:
   serializedVersion: 7
@@ -66,8 +72,8 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3272993538290859593}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 0f24a8d444c94e74484cc8a1073d179e, type: 3}
-  m_Controller: {fileID: 9100000, guid: ca2135fa83dbab548862f2fe28fcc4f1, type: 2}
+  m_Avatar: {fileID: 9000000, guid: f4b84238f935020439d7d49d69581a9a, type: 3}
+  m_Controller: {fileID: 9100000, guid: 0f5cb57059ace6b42a550f0dc48a727c, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -98,11 +104,11 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.6
-  m_Height: 3.05
+  m_Radius: 0.5
+  m_Height: 1.75
   m_Direction: 2
-  m_Center: {x: 0, y: -0.1, z: 0}
---- !u!195 &-1032446433864770634
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!195 &4337902635430692731
 NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -111,7 +117,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 3272993538290859593}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 1
+  m_Radius: 0.5
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -120,11 +126,11 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 1.2
-  m_BaseOffset: 0.7
+  m_Height: 1
+  m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!1001 &8596189277424798936
+--- !u!1001 &8786175480526311869
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -132,58 +138,58 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4828993581939943657}
     m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: 0f24a8d444c94e74484cc8a1073d179e, type: 3}
+    - target: {fileID: -8679921383154817045, guid: f4b84238f935020439d7d49d69581a9a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 0f24a8d444c94e74484cc8a1073d179e, type: 3}
+    - target: {fileID: -8679921383154817045, guid: f4b84238f935020439d7d49d69581a9a, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 0f24a8d444c94e74484cc8a1073d179e, type: 3}
+    - target: {fileID: -8679921383154817045, guid: f4b84238f935020439d7d49d69581a9a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.54
+      value: -0.2
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 0f24a8d444c94e74484cc8a1073d179e, type: 3}
+    - target: {fileID: -8679921383154817045, guid: f4b84238f935020439d7d49d69581a9a, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 0f24a8d444c94e74484cc8a1073d179e, type: 3}
+    - target: {fileID: -8679921383154817045, guid: f4b84238f935020439d7d49d69581a9a, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 0f24a8d444c94e74484cc8a1073d179e, type: 3}
+    - target: {fileID: -8679921383154817045, guid: f4b84238f935020439d7d49d69581a9a, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 0f24a8d444c94e74484cc8a1073d179e, type: 3}
+    - target: {fileID: -8679921383154817045, guid: f4b84238f935020439d7d49d69581a9a, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 0f24a8d444c94e74484cc8a1073d179e, type: 3}
+    - target: {fileID: -8679921383154817045, guid: f4b84238f935020439d7d49d69581a9a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 0f24a8d444c94e74484cc8a1073d179e, type: 3}
+    - target: {fileID: -8679921383154817045, guid: f4b84238f935020439d7d49d69581a9a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 0f24a8d444c94e74484cc8a1073d179e, type: 3}
+    - target: {fileID: -8679921383154817045, guid: f4b84238f935020439d7d49d69581a9a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 0f24a8d444c94e74484cc8a1073d179e, type: 3}
+    - target: {fileID: 919132149155446097, guid: f4b84238f935020439d7d49d69581a9a, type: 3}
       propertyPath: m_Name
-      value: GrassHopperActions
+      value: AphidActions
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 5866666021909216657, guid: 0f24a8d444c94e74484cc8a1073d179e, type: 3}
+    - {fileID: 5866666021909216657, guid: f4b84238f935020439d7d49d69581a9a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 0f24a8d444c94e74484cc8a1073d179e, type: 3}
---- !u!4 &8124904838024670003 stripped
+  m_SourcePrefab: {fileID: 100100000, guid: f4b84238f935020439d7d49d69581a9a, type: 3}
+--- !u!4 &9107542271233488470 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0f24a8d444c94e74484cc8a1073d179e, type: 3}
-  m_PrefabInstance: {fileID: 8596189277424798936}
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f4b84238f935020439d7d49d69581a9a, type: 3}
+  m_PrefabInstance: {fileID: 8786175480526311869}
   m_PrefabAsset: {fileID: 0}

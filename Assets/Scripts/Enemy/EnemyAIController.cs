@@ -42,6 +42,22 @@ public class EnemyAIController : MonoBehaviour, IDamageable
         PostAttack
     }
 
+    // ========== WANDER SUB-STATE ==========
+    private enum WanderSubstate { Waiting, Turning, Moving }
+    private WanderSubstate wanderSub = WanderSubstate.Waiting;
+
+    [Header("Wander Settings")]
+    [SerializeField] private float minWanderWait = 1f;
+    [SerializeField] private float maxWanderWait = 3f;
+    [SerializeField] private float wanderRadius = 3.5f;
+    [SerializeField] private float minWanderDistance = 1.0f; // avoid picking very close points
+    [SerializeField] private float turnSpeedDegPerSec = 360f;
+    [SerializeField] private float arriveTolerance = 0.15f;
+
+    private float wanderTimer = 0f;
+    private Vector3 wanderTarget;
+    private bool hasWanderTarget = false;
+
     private void Start()
     {
         if (data == null)
@@ -54,7 +70,13 @@ public class EnemyAIController : MonoBehaviour, IDamageable
         if (data.usesNavMesh)
         {
             agent = GetComponent<NavMeshAgent>();
-            if (agent != null) agent.speed = data.moveSpeed;
+            if (agent != null)
+            {
+                agent.speed = data.moveSpeed;
+                agent.updateRotation = false; // we rotate the model ourselves for smooth turns
+                agent.stoppingDistance = Mathf.Max(agent.stoppingDistance, 0.05f);
+                agent.autoBraking = true;
+            }
         }
 
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
@@ -71,6 +93,7 @@ public class EnemyAIController : MonoBehaviour, IDamageable
             healthBarInstance.SetMaxHealth(health);
         }
 
+        EnterWanderWaiting();
         currentState = EnemyState.Wander;
     }
 
@@ -102,45 +125,77 @@ public class EnemyAIController : MonoBehaviour, IDamageable
 
     private void UpdateWander()
     {
-        animator.SetBool("isWalking", true);
-
+        // Awareness gate
         float distToPlayer = Vector3.Distance(transform.position, player.position);
         if (distToPlayer <= data.awarenessRadius)
         {
+            // break out of wander cycle and chase
+            if (agent != null) agent.ResetPath();
             currentState = EnemyState.Chase;
             return;
         }
 
-        WanderMovement();
+        WanderMovementStep();
     }
 
     private void UpdateChase()
     {
-        animator.SetBool("isWalking", true);
-
-        float distToPlayer = Vector3.Distance(transform.position, player.position);
-
-        if (distToPlayer <= data.attackRange)
+        if (agent != null && data.usesNavMesh)
         {
-            currentState = EnemyState.Windup;
-            stateTimer = data.preAttackDuration;
-            animator.SetBool("isWalking", false);
+            agent.SetDestination(player.position);
 
-            if (data.attackStyle == EnemyAttackStyle.Lunge)
-                animator.SetTrigger("windup");
-            else
-                animator.SetTrigger("attack"); // normal melee windup (optional trigger)
-            return;
+            if (agent.velocity.sqrMagnitude > 0.0001f)
+            {
+                Quaternion target = Quaternion.LookRotation(agent.velocity.normalized);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, target, turnSpeedDegPerSec * Time.deltaTime);
+            }
+
+            float speed = agent.velocity.magnitude;
+            animator.SetFloat("Speed", speed);
+        }
+        else
+        {
+            Vector3 dir = (player.position - transform.position);
+            dir.y = 0f;
+            if (dir.sqrMagnitude > 0.0001f)
+            {
+                Quaternion targetRot = Quaternion.LookRotation(dir);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, turnSpeedDegPerSec * Time.deltaTime);
+                transform.position += transform.forward * data.moveSpeed * Time.deltaTime;
+
+                animator.SetFloat("Speed", data.moveSpeed);
+            }
         }
 
-        MoveTowards(player.position);
-    }
+        // Directly enter attack if close enough
+        if (Vector3.Distance(transform.position, player.position) <= data.attackRange)
+        {
+            // stop NavMeshAgent movement here
+            if (agent != null)
+            {
+                agent.ResetPath();
+                agent.isStopped = true;
+            }
 
+            currentState = EnemyState.Attack;
+            stateTimer = data.attackDuration;
+            damageApplied = false;
+
+            animator.SetFloat("Speed", 0f);
+            animator.SetTrigger("attack");
+
+            if (data.attackStyle == EnemyAttackStyle.Lunge && agent != null)
+            {
+                agent.updatePosition = false;
+                agent.updateRotation = false;
+            }
+        }
+    }
     private void UpdateWindup()
     {
         FacePlayer();
-        stateTimer -= Time.deltaTime;
 
+        stateTimer -= Time.deltaTime;
         if (stateTimer <= 0f)
         {
             currentState = EnemyState.Attack;
@@ -153,7 +208,7 @@ public class EnemyAIController : MonoBehaviour, IDamageable
                 {
                     agent.isStopped = true;
                     agent.updatePosition = false;
-                    agent.updateRotation = false;
+                    agent.updateRotation = false; // we keep manual rotation always
                 }
                 animator.SetTrigger("attack");
             }
@@ -176,64 +231,208 @@ public class EnemyAIController : MonoBehaviour, IDamageable
         {
             currentState = EnemyState.PostAttack;
             stateTimer = data.postAttackDuration;
-            animator.SetBool("isWalking", false);
+
+            animator.SetFloat("Speed", 0f);
 
             if (agent != null)
             {
                 agent.Warp(transform.position);
                 agent.isStopped = false;
                 agent.updatePosition = true;
-                agent.updateRotation = true;
+                agent.updateRotation = false;
             }
         }
     }
-
     private void UpdatePostAttack()
     {
         stateTimer -= Time.deltaTime;
         if (stateTimer <= 0f)
-            currentState = EnemyState.Chase;
+        {
+            float distToPlayer = Vector3.Distance(transform.position, player.position);
+            if (distToPlayer <= data.awarenessRadius)
+            {
+                currentState = EnemyState.Chase;
+            }
+            else
+            {
+                EnterWanderWaiting();
+                currentState = EnemyState.Wander;
+            }
+        }
     }
+    // ------------------- WANDER SUB-STATE MACHINE -------------------
 
-    // ------------------- MOVEMENT -------------------
-
-    private void WanderMovement()
+    private void EnterWanderWaiting()
     {
-        if (agent != null && data.usesNavMesh)
+        wanderSub = WanderSubstate.Waiting;
+        wanderTimer = Random.Range(minWanderWait, maxWanderWait);
+        hasWanderTarget = false;
+
+        if (agent != null) agent.ResetPath();
+
+        animator.SetFloat("Speed", 0f);
+    }
+
+    private void PickWanderTarget()
+    {
+        const int attempts = 6;
+        Vector3 basePos = transform.position;
+
+        for (int i = 0; i < attempts; i++)
         {
-            if (!agent.hasPath || agent.remainingDistance < 0.5f)
+            Vector3 candidate = basePos + Random.insideUnitSphere * wanderRadius;
+            candidate.y = basePos.y;
+
+            if (data.usesNavMesh && agent != null)
             {
-                Vector3 random = Random.insideUnitSphere * 3f + transform.position;
-                if (NavMesh.SamplePosition(random, out NavMeshHit hit, 3f, NavMesh.AllAreas))
-                    agent.SetDestination(hit.position);
+                if (NavMesh.SamplePosition(candidate, out NavMeshHit hit, 1.5f, NavMesh.AllAreas))
+                {
+                    if ((hit.position - basePos).magnitude >= minWanderDistance)
+                    {
+                        wanderTarget = hit.position;
+                        hasWanderTarget = true;
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                if ((candidate - basePos).magnitude >= minWanderDistance)
+                {
+                    wanderTarget = candidate;
+                    hasWanderTarget = true;
+                    return;
+                }
             }
         }
-        else
+
+        // fallback: just wait again if we couldn't find a good point
+        hasWanderTarget = false;
+    }
+
+    private void WanderMovementStep()
+    {
+        switch (wanderSub)
         {
-            Vector3 dir = Random.insideUnitSphere;
-            dir.y = 0f;
-            if (dir.sqrMagnitude > 0.01f)
+            case WanderSubstate.Waiting:
+                wanderTimer -= Time.deltaTime;
+                animator.SetFloat("Speed", 0f);
+
+                if (wanderTimer <= 0f)
+                {
+                    PickWanderTarget();
+                    if (hasWanderTarget)
+                        wanderSub = WanderSubstate.Turning;
+                    else
+                        EnterWanderWaiting(); // try again later
+                }
+                break;
+
+            case WanderSubstate.Turning:
             {
-                Quaternion targetRot = Quaternion.LookRotation(dir);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 180f * Time.deltaTime);
-                transform.position += transform.forward * data.moveSpeed * 0.25f * Time.deltaTime;
+                Vector3 toTarget = wanderTarget - transform.position;
+                toTarget.y = 0f;
+
+                if (toTarget.sqrMagnitude < 0.001f)
+                {
+                    // Target is basically on top of us; pick another
+                    EnterWanderWaiting();
+                    break;
+                }
+
+                Quaternion targetRot = Quaternion.LookRotation(toTarget.normalized);
+                transform.rotation = Quaternion.RotateTowards(
+                    transform.rotation,
+                    targetRot,
+                    turnSpeedDegPerSec * Time.deltaTime
+                );
+
+                animator.SetFloat("Speed", 0f);
+
+                float angle = Vector3.Angle(transform.forward, toTarget);
+                if (angle <= 5f)
+                {
+                    // Start moving after we’re facing it
+                    if (agent != null && data.usesNavMesh)
+                    {
+                        agent.SetDestination(wanderTarget);
+                    }
+                    wanderSub = WanderSubstate.Moving;
+                }
+                break;
+            }
+
+            case WanderSubstate.Moving:
+            {
+                if (agent != null && data.usesNavMesh)
+                {
+                    // Smoothly face movement direction
+                    if (agent.velocity.sqrMagnitude > 0.0001f)
+                    {
+                        Quaternion faceVel = Quaternion.LookRotation(agent.velocity.normalized);
+                        transform.rotation = Quaternion.RotateTowards(transform.rotation, faceVel, turnSpeedDegPerSec * Time.deltaTime);
+                    }
+
+                    float speed = agent.velocity.magnitude;
+                    animator.SetFloat("Speed", speed);
+
+                    if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + arriveTolerance)
+                    {
+                        EnterWanderWaiting();
+                    }
+                }
+                else
+                {
+                    // Fallback no-NavMesh wander move
+                    Vector3 toTarget = wanderTarget - transform.position;
+                    toTarget.y = 0f;
+
+                    if (toTarget.sqrMagnitude < 0.04f)
+                    {
+                        EnterWanderWaiting();
+                        break;
+                    }
+
+                    Quaternion targetRot = Quaternion.LookRotation(toTarget.normalized);
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, turnSpeedDegPerSec * Time.deltaTime);
+                    transform.position += transform.forward * (data.moveSpeed * 0.6f) * Time.deltaTime;
+
+                    animator.SetFloat("Speed", data.moveSpeed * 0.6f);
+                }
+                break;
             }
         }
     }
+
+    // ------------------- GENERAL MOVEMENT / FACING -------------------
 
     private void MoveTowards(Vector3 target)
     {
         if (agent != null && data.usesNavMesh)
         {
             agent.SetDestination(target);
+
+            if (agent.velocity.sqrMagnitude > 0.0001f)
+            {
+                Quaternion targetRot = Quaternion.LookRotation(agent.velocity.normalized);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, turnSpeedDegPerSec * Time.deltaTime);
+            }
+
+            float speed = agent.velocity.magnitude;
+            animator.SetFloat("Speed", speed);
         }
         else
         {
             Vector3 dir = (target - transform.position);
             dir.y = 0f;
-            Quaternion targetRot = Quaternion.LookRotation(dir);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 360f * Time.deltaTime);
-            transform.position += transform.forward * data.moveSpeed * Time.deltaTime;
+            if (dir.sqrMagnitude > 0.0001f)
+            {
+                Quaternion targetRot = Quaternion.LookRotation(dir);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, turnSpeedDegPerSec * Time.deltaTime);
+                transform.position += transform.forward * data.moveSpeed * Time.deltaTime;
+
+                animator.SetFloat("Speed", data.moveSpeed);
+            }
         }
     }
 
@@ -244,52 +443,61 @@ public class EnemyAIController : MonoBehaviour, IDamageable
         if (dir.sqrMagnitude > 0.001f)
         {
             Quaternion targetRot = Quaternion.LookRotation(dir);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 360f * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, turnSpeedDegPerSec * Time.deltaTime);
         }
     }
 
     // ------------------- ATTACK METHODS -------------------
 
-    private void LungeForward()
+   private void LungeForward()
+{
+    if (!damageApplied)
     {
+        Collider[] hits = Physics.OverlapSphere(transform.position, 1f);
+        foreach (var hit in hits)
+        {
+            if (hit.CompareTag("Player"))
+            {
+                var ps = hit.GetComponent<PlayerStats>();
+                if (ps != null) ps.TakeDamage(data.attackDamage);
+
+                damageApplied = true;
+
+                // 🛑 stop lunge movement when player is hit
+                stateTimer = 0f; 
+                return;
+            }
+        }
+    }
+
+    // only move forward if no hit yet
+    if (!damageApplied)
         transform.position += transform.forward * 18f * Time.deltaTime;
+}
 
-        if (!damageApplied)
-        {
-            Collider[] hits = Physics.OverlapSphere(transform.position, 1f);
-            foreach (var hit in hits)
-            {
-                if (hit.CompareTag("Player"))
-                {
-                    var ps = hit.GetComponent<PlayerStats>();
-                    if (ps != null) ps.TakeDamage(data.attackDamage);
-                    damageApplied = true;
-                    break;
-                }
-            }
-        }
-    }
+private void MeleeAttack()
+{
+    // Always face the player during melee attacks
+    FacePlayer();
 
-    private void MeleeAttack()
+    if (!damageApplied)
     {
-        if (!damageApplied)
+        // attack directly in front of the enemy
+        Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward, 1f);
+        foreach (var hit in hits)
         {
-            Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward, 1f);
-            foreach (var hit in hits)
+            if (hit.CompareTag("Player"))
             {
-                if (hit.CompareTag("Player"))
-                {
-                    var ps = hit.GetComponent<PlayerStats>();
-                    if (ps != null) ps.TakeDamage(data.attackDamage);
-                    damageApplied = true;
-                    break;
-                }
+                var ps = hit.GetComponent<PlayerStats>();
+                if (ps != null) ps.TakeDamage(data.attackDamage);
+                damageApplied = true;
+                break;
             }
         }
     }
+}
 
     // ------------------- DAMAGE -------------------
-
     public void TakeDamage(int amount, Vector3 hitPoint, GameObject source)
     {
         health -= amount;
