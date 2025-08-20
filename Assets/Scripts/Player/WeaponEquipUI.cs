@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +6,7 @@ public class WeaponEquipUI : MonoBehaviour
 {
     public static WeaponEquipUI Instance;
 
-    [Header("Slot Images")]
+    [Header("Slot Images (UI placeholders for J/K/L)")]
     public Image slotJImage;
     public Image slotKImage;
     public Image slotLImage;
@@ -18,30 +16,32 @@ public class WeaponEquipUI : MonoBehaviour
     public Sprite gauntletSprite;
     public Sprite slingshotSprite;
 
-    [Header("Default Key Sprites")]
-    public Sprite KeySpriteJ;
-    public Sprite KeySpriteK;
-    public Sprite KeySpriteL;
+    [Header("Default Sprites (empty slots)")]
+    public Sprite defaultSpriteJ;
+    public Sprite defaultSpriteK;
+    public Sprite defaultSpriteL;
+
+    [Header("Assigning Sprites (shown when choosing)")]
+    public Sprite assigningSpriteJ;
+    public Sprite assigningSpriteK;
+    public Sprite assigningSpriteL;
 
     [Header("Equip Prompt")]
     public TextMeshProUGUI promptText;
 
     private WeaponType currentWeapon;
     private bool isChoosingSlot = false;
-
     public bool IsChoosingSlot => isChoosingSlot;
-
-    private Dictionary<ModularWeaponSlotKey, WeaponType> equippedWeapons = new Dictionary<ModularWeaponSlotKey, WeaponType>
-    {
-        { ModularWeaponSlotKey.Slot1, WeaponType.None },
-        { ModularWeaponSlotKey.Slot2, WeaponType.None },
-        { ModularWeaponSlotKey.Slot3, WeaponType.None },
-    };
 
     private void Awake()
     {
         Instance = this;
         promptText.gameObject.SetActive(false);
+
+        // Initialize with default sprites
+        slotJImage.sprite = defaultSpriteJ;
+        slotKImage.sprite = defaultSpriteK;
+        slotLImage.sprite = defaultSpriteL;
     }
 
     private void Update()
@@ -49,17 +49,11 @@ public class WeaponEquipUI : MonoBehaviour
         if (!isChoosingSlot) return;
 
         if (Input.GetKeyDown(KeyCode.J))
-        {
             EquipToSlot(ModularWeaponSlotKey.Slot1);
-        }
         else if (Input.GetKeyDown(KeyCode.K))
-        {
             EquipToSlot(ModularWeaponSlotKey.Slot2);
-        }
         else if (Input.GetKeyDown(KeyCode.L))
-        {
             EquipToSlot(ModularWeaponSlotKey.Slot3);
-        }
     }
 
     public void OpenEquipPrompt(WeaponType weapon)
@@ -69,10 +63,15 @@ public class WeaponEquipUI : MonoBehaviour
         promptText.gameObject.SetActive(true);
         promptText.text = $"Press J / K / L to equip {weapon}";
 
+        // Show assigning state
+        slotJImage.sprite = assigningSpriteJ;
+        slotKImage.sprite = assigningSpriteK;
+        slotLImage.sprite = assigningSpriteL;
+
         if (PlayerMovement.Instance != null)
         {
             PlayerMovement.Instance.canMove = false;
-            PlayerMovement.Instance.isInputGloballyLocked = true; // 🔒 lock global input
+            PlayerMovement.Instance.isInputGloballyLocked = true;
         }
     }
 
@@ -81,42 +80,33 @@ public class WeaponEquipUI : MonoBehaviour
         isChoosingSlot = false;
         promptText.gameObject.SetActive(false);
 
+        // Revert back to correct visuals (default if empty, weapon if assigned)
+        RefreshAllSlots();
+
         if (PlayerMovement.Instance != null)
         {
             PlayerMovement.Instance.canMove = true;
-            PlayerMovement.Instance.isInputGloballyLocked = false; // ✅ unlock input globally
+            PlayerMovement.Instance.isInputGloballyLocked = false;
         }
-
-        ModularWeaponSlotManager.Instance?.SuppressInputForAllWeapons(false);
-
-        StartCoroutine(TemporarilyBlockInputAfterEquip());
-    }
-
-    private IEnumerator TemporarilyBlockInputAfterEquip()
-    {
-        ModularWeaponInputHandler inputHandler = FindFirstObjectByType<ModularWeaponInputHandler>();
-        if (inputHandler != null)
-            inputHandler.SuppressInputTemporarily(0.15f);  // ~150ms delay
-
-        yield return null;
     }
 
     private void EquipToSlot(ModularWeaponSlotKey slotKey)
     {
-        foreach (var kvp in equippedWeapons)
+        // Remove weapon from other slots if already equipped
+        for (int i = 0; i < PlayerData.equippedWeapons.Length; i++)
         {
-            if (kvp.Value == currentWeapon)
+            if (PlayerData.equippedWeapons[i] == currentWeapon)
             {
-                equippedWeapons[kvp.Key] = WeaponType.None;
-                UpdateSlotVisual(kvp.Key, WeaponType.None);
-                break;
+                PlayerData.equippedWeapons[i] = WeaponType.None;
+                UpdateSlotVisual((ModularWeaponSlotKey)i, WeaponType.None);
             }
         }
 
-        equippedWeapons[slotKey] = currentWeapon;
+        // Assign new weapon
+        PlayerData.equippedWeapons[(int)slotKey] = currentWeapon;
         ModularWeaponSlotManager.Instance.AssignWeaponToSlot(currentWeapon, slotKey);
-        UpdateSlotVisual(slotKey, currentWeapon);
 
+        UpdateSlotVisual(slotKey, currentWeapon);
         CloseEquipPrompt();
     }
 
@@ -132,31 +122,35 @@ public class WeaponEquipUI : MonoBehaviour
 
         if (slotImage == null) return;
 
-        slotImage.sprite = weapon switch
+        if (weapon == WeaponType.None)
         {
-            WeaponType.Dagger => daggerSprite,
-            WeaponType.Gauntlet => gauntletSprite,
-            WeaponType.Slingshot => slingshotSprite,
-            _ => GetDefaultKeySprite(slotKey),
-        };
+            // Empty slot → show default sprite
+            slotImage.sprite = slotKey switch
+            {
+                ModularWeaponSlotKey.Slot1 => defaultSpriteJ,
+                ModularWeaponSlotKey.Slot2 => defaultSpriteK,
+                ModularWeaponSlotKey.Slot3 => defaultSpriteL,
+                _ => null,
+            };
+        }
+        else
+        {
+            // Equipped → show weapon sprite
+            slotImage.sprite = weapon switch
+            {
+                WeaponType.Dagger => daggerSprite,
+                WeaponType.Gauntlet => gauntletSprite,
+                WeaponType.Slingshot => slingshotSprite,
+                _ => null,
+            };
+        }
     }
 
-    private Sprite GetDefaultKeySprite(ModularWeaponSlotKey slotKey)
-    {
-        return slotKey switch
-        {
-            ModularWeaponSlotKey.Slot1 => KeySpriteJ,
-            ModularWeaponSlotKey.Slot2 => KeySpriteK,
-            ModularWeaponSlotKey.Slot3 => KeySpriteL,
-            _ => null,
-        };
-    }
     public void RefreshAllSlots()
     {
         for (int i = 0; i < 3; i++)
         {
-            var type = PlayerData.equippedWeapons[i];
-            UpdateSlotVisual((ModularWeaponSlotKey)i, type);
+            UpdateSlotVisual((ModularWeaponSlotKey)i, PlayerData.equippedWeapons[i]);
         }
     }
 }

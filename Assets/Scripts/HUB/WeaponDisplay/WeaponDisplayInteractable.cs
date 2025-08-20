@@ -27,6 +27,7 @@ public class WeaponDisplayInteractable : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
+            promptUI.HidePrompt();
             if (!isUnlocked)
             {
                 TryUnlockWeapon();

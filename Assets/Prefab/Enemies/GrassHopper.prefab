@@ -51,12 +51,20 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: c011735bc0b773e459d5d9babd977c53, type: 2}
   spawner: {fileID: 0}
   healthBarPrefab: {fileID: 7591295072350178841, guid: 05f5b3be33dc06b4f953eab7d4525326, type: 3}
+  aggroIconPrefab: {fileID: 8359191373501381227, guid: 0dd859de113c1754dab0db27f98dfb27, type: 3}
   enemyDropPrefab: {fileID: 8459696941023806976, guid: e7826a83c0474f74886104c63c8a3d44, type: 3}
   minNatureForceDrop: 1
   maxNatureForceDrop: 3
   minManaDrop: 0
   maxManaDrop: 2
   loreNoteDropChance: 0.15
+  poofPrefab: {fileID: 4105938874594104566, guid: 2c2428c397c74f04db7e9fbabe5fcef3, type: 3}
+  minWanderWait: 1
+  maxWanderWait: 3
+  wanderRadius: 6
+  minWanderDistance: 4
+  turnSpeedDegPerSec: 120
+  arriveTolerance: 0.15
 --- !u!95 &7203327792706244560
 Animator:
   serializedVersion: 7

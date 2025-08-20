@@ -2,39 +2,15 @@ using UnityEngine;
 
 public class BladeSpike : MonoBehaviour
 {
-    public Transform followTarget;
-    public float damageInterval = 0.5f;
-    public float duration = 3f;
+    public float lifeTime = 1.5f;       // lasts for 1.5s
     public float damageRadius = 1.2f;
     public int damage = 15;
     public LayerMask enemyLayers;
 
-    private float timer = 0f;
-    private float damageTimer = 0f;
-
     void Start()
     {
-        timer = duration;
-        damageTimer = damageInterval;
-    }
-
-    void Update()
-    {
-        if (followTarget != null)
-            transform.position = followTarget.position;
-
-        damageTimer -= Time.deltaTime;
-        if (damageTimer <= 0f)
-        {
-            DealDamage();
-            damageTimer = damageInterval;
-        }
-
-        timer -= Time.deltaTime;
-        if (timer <= 0f)
-        {
-            Destroy(gameObject);
-        }
+        DealDamage();                   // deal damage once when spawned
+        Destroy(gameObject, lifeTime);  // despawn after 1.5s
     }
 
     void DealDamage()
@@ -49,9 +25,10 @@ public class BladeSpike : MonoBehaviour
             }
         }
     }
+
     void OnDrawGizmos()
     {
-        Gizmos.color = new Color(1f, 0.2f, 0.2f, 0.4f); // red-ish transparent
+        Gizmos.color = new Color(1f, 0.2f, 0.2f, 0.4f);
         Gizmos.DrawSphere(transform.position, damageRadius);
     }
 }

@@ -13,43 +13,12 @@ public class ArtifactSO : ScriptableObject
 
     public void ApplyEffect()
     {
-        var playerStats = PlayerStats.Instance;
-        if (playerStats == null)
+        if (RunData.CurrentRun == null)
         {
-            Debug.LogWarning("Cannot apply artifact effect: PlayerStats not found.");
+            Debug.LogWarning("Cannot apply artifact: No active run!");
             return;
         }
 
-        Debug.Log($"Applying effect of artifact: {artifactName}");
-
-        switch (effectType)
-        {
-            case ArtifactType.IncreaseHP:
-                playerStats.IncreaseMaxHP(effectAmount);
-                Debug.Log($"Increased Max HP by {effectAmount}");
-                break;
-
-            case ArtifactType.IncreaseSP:
-                playerStats.IncreaseMaxSP(effectAmount);
-                Debug.Log($"Increased Max SP by {effectAmount}");
-                break;
-
-            case ArtifactType.IncreaseMP:
-                playerStats.IncreaseMaxMP(effectAmount);
-                Debug.Log($"Increased Max MP by {effectAmount}");
-                break;
-
-            case ArtifactType.IncreaseAttack:
-                playerStats.attackMultiplier += effectAmount;
-                Debug.Log($"Increased Attack Multiplier by {effectAmount}");
-                break;
-
-            case ArtifactType.IncreaseDefense:
-                playerStats.defenseMultiplier += effectAmount;
-                Debug.Log($"Increased Defense Multiplier by {effectAmount}");
-                break;
-        }
-
-        playerStats.RefreshUI();
+        RunData.CurrentRun.AddArtifact(this);
     }
 }

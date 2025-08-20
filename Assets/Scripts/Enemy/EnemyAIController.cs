@@ -18,6 +18,10 @@ public class EnemyAIController : MonoBehaviour, IDamageable
     public EnemyHealthBar healthBarPrefab;
     private EnemyHealthBar healthBarInstance;
 
+    [Header("Aggro")]
+    [SerializeField] private EnemyAggroIcon aggroIconPrefab;
+    private EnemyAggroIcon aggroIconInstance;
+
     [Header("Drops")]
     public EnemyDrop enemyDropPrefab;
     public int minNatureForceDrop = 1;
@@ -26,6 +30,8 @@ public class EnemyAIController : MonoBehaviour, IDamageable
     public int maxManaDrop = 2;
     [Range(0f, 1f)] public float loreNoteDropChance = 0.15f;
 
+    [Header("VFX")]
+    public GameObject poofPrefab;   // assign in inspector (TUNIC-style poof effect)
     private bool isStaggered = false;
     private float staggerDuration = 0.2f;
 
@@ -73,7 +79,7 @@ public class EnemyAIController : MonoBehaviour, IDamageable
             if (agent != null)
             {
                 agent.speed = data.moveSpeed;
-                agent.updateRotation = false; // we rotate the model ourselves for smooth turns
+                agent.updateRotation = false;
                 agent.stoppingDistance = Mathf.Max(agent.stoppingDistance, 0.05f);
                 agent.autoBraking = true;
             }
@@ -91,6 +97,12 @@ public class EnemyAIController : MonoBehaviour, IDamageable
             healthBarInstance = Instantiate(healthBarPrefab);
             healthBarInstance.AttachTo(transform, new Vector3(0f, 2f, 0f));
             healthBarInstance.SetMaxHealth(health);
+        }
+
+        if (aggroIconPrefab != null)
+        {
+            aggroIconInstance = Instantiate(aggroIconPrefab);
+            aggroIconInstance.AttachTo(transform, new Vector3(0f, 2.5f, 0f)); // above head
         }
 
         EnterWanderWaiting();
@@ -125,16 +137,14 @@ public class EnemyAIController : MonoBehaviour, IDamageable
 
     private void UpdateWander()
     {
-        // Awareness gate
         float distToPlayer = Vector3.Distance(transform.position, player.position);
         if (distToPlayer <= data.awarenessRadius)
         {
-            // break out of wander cycle and chase
+            aggroIconInstance?.Show();
             if (agent != null) agent.ResetPath();
             currentState = EnemyState.Chase;
             return;
         }
-
         WanderMovementStep();
     }
 
@@ -170,79 +180,82 @@ public class EnemyAIController : MonoBehaviour, IDamageable
         // Directly enter attack if close enough
         if (Vector3.Distance(transform.position, player.position) <= data.attackRange)
         {
-            // stop NavMeshAgent movement here
             if (agent != null)
             {
                 agent.ResetPath();
                 agent.isStopped = true;
             }
 
-            currentState = EnemyState.Attack;
-            stateTimer = data.attackDuration;
-            damageApplied = false;
-
+            // 🟢 Go into Windup first instead of Attack
+            currentState = EnemyState.Windup;
+            stateTimer = data.preAttackDuration;  // give time to rotate/telegraph
             animator.SetFloat("Speed", 0f);
-            animator.SetTrigger("attack");
 
-            if (data.attackStyle == EnemyAttackStyle.Lunge && agent != null)
+            return;
+        }
+
+    }
+   private void UpdateWindup()
+{
+    FacePlayer(); // lock in facing while winding up
+
+    stateTimer -= Time.deltaTime;
+    if (stateTimer <= 0f)
+    {
+        currentState = EnemyState.Attack;
+        stateTimer = data.attackDuration;
+        damageApplied = false;
+
+        if (data.attackStyle == EnemyAttackStyle.Lunge)
+        {
+            if (agent != null)
             {
+                agent.isStopped = true;
                 agent.updatePosition = false;
                 agent.updateRotation = false;
             }
+
+            // 🛑 Lock the facing here so it won't keep adjusting in UpdateAttack
+            FacePlayer(); 
+            animator.SetTrigger("attack");
         }
-    }
-    private void UpdateWindup()
-    {
-        FacePlayer();
-
-        stateTimer -= Time.deltaTime;
-        if (stateTimer <= 0f)
-        {
-            currentState = EnemyState.Attack;
-            stateTimer = data.attackDuration;
-            damageApplied = false;
-
-            if (data.attackStyle == EnemyAttackStyle.Lunge)
-            {
-                if (agent != null)
-                {
-                    agent.isStopped = true;
-                    agent.updatePosition = false;
-                    agent.updateRotation = false; // we keep manual rotation always
-                }
-                animator.SetTrigger("attack");
-            }
-            else
-            {
-                animator.SetTrigger("attack");
-            }
-        }
-    }
-
-    private void UpdateAttack()
-    {
-        if (data.attackStyle == EnemyAttackStyle.Lunge)
-            LungeForward();
         else
-            MeleeAttack();
-
-        stateTimer -= Time.deltaTime;
-        if (stateTimer <= 0f)
         {
-            currentState = EnemyState.PostAttack;
-            stateTimer = data.postAttackDuration;
-
-            animator.SetFloat("Speed", 0f);
-
-            if (agent != null)
-            {
-                agent.Warp(transform.position);
-                agent.isStopped = false;
-                agent.updatePosition = true;
-                agent.updateRotation = false;
-            }
+            animator.SetTrigger("attack");
         }
     }
+}
+
+private void UpdateAttack()
+{
+    if (data.attackStyle == EnemyAttackStyle.Lunge)
+    {
+        // ❌ removed FacePlayer();
+        LungeForward();
+    }
+    else
+    {
+        MeleeAttack(); // melee still faces during swing
+    }
+
+    stateTimer -= Time.deltaTime;
+    if (stateTimer <= 0f)
+    {
+        currentState = EnemyState.PostAttack;
+        stateTimer = data.postAttackDuration;
+
+        animator.SetFloat("Speed", 0f);
+
+        if (agent != null)
+        {
+            agent.Warp(transform.position);
+            agent.isStopped = false;
+            agent.updatePosition = true;
+            agent.updateRotation = false;
+        }
+    }
+}
+
     private void UpdatePostAttack()
     {
         stateTimer -= Time.deltaTime;
@@ -453,7 +466,7 @@ public class EnemyAIController : MonoBehaviour, IDamageable
 {
     if (!damageApplied)
     {
-        Collider[] hits = Physics.OverlapSphere(transform.position, 1f);
+        Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward * 1f, 1f);
         foreach (var hit in hits)
         {
             if (hit.CompareTag("Player"))
@@ -501,12 +514,18 @@ private void MeleeAttack()
     public void TakeDamage(int amount, Vector3 hitPoint, GameObject source)
     {
         health -= amount;
-        healthBarInstance?.SetHealth(health);
+
+        if (healthBarInstance != null)
+        {
+            healthBarInstance.Show();             // 🆕 make it visible
+            healthBarInstance.SetHealth(health);
+        }
+
         StartCoroutine(OnHitReaction());
 
         if (health <= 0f) Die();
     }
-
+    
     private IEnumerator OnHitReaction()
     {
         isStaggered = true;
@@ -530,14 +549,21 @@ private void MeleeAttack()
 
     private void Die()
     {
-        animator?.SetTrigger("die");
+        // 🟢 Spawn poof effect immediately
+        if (poofPrefab != null)
+        {
+            GameObject poof = Instantiate(poofPrefab, transform.position, Quaternion.identity);
+            Destroy(poof, 1.5f); // clean up particle system after it finishes
+        }
 
         if (healthBarInstance != null)
-            Destroy(healthBarInstance.gameObject, 0.5f);
-
+            Destroy(healthBarInstance.gameObject);
+        if (aggroIconInstance != null)               // 🆕 cleanup
+            Destroy(aggroIconInstance.gameObject);
         DropRewards();
         spawner?.OnEnemyDeath(gameObject);
-        Destroy(gameObject, 0.5f);
+
+        Destroy(gameObject); // destroy enemy immediately after spawning poof
     }
 
     private void DropRewards()
@@ -554,7 +580,6 @@ private void MeleeAttack()
         if (Random.value < loreNoteDropChance)
             PlayerInventory.Instance?.AddRandomLoreNote();
     }
-
     private void OnDrawGizmosSelected()
     {
         if (data == null) return;

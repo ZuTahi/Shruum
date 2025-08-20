@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class AutoDestroy : MonoBehaviour
 {
+    public float Time = 1f;
     void Start()
     {
-        Destroy(gameObject, 0.3f); // or whatever duration you want
+        Destroy(gameObject, Time); // or whatever duration you want
     }
 }

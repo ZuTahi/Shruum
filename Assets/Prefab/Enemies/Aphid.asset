@@ -15,11 +15,11 @@ MonoBehaviour:
   enemyName: Aphid
   aiType: 0
   attackStyle: 0
-  maxHealth: 10
+  maxHealth: 25
   moveSpeed: 7
   awarenessRadius: 6
   groupAwarenessRadius: 4
-  attackRange: 1.5
+  attackRange: 2
   preAttackDuration: 0.2
   attackDuration: 0.5
   postAttackDuration: 0.2

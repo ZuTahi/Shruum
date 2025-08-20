@@ -18,9 +18,9 @@ TagManager:
   - Enemy
   - Projectile
   - Grounded
-  - 
-  - 
-  - 
+  - PickUp
+  - Player
+  - Obstacle
   - 
   - 
   - 

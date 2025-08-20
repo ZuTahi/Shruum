@@ -48,5 +48,5 @@ MonoBehaviour:
   natureForceDropPrefab: {fileID: 818231959689995300, guid: a21767df9feb2ff43ab3fdf2fc274a63, type: 3}
   manaAmount: 1
   natureForceAmount: 1
-  dropSpreadRadius: 0.5
-  dropUpwardForce: 2
+  dropSpreadRadius: 0.1
+  dropUpwardForce: 0.1
