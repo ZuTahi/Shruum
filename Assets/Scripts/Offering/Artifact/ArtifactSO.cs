@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Artifact", menuName = "Artifacts/Artifact")]
+[CreateAssetMenu(fileName = "New Artifact", menuName = "Artifacts/Temporary Artifact")]
 public class ArtifactSO : ScriptableObject
 {
     public string artifactName;

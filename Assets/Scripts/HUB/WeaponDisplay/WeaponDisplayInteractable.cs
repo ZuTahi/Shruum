@@ -7,7 +7,6 @@ public class WeaponDisplayInteractable : MonoBehaviour
 
     [Header("Unlock Settings")]
     public bool isUnlocked = false;
-    public int unlockCost = 50;
 
     private bool playerInRange = false;
     private InteractionPromptUI promptUI;
@@ -16,6 +15,7 @@ public class WeaponDisplayInteractable : MonoBehaviour
     {
         isUnlocked = PlayerData.IsWeaponUnlocked(weaponType);
         UpdateLockVisual();
+
         promptUI = FindFirstObjectByType<InteractionPromptUI>();
         if (promptUI == null)
             Debug.LogError("❌ InteractionPromptUI not found in the scene!");
@@ -25,9 +25,10 @@ public class WeaponDisplayInteractable : MonoBehaviour
     {
         if (!playerInRange) return;
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            promptUI.HidePrompt();
+            promptUI?.HidePrompt();
+
             if (!isUnlocked)
             {
                 TryUnlockWeapon();
@@ -35,21 +36,30 @@ public class WeaponDisplayInteractable : MonoBehaviour
             else
             {
                 WeaponEquipUI.Instance.OpenEquipPrompt(weaponType);
-                LockPlayerInput();
+                PlayerMovement.Instance.canMove = false; // freeze movement if you want
             }
         }
+
+        // 🚫 Disable dash whenever in range
+        PlayerMovement.Instance.canDash = false;
     }
 
     private void TryUnlockWeapon()
     {
-        if (PlayerInventory.Instance.natureForce >= unlockCost)
+        if (PlayerInventory.Instance.HasPermanentItem(PermanentItemType.WeaponKey, 1))
         {
-            PlayerInventory.Instance.AddNatureForce(-unlockCost);
+            PlayerInventory.Instance.ConsumePermanentItem(PermanentItemType.WeaponKey, 1);
             PlayerData.UnlockWeapon(weaponType);
             isUnlocked = true;
             UpdateLockVisual();
 
             GameManager.Instance.SaveGame();
+
+            Debug.Log($"[WeaponDisplay] {weaponType} unlocked using a WeaponKey!");
+        }
+        else
+        {
+            Debug.Log("[WeaponDisplay] Not enough WeaponKeys to unlock this weapon.");
         }
     }
 
@@ -59,23 +69,14 @@ public class WeaponDisplayInteractable : MonoBehaviour
             lockVisual.SetActive(!isUnlocked);
     }
 
-    private void LockPlayerInput()
-    {
-        if (PlayerMovement.Instance != null)
-        {
-            PlayerMovement.Instance.canMove = false;
-            PlayerMovement.Instance.isInputGloballyLocked = true; // 🔒 Lock global input while assigning
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
-        { 
+        {
             playerInRange = true;
             if (promptUI != null)
             {
-                string promptText = isUnlocked ? "Press [F] to Interact" : $"Press [F] to Unlock ({unlockCost})";
+                string promptText = isUnlocked ? "Press [SPACE] to Interact" : "Press [SPACE] to Unlock";
                 promptUI.ShowPrompt(promptText);
             }
         }
@@ -86,14 +87,14 @@ public class WeaponDisplayInteractable : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInRange = false;
-            if (promptUI != null)
-                promptUI.HidePrompt();
-        }   
+            promptUI?.HidePrompt();
+            PlayerMovement.Instance.canDash = true; // ✅ restore dash
+        }
     }
+
     public void RefreshLockStatus()
     {
         isUnlocked = PlayerData.IsWeaponUnlocked(weaponType);
         UpdateLockVisual();
     }
-
 }

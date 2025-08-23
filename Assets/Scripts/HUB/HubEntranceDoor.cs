@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class HubEntranceDoor : MonoBehaviour
 {
@@ -8,6 +7,14 @@ public class HubEntranceDoor : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log("HubEntranceDoor: Moving to Room0");
+
+            // ✅ Save the player's current HP/SP/MP before leaving hub
+            if (PlayerStats.Instance != null)
+            {
+                PlayerStats.Instance.SaveToPlayerData();
+            }
+
+            // ✅ Start new run (this should trigger SceneManager.LoadScene inside GameManager)
             GameManager.Instance.StartNewRun();
         }
     }

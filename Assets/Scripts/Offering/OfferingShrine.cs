@@ -2,12 +2,13 @@ using UnityEngine;
 
 public class OfferingShrine : MonoBehaviour
 {
-    public int hpUpgradeAmount = 10;
-    public int spUpgradeAmount = 5;
-    public int mpUpgradeAmount = 5;
-    public float attackUpgradeMultiplier = 0.1f;
-    public float defenseUpgradePercent = 0.05f;
-   
+    [Header("Upgrade amounts per level")]
+    public int hpUpgradeAmount = 20;
+    public int spUpgradeAmount = 10;
+    public int mpUpgradeAmount = 10;
+    public float attackUpgradeMultiplier = 0.1f;   // +10% per level
+    public float defenseUpgradePercent  = 0.05f;   // +5% (as a fraction) per level
+
     public void UpgradePlayer(StatType type)
     {
         if (PlayerData.HasReachedMaxUpgrades(type))
@@ -16,43 +17,80 @@ public class OfferingShrine : MonoBehaviour
             return;
         }
 
-        int cost = PlayerData.GetUpgradeCost(type);
-        if (PlayerInventory.Instance.natureForce < cost)
+        PermanentItemType item = MapToPermanentItem(type);
+        if (!PlayerInventory.Instance.HasPermanentItem(item, 1))
         {
-            Debug.Log("Not enough Nature Force to upgrade.");
+            Debug.Log($"Not enough {item} to upgrade {type}.");
             return;
         }
 
-        PlayerInventory.Instance.AddNatureForce(-cost);
+        // consume item
+        PlayerInventory.Instance.ConsumePermanentItem(item, 1);
+
+        // increment level tracking
         PlayerData.IncrementUpgradeCount(type);
 
+        // apply the permanent effect to PlayerData + live stats
+        var ps = PlayerStats.Instance;
         switch (type)
         {
             case StatType.HP:
                 PlayerData.maxHP += hpUpgradeAmount;
-                PlayerStats.Instance.LoadFromData();
+                if (ps != null)
+                {
+                    float ratio = ps.maxHP > 0 ? (float)ps.currentHP / ps.maxHP : 1f;
+                    ps.maxHP = PlayerData.maxHP;
+                    ps.currentHP = Mathf.CeilToInt(ps.maxHP * Mathf.Clamp01(ratio));
+                }
                 break;
+
             case StatType.SP:
                 PlayerData.maxSP += spUpgradeAmount;
-                PlayerStats.Instance.LoadFromData();
+                if (ps != null)
+                {
+                    float ratio = ps.maxSP > 0 ? (float)ps.currentSP / ps.maxSP : 1f;
+                    ps.maxSP = PlayerData.maxSP;
+                    ps.currentSP = Mathf.CeilToInt(ps.maxSP * Mathf.Clamp01(ratio));
+                }
                 break;
+
             case StatType.MP:
                 PlayerData.maxMP += mpUpgradeAmount;
-                PlayerStats.Instance.LoadFromData();
+                if (ps != null)
+                {
+                    float ratio = ps.maxMP > 0 ? (float)ps.currentMP / ps.maxMP : 1f;
+                    ps.maxMP = PlayerData.maxMP;
+                    ps.currentMP = Mathf.CeilToInt(ps.maxMP * Mathf.Clamp01(ratio));
+                }
                 break;
+
             case StatType.ATK:
                 PlayerData.attackMultiplier += attackUpgradeMultiplier;
-                PlayerStats.Instance.LoadFromData();
+                if (ps != null) ps.attackMultiplier = PlayerData.attackMultiplier;
                 break;
+
             case StatType.DEF:
                 PlayerData.baseDefensePercent += defenseUpgradePercent;
-                PlayerStats.Instance.LoadFromData();
+                if (ps != null) ps.baseDefensePercent = PlayerData.baseDefensePercent;
                 break;
         }
 
-        Debug.Log($"[Shrine] Upgraded {type}, new count: {PlayerData.GetUpgradeCount(type)}");
-
-        PlayerStats.Instance?.LoadFromData();
+        // refresh live UI
+        if (ps != null) ps.RefreshUI();
         PlayerUIManager.Instance?.RefreshAllStats();
+        Debug.Log($"[Shrine] Upgraded {type}. New level: {PlayerData.GetUpgradeCount(type)}");
+    }
+
+    private PermanentItemType MapToPermanentItem(StatType type)
+    {
+        switch (type)
+        {
+            case StatType.HP:  return PermanentItemType.Flower;
+            case StatType.SP:  return PermanentItemType.Leaf;
+            case StatType.MP:  return PermanentItemType.Water;
+            case StatType.ATK: return PermanentItemType.Fruit;
+            case StatType.DEF: return PermanentItemType.Root;
+            default:           return PermanentItemType.Flower;
+        }
     }
 }

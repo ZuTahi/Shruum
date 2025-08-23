@@ -1,22 +1,33 @@
-// --- CheatManager.cs ---
 using UnityEngine;
 
 public class CheatManager : MonoBehaviour
 {
-    [Header("Cheat Settings")]
-    public int addNatureForceAmount = 1000;
-
     void Update()
     {
-        // Add Nature Force
-        if (Input.GetKeyDown(KeyCode.N))
+        // Debug Inventory
+        if (Input.GetKeyDown(KeyCode.M))
         {
-            if (PlayerInventory.Instance != null)
-            {
-                PlayerInventory.Instance.AddNatureForce(addNatureForceAmount);
-                Debug.Log($"[Cheat] Added {addNatureForceAmount} Nature Force.");
-            }
+            PlayerInventory.Instance?.DebugInventory();
         }
+
+        // Add Permanent Items
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            PlayerInventory.Instance?.AddPermanentItem(PermanentItemType.Flower, 1);
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            PlayerInventory.Instance?.AddPermanentItem(PermanentItemType.Leaf, 1);
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+            PlayerInventory.Instance?.AddPermanentItem(PermanentItemType.Water, 1);
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+            PlayerInventory.Instance?.AddPermanentItem(PermanentItemType.Fruit, 1);
+
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+            PlayerInventory.Instance?.AddPermanentItem(PermanentItemType.Root, 1);
+
+        if (Input.GetKeyDown(KeyCode.K))
+            PlayerInventory.Instance?.AddPermanentItem(PermanentItemType.WeaponKey, 1);
 
         // Clear Save Data
         if (Input.GetKeyDown(KeyCode.C))

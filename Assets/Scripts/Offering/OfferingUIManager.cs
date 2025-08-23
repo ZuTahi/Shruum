@@ -38,7 +38,7 @@ public class OfferingUIManager : MonoBehaviour
             selectedIndex = (selectedIndex + 1) % statBlocks.Length;
             UpdateUI();
         }
-        else if (Input.GetKeyDown(KeyCode.F))
+        else if (Input.GetKeyDown(KeyCode.Space))
         {
             TryUpgradeSelectedStat();
         }
@@ -74,16 +74,39 @@ public class OfferingUIManager : MonoBehaviour
         if (currentShrine == null) return;
 
         StatType type = (StatType)selectedIndex;
-        int cost = PlayerData.GetUpgradeCost(type);
 
-        if (PlayerInventory.Instance.natureForce >= cost)
+        // respect max level
+        if (PlayerData.HasReachedMaxUpgrades(type))
         {
-            currentShrine.UpgradePlayer(type);
-            UpdateUI(); // refresh cost + visuals
+            Debug.Log($"{type} is already at max level.");
+            return;
+        }
+
+        // each upgrade costs exactly 1 corresponding item
+        PermanentItemType needed = MapToPermanentItem(type);
+
+        if (PlayerInventory.Instance.HasPermanentItem(needed, 1))
+        {
+            currentShrine.UpgradePlayer(type);   // will consume the item and apply stats
+            UpdateUI();
         }
         else
         {
-            Debug.Log($"Not enough Nature Force. Needed: {cost}");
+            Debug.Log($"Need 1x {needed} to upgrade {type}.");
+        }
+    }
+
+    // helper to map StatType -> item
+    private PermanentItemType MapToPermanentItem(StatType type)
+    {
+        switch (type)
+        {
+            case StatType.HP:  return PermanentItemType.Flower;
+            case StatType.SP:  return PermanentItemType.Leaf;
+            case StatType.MP:  return PermanentItemType.Water;
+            case StatType.ATK: return PermanentItemType.Fruit;
+            case StatType.DEF: return PermanentItemType.Root;
+            default:           return PermanentItemType.Flower; // safe fallback
         }
     }
 
@@ -121,12 +144,11 @@ public class OfferingUIManager : MonoBehaviour
             string label = type.ToString();
             int upgradeCount = PlayerData.GetUpgradeCount(type);
             int maxCount = PlayerData.maxUpgradeCount;
-            int upgradeCost = PlayerData.GetUpgradeCost(type);
             Sprite icon = (i < statIcons.Length) ? statIcons[i] : null;
             bool selected = i == selectedIndex;
 
             // ✅ Show cost instead of stat value
-            statBlocks[i].SetData(label, upgradeCost, upgradeCount, maxCount, icon, selected);
+            statBlocks[i].SetData(label, upgradeCount, maxCount, icon, selected);
         }
 
         // Show upgrade prompt only if panel active

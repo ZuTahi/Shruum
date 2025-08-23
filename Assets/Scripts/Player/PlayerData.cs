@@ -1,3 +1,5 @@
+// PlayerData.cs
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -40,26 +42,66 @@ public static class PlayerData
     public static int atkUpgradeCount = 0;
     public static int defUpgradeCount = 0;
 
-    public static int maxUpgradeCount = 10;              // Cap per stat
-    public static int baseUpgradeCost = 100;             // Cost of first upgrade
-    public static int costIncreasePerUpgrade = 50;       // Linear increase per upgrade
+    public static int maxUpgradeCount = 10;
+    public static int baseUpgradeCost = 100;
+    public static int costIncreasePerUpgrade = 50;
+
+    // Permanent items (kept across runs)
+    public static Dictionary<PermanentItemType, int> permanentItems = new Dictionary<PermanentItemType, int>();
 
     static PlayerData()
     {
         ResetWeapons();
+        InitPermanentItems();
     }
 
+    public static void InitPermanentItems()
+    {
+        foreach (PermanentItemType type in Enum.GetValues(typeof(PermanentItemType)))
+            if (!permanentItems.ContainsKey(type)) permanentItems[type] = 0;
+    }
+
+    // -------- Permanent item helpers (used by PlayerInventory) --------
+    public static void AddPermanentItem(PermanentItemType type, int amount = 1)
+    {
+        if (!permanentItems.ContainsKey(type)) permanentItems[type] = 0;
+        permanentItems[type] += amount;
+        Debug.Log($"[PlayerData] Added {amount}x {type}. Total = {permanentItems[type]}");
+        SaveSystem.SavePlayer();
+    }
+
+    public static bool ConsumePermanentItem(PermanentItemType type, int amount = 1)
+    {
+        if (permanentItems.ContainsKey(type) && permanentItems[type] >= amount)
+        {
+            permanentItems[type] -= amount;
+            Debug.Log($"[PlayerData] Consumed {amount}x {type}. Remaining = {permanentItems[type]}");
+            SaveSystem.SavePlayer();
+            return true;
+        }
+        Debug.LogWarning($"[PlayerData] Tried to consume {amount}x {type}, but not enough!");
+        return false;
+    }
+
+    public static int GetPermanentItemCount(PermanentItemType type)
+    {
+        return permanentItems.ContainsKey(type) ? permanentItems[type] : 0;
+    }
+
+    // -------- Save/Load --------
     public static void LoadFromSaveData(PlayerSaveData data)
     {
         natureForce = data.natureForce;
-        maxHP = data.maxHP;
-        maxSP = data.maxSP;
-        maxMP = data.maxMP;
+
+        maxHP = data.maxHP; maxSP = data.maxSP; maxMP = data.maxMP;
+        currentHP = data.currentHP; currentSP = data.currentSP; currentMP = data.currentMP;
+
         attackMultiplier = data.attackMultiplier;
         baseDefensePercent = data.baseDefensePercent;
         defenseMultiplier = data.defenseMultiplier;
-        loreNotes = data.loreNotes.ToList();
+        staminaRegenRate = data.staminaRegenRate;
 
+        loreNotes = data.loreNotes.ToList();
         unlockedWeapons = new HashSet<WeaponType>(data.unlockedWeapons);
 
         hpUpgradeCount = data.hpUpgradeCount;
@@ -67,30 +109,33 @@ public static class PlayerData
         mpUpgradeCount = data.mpUpgradeCount;
         atkUpgradeCount = data.atkUpgradeCount;
         defUpgradeCount = data.defUpgradeCount;
+
+        // rebuild permanent item dict from array
+        permanentItems.Clear();
+        InitPermanentItems();
+        foreach (PermanentItemType t in Enum.GetValues(typeof(PermanentItemType)))
+            permanentItems[t] = data.GetItemCount(t);
+
+        Debug.Log("[PlayerData] Loaded from save.");
     }
 
+    // -------- Weapons --------
     public static void UnlockWeapon(WeaponType weapon)
     {
-        if (!unlockedWeapons.Contains(weapon))
+        if (unlockedWeapons.Add(weapon))
         {
-            unlockedWeapons.Add(weapon);
             Debug.Log($"[PlayerData] Unlocked weapon: {weapon}");
+            SaveSystem.SavePlayer();
         }
     }
 
-    public static bool IsWeaponUnlocked(WeaponType weapon)
-    {
-        return unlockedWeapons.Contains(weapon);
-    }
+    public static bool IsWeaponUnlocked(WeaponType weapon) => unlockedWeapons.Contains(weapon);
 
+    // -------- Reset --------
     public static void ResetToDefault()
     {
-        maxHP = 50;
-        maxSP = 50;
-        maxMP = 50;
-        currentHP = maxHP;
-        currentSP = maxSP;
-        currentMP = maxMP;
+        maxHP = 50; maxSP = 50; maxMP = 50;
+        currentHP = maxHP; currentSP = maxSP; currentMP = maxMP;
 
         attackMultiplier = 1f;
         baseDefensePercent = 0f;
@@ -99,38 +144,33 @@ public static class PlayerData
         natureForce = 0;
         loreNotes.Clear();
 
-        hpUpgradeCount = 0;
-        spUpgradeCount = 0;
-        mpUpgradeCount = 0;
-        atkUpgradeCount = 0;
-        defUpgradeCount = 0;
+        hpUpgradeCount = 0; spUpgradeCount = 0; mpUpgradeCount = 0; atkUpgradeCount = 0; defUpgradeCount = 0;
 
         ResetWeapons();
+        permanentItems.Clear();
+        InitPermanentItems();
 
         Debug.Log("[PlayerData] Reset to default values.");
+        SaveSystem.SavePlayer();
     }
 
     private static void ResetWeapons()
     {
         for (int i = 0; i < equippedWeapons.Length; i++)
             equippedWeapons[i] = WeaponType.None;
-
         unlockedWeapons = new HashSet<WeaponType>();
     }
 
-    // Upgrade Tracking Utilities
-    public static int GetUpgradeCount(StatType type)
+    // -------- Upgrade helpers (unchanged) --------
+    public static int GetUpgradeCount(StatType type) => type switch
     {
-        return type switch
-        {
-            StatType.HP => hpUpgradeCount,
-            StatType.SP => spUpgradeCount,
-            StatType.MP => mpUpgradeCount,
-            StatType.ATK => atkUpgradeCount,
-            StatType.DEF => defUpgradeCount,
-            _ => 0
-        };
-    }
+        StatType.HP => hpUpgradeCount,
+        StatType.SP => spUpgradeCount,
+        StatType.MP => mpUpgradeCount,
+        StatType.ATK => atkUpgradeCount,
+        StatType.DEF => defUpgradeCount,
+        _ => 0
+    };
 
     public static void IncrementUpgradeCount(StatType type)
     {
@@ -142,6 +182,7 @@ public static class PlayerData
             case StatType.ATK: atkUpgradeCount++; break;
             case StatType.DEF: defUpgradeCount++; break;
         }
+        SaveSystem.SavePlayer();
     }
 
     public static int GetUpgradeCost(StatType type)
@@ -150,8 +191,5 @@ public static class PlayerData
         return baseUpgradeCost + (count * costIncreasePerUpgrade);
     }
 
-    public static bool HasReachedMaxUpgrades(StatType type)
-    {
-        return GetUpgradeCount(type) >= maxUpgradeCount;
-    }
+    public static bool HasReachedMaxUpgrades(StatType type) => GetUpgradeCount(type) >= maxUpgradeCount;
 }

@@ -5,11 +5,9 @@ public class EnemyDrop : MonoBehaviour
 {
     [Header("Drop Prefabs")]
     public GameObject manaDropPrefab;
-    public GameObject natureForceDropPrefab;
 
     [Header("Drop Values")]
     public int manaAmount = 1;
-    public int natureForceAmount = 1;
 
     [Header("Spawn Tuning")]
     public float dropSpreadRadius = 0.25f;   // smaller ring around enemy
@@ -18,10 +16,9 @@ public class EnemyDrop : MonoBehaviour
     public float groundProbeHeight = 1.5f;   // how far above we raycast from
     public float spawnLift = 0.06f;          // small lift to prevent ground clipping
 
-    public void SetDropValues(int mana, int natureForce)
+    public void SetDropValues(int mana)
     {
         manaAmount = mana;
-        natureForceAmount = natureForce;
     }
 
     public void DropItems()
@@ -48,14 +45,6 @@ public class EnemyDrop : MonoBehaviour
             Vector2 planar = Random.insideUnitCircle * dropSpreadRadius;
             Vector3 pos = basePos + new Vector3(planar.x, spawnLift, planar.y);
             SpawnOne(manaDropPrefab, pos, enemyCols);
-        }
-
-        // Spawn nature force
-        for (int i = 0; i < natureForceAmount; i++)
-        {
-            Vector2 planar = Random.insideUnitCircle * dropSpreadRadius;
-            Vector3 pos = basePos + new Vector3(planar.x, spawnLift, planar.y);
-            SpawnOne(natureForceDropPrefab, pos, enemyCols);
         }
     }
 

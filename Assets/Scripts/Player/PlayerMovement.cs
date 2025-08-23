@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     // Dash state
     private bool isDashing = false;
     private float dashTimer = 0f;
+    public bool canDash = true;
     private float dashCooldownTimer = 0f;
     private Vector3 dashDirection;
 
@@ -53,7 +54,9 @@ public class PlayerMovement : MonoBehaviour
         if (dashCooldownTimer > 0f)
             dashCooldownTimer -= Time.deltaTime;
 
+        // ✅ Dash only if not interacting
         if (Input.GetKeyDown(KeyCode.Space)
+            && canDash  
             && !isDashing
             && dashCooldownTimer <= 0f
             && PlayerStats.Instance != null

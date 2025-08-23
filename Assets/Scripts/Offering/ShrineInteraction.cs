@@ -17,12 +17,13 @@ public class ShrineInteraction : MonoBehaviour
     {
         if (!playerInRange) return;
 
-        if (Input.GetKeyDown(KeyCode.F) && !uiManager.IsPanelActive())
+        if (Input.GetKeyDown(KeyCode.Space) && !uiManager.IsPanelActive())
         {
             uiManager.ShowOfferingPanel(GetComponentInParent<OfferingShrine>());
             if (promptUI != null)
                 promptUI.HidePrompt(); // Hide when UI is open
         }
+        PlayerMovement.Instance.canDash = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -32,7 +33,7 @@ public class ShrineInteraction : MonoBehaviour
             playerInRange = true;
 
             if (promptUI != null && !uiManager.IsPanelActive())
-                promptUI.ShowPrompt("Press [F] to Interact");
+                promptUI.ShowPrompt("Press [SPACE] to Interact");
         }
     }
 
@@ -45,7 +46,8 @@ public class ShrineInteraction : MonoBehaviour
             if (promptUI != null)
                 promptUI.HidePrompt();
 
-            uiManager.HideOfferingPanel(); // Auto-close UI when walking away
+            uiManager.HideOfferingPanel();
+            PlayerMovement.Instance.canDash = true; // Auto-close UI when walking away
         }
     }
 }

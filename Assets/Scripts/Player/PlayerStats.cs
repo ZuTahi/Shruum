@@ -48,35 +48,35 @@ public class PlayerStats : MonoBehaviour
     }
     public void LoadFromData()
     {
-        // Capture old ratios and "was full" flags
-        float hpRatio = (maxHP > 0) ? (float)currentHP / maxHP : 1f;
-        bool hpWasFull = (maxHP > 0) && (currentHP >= maxHP);
-
-        float spRatio = (maxSP > 0) ? (float)currentSP / maxSP : 1f;
-        bool spWasFull = (maxSP > 0) && (currentSP >= maxSP);
-
-        float mpRatio = (maxMP > 0) ? (float)currentMP / maxMP : 1f;
-        bool mpWasFull = (maxMP > 0) && (currentMP >= maxMP);
-
         // Load permanent baseline
         maxHP = PlayerData.maxHP;
         maxSP = PlayerData.maxSP;
         maxMP = PlayerData.maxMP;
 
-        attackMultiplier     = PlayerData.attackMultiplier;
-        baseDefensePercent   = PlayerData.baseDefensePercent;
-        defenseMultiplier    = PlayerData.defenseMultiplier;
+        attackMultiplier   = PlayerData.attackMultiplier;
+        baseDefensePercent = PlayerData.baseDefensePercent;
+        defenseMultiplier  = PlayerData.defenseMultiplier;
 
-        // Apply run buffs (adds bonusHP, etc.)
-        RunData.ApplyRunBuffs(this);  // 
+        // Apply run buffs
+        RunData.ApplyRunBuffs(this);
 
-        // Restore currents: if it was full, keep it full; else keep the same ratio
-        currentHP = hpWasFull ? maxHP : Mathf.RoundToInt(hpRatio * maxHP);
-        currentSP = spWasFull ? maxSP : Mathf.RoundToInt(spRatio * maxSP);
-        currentMP = mpWasFull ? maxMP : Mathf.RoundToInt(mpRatio * maxMP);
+        // Restore live values if available
+        if (PlayerData.currentHP > 0 || PlayerData.currentSP > 0 || PlayerData.currentMP > 0)
+        {
+            currentHP = Mathf.Clamp(PlayerData.currentHP, 0, maxHP);
+            currentSP = Mathf.Clamp(PlayerData.currentSP, 0, maxSP);
+            currentMP = Mathf.Clamp(PlayerData.currentMP, 0, maxMP);
+        }
+        else
+        {
+            // Fallback: default to full if PlayerData doesn't have live values
+            currentHP = maxHP;
+            currentSP = maxSP;
+            currentMP = maxMP;
+        }
 
         RefreshUI();
-        Debug.Log("[PlayerStats] Loaded from PlayerData (ratios preserved).");
+        Debug.Log("[PlayerStats] Loaded from PlayerData (carried live stats).");
     }
 
     public void TakeDamage(int rawDamage)
@@ -159,6 +159,12 @@ public class PlayerStats : MonoBehaviour
     public void RefreshUI()
     {
         PlayerUIManager.Instance?.RefreshAllStats();
+    }
+    public void SaveToPlayerData()
+    {
+        PlayerData.currentHP = currentHP;
+        PlayerData.currentSP = currentSP;
+        PlayerData.currentMP = currentMP;
     }
 
     public void RevivePlayer()

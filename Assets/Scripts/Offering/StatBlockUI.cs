@@ -5,28 +5,41 @@ using UnityEngine.UI;
 public class StatBlockUI : MonoBehaviour
 {
     [Header("UI Elements")]
-    public TextMeshProUGUI statNameText;
-    public TextMeshProUGUI statValueText;
-    public TextMeshProUGUI upgradeCountText;
-    public Image icon;
+    [SerializeField] private TextMeshProUGUI statNameText;
+    [SerializeField] private TextMeshProUGUI upgradeCountText;
+    [SerializeField] private Image icon;
 
     [Header("Colors")]
-    public Color selectedColor = Color.white;
-    public Color unselectedColor = new Color(0.5f, 0.5f, 0.5f); // Gray
+    [SerializeField] private Color selectedColor = Color.white;
+    [SerializeField] private Color unselectedColor = new Color(0.5f, 0.5f, 0.5f); // Gray
 
-    public void SetData(string name, int value, int count, int maxCount, Sprite iconSprite, bool isSelected)
+    /// <summary>
+    /// Updates how the stat block looks.
+    /// </summary>
+    public void SetData(string name, int count, int maxCount, Sprite iconSprite, bool isSelected)
     {
+        // Base slot visuals
         statNameText.text = name;
-        statValueText.text = value.ToString();
-        upgradeCountText.text = $"{count}/{maxCount}";
         icon.sprite = iconSprite;
 
-        // Set visibility and color
+        // Determine display text for upgrade count
+        string displayText;
+        if (count <= 0)
+            displayText = "upgrade";
+        else if (count >= maxCount)
+            displayText = "Max";
+        else
+            displayText = $"LvLl. {count}";
+
+        // Apply text + visibility
+        upgradeCountText.text = displayText;
+        upgradeCountText.gameObject.SetActive(isSelected);
+
+        // Tint colors depending on selection
         statNameText.color = isSelected ? selectedColor : unselectedColor;
-        statValueText.color = isSelected ? selectedColor : unselectedColor;
-        upgradeCountText.color = isSelected ? selectedColor : unselectedColor;
         icon.color = isSelected ? selectedColor : unselectedColor;
 
-        statValueText.gameObject.SetActive(isSelected);
+        if (isSelected)
+            upgradeCountText.color = selectedColor;
     }
 }

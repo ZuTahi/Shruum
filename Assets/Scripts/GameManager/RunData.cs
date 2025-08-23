@@ -44,6 +44,12 @@ public class RunData
             Debug.LogWarning("[RunData] No PlayerStats found to apply artifact.");
             return;
         }
+        // ✅ Capture ratios before buffs are applied
+        float hpRatio = (playerStats.maxHP > 0) ? (float)playerStats.currentHP / playerStats.maxHP : 1f;
+        bool hpWasFull = playerStats.currentHP >= playerStats.maxHP;
+
+        float mpRatio = (playerStats.maxMP > 0) ? (float)playerStats.currentMP / playerStats.maxMP : 1f;
+        bool mpWasFull = playerStats.currentMP >= playerStats.maxMP;
 
         switch (artifact.effectType)
         {
@@ -65,6 +71,11 @@ public class RunData
         }
 
         playerStats.LoadFromData();
+        playerStats.currentHP = hpWasFull ? playerStats.maxHP : Mathf.RoundToInt(hpRatio * playerStats.maxHP);
+        playerStats.currentMP = mpWasFull ? playerStats.maxMP : Mathf.RoundToInt(mpRatio * playerStats.maxMP);
+        PlayerData.currentHP = playerStats.currentHP;
+        PlayerData.currentSP = playerStats.currentSP;
+        PlayerData.currentMP = playerStats.currentMP;
         Debug.Log($"[RunData] Artifact applied and buffs updated: {artifact.artifactName}");
         playerStats.RefreshUI();
     }
@@ -83,12 +94,19 @@ public class RunData
     // Clear run data after death, quit, or victory
     public static void ClearRunData()
     {
+        bonusHP = 0;
+        bonusSP = 0;
+        bonusMP = 0;
+        bonusAttack = 0f;
+        bonusDefense = 0f;
+
         if (CurrentRun != null)
         {
             CurrentRun.acquiredArtifacts.Clear();
             CurrentRun.roomsCleared = 0;
             CurrentRun = null;
-            Debug.Log("[RunData] Run data cleared.");
         }
+
+        Debug.Log("[RunData] Run data cleared (bonuses reset).");
     }
 }

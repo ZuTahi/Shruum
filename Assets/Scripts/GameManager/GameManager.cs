@@ -61,13 +61,20 @@ public class GameManager : MonoBehaviour
 
     public void RespawnAtHub()
     {
-        Debug.Log("Player died, respawning at Hub...");
-        RunData.ClearRunData();   // Clear temporary buffs
-        ResetCurrentRunData();
-        SceneManager.sceneLoaded += OnHubLoaded;
-        SceneManager.LoadScene("HubScene");
-        SaveGame();
+        // Clear temporary run buffs
+        RunData.ClearRunData();
+
+        // Reset player stats to full before loading hub
+        PlayerData.currentHP = PlayerData.maxHP;
+        PlayerData.currentSP = PlayerData.maxSP;
+        PlayerData.currentMP = PlayerData.maxMP;
+
+        // Now load the Hub scene (example)
+        UnityEngine.SceneManagement.SceneManager.LoadScene("HubScene");
+
+        Debug.Log("[GameManager] Respawning player at hub with full stats.");
     }
+
     private void OnHubLoaded(Scene scene, LoadSceneMode mode)
     {
         if (scene.name == "HubScene")

@@ -24,11 +24,8 @@ public class EnemyAIController : MonoBehaviour, IDamageable
 
     [Header("Drops")]
     public EnemyDrop enemyDropPrefab;
-    public int minNatureForceDrop = 1;
-    public int maxNatureForceDrop = 3;
     public int minManaDrop = 0;
     public int maxManaDrop = 2;
-    [Range(0f, 1f)] public float loreNoteDropChance = 0.15f;
 
     [Header("VFX")]
     public GameObject poofPrefab;   // assign in inspector (TUNIC-style poof effect)
@@ -571,15 +568,14 @@ private void MeleeAttack()
         if (enemyDropPrefab != null)
         {
             var drop = Instantiate(enemyDropPrefab, transform.position, Quaternion.identity);
-            int natureForce = Random.Range(minNatureForceDrop, maxNatureForceDrop + 1);
+            
+            // Only drop mana
             int mana = Random.Range(minManaDrop, maxManaDrop + 1);
-            drop.SetDropValues(mana, natureForce);
+            drop.SetDropValues(mana);   // updated EnemyDrop script should only take mana now
             drop.DropItems();
         }
-
-        if (Random.value < loreNoteDropChance)
-            PlayerInventory.Instance?.AddRandomLoreNote();
     }
+
     private void OnDrawGizmosSelected()
     {
         if (data == null) return;

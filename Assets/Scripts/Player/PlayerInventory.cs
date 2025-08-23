@@ -1,63 +1,99 @@
+// PlayerInventory.cs
 using UnityEngine;
+using System;
 using System.Collections.Generic;
+
+public enum PermanentItemType
+{
+    Flower,   // HP
+    Leaf,     // SP
+    Water,    // MP
+    Fruit,    // Attack
+    Root,     // Defense
+    WeaponKey // Unlock weapons
+}
 
 public class PlayerInventory : MonoBehaviour
 {
     public static PlayerInventory Instance { get; private set; }
 
-    public int natureForce = 0;
-    public List<string> loreNotes = new List<string>();
+    // How many of each item player owns (runtime mirror of PlayerData)
+    private Dictionary<PermanentItemType, int> permanentItems = new Dictionary<PermanentItemType, int>();
 
     private void Awake()
     {
-        if (Instance != null) Destroy(gameObject);
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
-        natureForce = PlayerData.natureForce;
+
+        // Init dictionary with 0 counts
+        foreach (PermanentItemType type in Enum.GetValues(typeof(PermanentItemType)))
+            permanentItems[type] = 0;
     }
 
-    public void AddNatureForce(int amount)
+    private void Start()
     {
-        natureForce += amount;
-        PlayerData.natureForce = natureForce;
-        // Optional: Clamp to non-negative values
-        if (natureForce < 0)
-            natureForce = 0;
-
-        NatureForceUI.Instance?.UpdateNatureUI(natureForce);
+        // Optional: sync from PlayerData on scene start
+        foreach (PermanentItemType t in Enum.GetValues(typeof(PermanentItemType)))
+            permanentItems[t] = PlayerData.GetPermanentItemCount(t);
     }
 
-    public void AddRandomLoreNote()
+    // --- Add / Remove / Query permanent items ---
+    public void AddPermanentItem(PermanentItemType type, int amount = 1)
     {
-        if (PlayerData.loreNotes.Count == 0)
+        if (!permanentItems.ContainsKey(type))
+            permanentItems[type] = 0;
+
+        permanentItems[type] += amount;
+
+        // also reflect into PlayerData (which saves)
+        PlayerData.AddPermanentItem(type, amount);
+
+        Debug.Log($"[Inventory] Added {amount}x {type}. Total = {permanentItems[type]}");
+    }
+
+    public bool ConsumePermanentItem(PermanentItemType type, int amount = 1)
+    {
+        if (GetPermanentItemCount(type) >= amount)
         {
-            Debug.Log("No lore notes available to collect.");
-            return;
+            permanentItems[type] -= amount;
+
+            // also reflect into PlayerData (which saves)
+            var ok = PlayerData.ConsumePermanentItem(type, amount);
+            Debug.Log($"[Inventory] Consumed {amount}x {type}. Remaining = {permanentItems[type]}");
+            return ok;
         }
+        Debug.LogWarning($"[Inventory] Tried to consume {amount}x {type}, but not enough in inventory!");
+        return false;
+    }
 
-        // Pick a random lore note not already owned
-        var availableNotes = new List<string>(PlayerData.loreNotes);
-        availableNotes.RemoveAll(note => loreNotes.Contains(note));
+    public int GetPermanentItemCount(PermanentItemType type)
+    {
+        return permanentItems.ContainsKey(type) ? permanentItems[type] : 0;
+    }
 
-        if (availableNotes.Count == 0)
-        {
-            Debug.Log("All lore notes already collected.");
-            return;
-        }
-
-        int randomIndex = Random.Range(0, availableNotes.Count);
-        string randomNote = availableNotes[randomIndex];
-        loreNotes.Add(randomNote);
-        Debug.Log("Collected Random Lore Note: " + randomNote);
-
-        // Optionally update UI here
+    public bool HasPermanentItem(PermanentItemType type, int amount = 1)
+    {
+        return GetPermanentItemCount(type) >= amount;
     }
 
     public void LoadData(PlayerSaveData data)
     {
-        natureForce = data.natureForce;
-        PlayerData.natureForce = natureForce;
+        foreach (PermanentItemType type in Enum.GetValues(typeof(PermanentItemType)))
+            permanentItems[type] = data.GetItemCount(type);
 
-        loreNotes = new List<string>(data.loreNotes);
-        NatureForceUI.Instance?.UpdateNatureUI(natureForce);
+        Debug.Log("[Inventory] Data loaded from PlayerSaveData.");
+    }
+
+    // Handy debug
+    public void DebugInventory()
+    {
+        Debug.Log("=== Permanent Inventory ===");
+        foreach (var kvp in permanentItems)
+            Debug.Log($"{kvp.Key}: {kvp.Value}");
+        Debug.Log("===========================");
     }
 }

@@ -1,23 +1,28 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DoorController : MonoBehaviour
 {
     [Header("Door Components")]
-    public Animator doorAnimator; // Animator with isLocked bool controlling open/close
+    public Animator doorAnimator;
 
-    /// <summary>
-    /// Lock the door: activate collider and play lock animation.
-    /// </summary>
+    public string nextSceneName; // assign in inspector
 
-    /// <summary>
-    /// Unlock the door: play open animation. Collider stays enabled if it's animated.
-    /// </summary>
     public void Unlock()
     {
-        // We no longer disable the collider, since the animated mesh moves away
         if (doorAnimator != null)
             doorAnimator.SetBool("isLocked", false);
 
         Debug.Log($"{gameObject.name} is now Unlocked.");
+
+        // Save player stats before leaving this room
+        if (PlayerStats.Instance != null)
+        {
+            PlayerStats.Instance.SaveToPlayerData();
+        }
+
+        // Then load next room
+        SceneManager.LoadScene(nextSceneName);
     }
 }
+
