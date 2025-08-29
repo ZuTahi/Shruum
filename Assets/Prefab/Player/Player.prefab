@@ -527,6 +527,7 @@ MonoBehaviour:
   defenseMultiplier: 1
   attackMultiplier: 1
   staminaRegenRate: 7
+  animator: {fileID: 8646550266716709962}
 --- !u!114 &3908167795112065903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -573,7 +574,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponSlots:
-  - {fileID: 0}
+  - {fileID: 381676998158350765}
   - {fileID: 0}
   - {fileID: 0}
   allWeapons:

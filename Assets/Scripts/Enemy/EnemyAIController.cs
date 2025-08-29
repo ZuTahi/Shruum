@@ -13,6 +13,7 @@ public class EnemyAIController : MonoBehaviour, IDamageable
     private NavMeshAgent agent;
     private Renderer rend;
     private Color originalColor;
+    private bool hasAggro = false;
 
     [Header("UI")]
     public EnemyHealthBar healthBarPrefab;
@@ -142,13 +143,25 @@ public class EnemyAIController : MonoBehaviour, IDamageable
             currentState = EnemyState.Chase;
             return;
         }
+        if (!hasAggro && distToPlayer <= data.awarenessRadius)
+        {
+            hasAggro = true;  // 🟢 lock aggro forever
+            aggroIconInstance?.Show();
+            if (agent != null) agent.ResetPath();
+            currentState = EnemyState.Chase;
+            return;
+        }
         WanderMovementStep();
     }
 
     private void UpdateChase()
     {
+        if (player == null) return;
+
+        // 🟢 Always ensure agent is active when chasing
         if (agent != null && data.usesNavMesh)
         {
+            agent.isStopped = false;
             agent.SetDestination(player.position);
 
             if (agent.velocity.sqrMagnitude > 0.0001f)
@@ -174,8 +187,9 @@ public class EnemyAIController : MonoBehaviour, IDamageable
             }
         }
 
-        // Directly enter attack if close enough
-        if (Vector3.Distance(transform.position, player.position) <= data.attackRange)
+        // 🟢 Enter Windup → Attack if in range
+        float distToPlayer = Vector3.Distance(transform.position, player.position);
+        if (distToPlayer <= data.attackRange)
         {
             if (agent != null)
             {
@@ -183,15 +197,12 @@ public class EnemyAIController : MonoBehaviour, IDamageable
                 agent.isStopped = true;
             }
 
-            // 🟢 Go into Windup first instead of Attack
             currentState = EnemyState.Windup;
-            stateTimer = data.preAttackDuration;  // give time to rotate/telegraph
+            stateTimer = data.preAttackDuration;  // telegraph time
             animator.SetFloat("Speed", 0f);
-
-            return;
         }
-
     }
+
    private void UpdateWindup()
 {
     FacePlayer(); // lock in facing while winding up
@@ -258,16 +269,8 @@ private void UpdateAttack()
         stateTimer -= Time.deltaTime;
         if (stateTimer <= 0f)
         {
-            float distToPlayer = Vector3.Distance(transform.position, player.position);
-            if (distToPlayer <= data.awarenessRadius)
-            {
-                currentState = EnemyState.Chase;
-            }
-            else
-            {
-                EnterWanderWaiting();
-                currentState = EnemyState.Wander;
-            }
+
+            currentState = EnemyState.Chase;
         }
     }
     // ------------------- WANDER SUB-STATE MACHINE -------------------
@@ -459,59 +462,66 @@ private void UpdateAttack()
 
     // ------------------- ATTACK METHODS -------------------
 
-   private void LungeForward()
-{
-    if (!damageApplied)
+    private void LungeForward()
     {
-        Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward * 1f, 1f);
-        foreach (var hit in hits)
+        if (!damageApplied)
         {
-            if (hit.CompareTag("Player"))
+            // Hitbox shifted forward (head area), tighter radius
+            Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward * 1.2f, 0.8f);
+            foreach (var hit in hits)
             {
-                var ps = hit.GetComponent<PlayerStats>();
-                if (ps != null) ps.TakeDamage(data.attackDamage);
+                if (hit.CompareTag("Player"))
+                {
+                    var ps = hit.GetComponent<PlayerStats>();
+                    if (ps != null) ps.TakeDamage(data.attackDamage);
 
-                damageApplied = true;
+                    damageApplied = true;
 
-                // 🛑 stop lunge movement when player is hit
-                stateTimer = 0f; 
-                return;
+                    // stop lunge immediately on hit
+                    stateTimer = 0f; 
+                    return;
+                }
             }
         }
+
+        // keep moving forward only while in attack state
+        if (!damageApplied)
+            transform.position += transform.forward * 18f * Time.deltaTime;
     }
 
-    // only move forward if no hit yet
-    if (!damageApplied)
-        transform.position += transform.forward * 18f * Time.deltaTime;
-}
-
-private void MeleeAttack()
-{
-    // Always face the player during melee attacks
-    FacePlayer();
-
-    if (!damageApplied)
+    private void MeleeAttack()
     {
-        // attack directly in front of the enemy
+        FacePlayer();
+    }
+    // Called by Animation Event at the strike frame
+// Called by Animation Event at the strike frame
+    public void OnMeleeHit()
+    {
+        if (damageApplied) return;
+
         Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward, 1f);
         foreach (var hit in hits)
         {
             if (hit.CompareTag("Player"))
             {
                 var ps = hit.GetComponent<PlayerStats>();
-                if (ps != null) ps.TakeDamage(data.attackDamage);
+                if (ps != null)
+                {
+                    ps.TakeDamage(data.attackDamage);
+                }
+
                 damageApplied = true;
                 break;
             }
         }
     }
-}
 
     // ------------------- DAMAGE -------------------
     public void TakeDamage(int amount, Vector3 hitPoint, GameObject source)
     {
         health -= amount;
-
+        hasAggro = true;
+        currentState = EnemyState.Chase; 
         if (healthBarInstance != null)
         {
             healthBarInstance.Show();             // 🆕 make it visible
@@ -579,9 +589,26 @@ private void MeleeAttack()
     private void OnDrawGizmosSelected()
     {
         if (data == null) return;
+
+        // Awareness + Attack range (already there)
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, data.awarenessRadius);
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, data.attackRange);
+
+        // 🟢 Show Lunge hitbox
+        if (data.attackStyle == EnemyAttackStyle.Lunge)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(transform.position + transform.forward * 1f, 1f);
+        }
+
+        // 🟢 Show Melee hitbox
+        if (data.attackStyle == EnemyAttackStyle.NormalMelee)
+        {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawWireSphere(transform.position + transform.forward, .5f);
+        }
     }
+
 }

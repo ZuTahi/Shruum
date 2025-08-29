@@ -22,6 +22,7 @@ public class PlayerStats : MonoBehaviour
 
     public float TotalDefensePercent => Mathf.Clamp01(baseDefensePercent * defenseMultiplier);
     private bool isDead = false;
+    public Animator animator;
     public static PlayerStats Instance { get; private set; }
 
     private void Awake()
@@ -93,12 +94,20 @@ public class PlayerStats : MonoBehaviour
         {
             currentHP = 0;
             isDead = true;
+            animator?.SetTrigger("Die");
             Debug.Log("Player has died.");
-            GameManager.Instance.RespawnAtHub();
+            Invoke(nameof(HandleDeath), 2f);
+        }
+        else
+        {
+            animator?.SetTrigger("Stagger");
         }
         PlayerUIManager.Instance.UpdateHP(currentHP, maxHP);
     }
-
+    private void HandleDeath()
+    {
+        GameManager.Instance.RespawnAtHub();
+    }
     private void RegenerateStamina()
     {
         spRegenBuffer += staminaRegenRate * Time.deltaTime;

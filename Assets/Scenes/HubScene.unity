@@ -4512,7 +4512,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d00c57c89f51f8b458e0aabbe82b327f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  addNatureForceAmount: 1000
 --- !u!4 &1618677135
 Transform:
   m_ObjectHideFlags: 0
@@ -6598,8 +6597,7 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1661787649}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 1305607198739358890, guid: d4331c7cb2b73c540aef37bce070239c, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4331c7cb2b73c540aef37bce070239c, type: 3}
