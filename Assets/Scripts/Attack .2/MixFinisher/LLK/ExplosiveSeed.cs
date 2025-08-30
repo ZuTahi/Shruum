@@ -2,49 +2,24 @@ using UnityEngine;
 
 public class ExplosiveSeed : MonoBehaviour
 {
-    [Header("Projectile Settings")]
-    public float travelSpeed = 12f;
-    public float maxLifetime = 3f;
-    public int directDamage = 10;
+    public GameObject explosionDamageZonePrefab; // ExplosionDamageZone prefab
+    public float explosionRadius = 5f;   // Explosion radius for collision
+    public float explosionForce = 10f;    // Explosion force (optional)
+    public LayerMask damageableLayer;     // Layer to damage (e.g., enemies, player)
+    public float lifetime = 5f;           // Lifetime of the seed before it explodes (optional)
 
-    public GameObject explosionEffectPrefab; // Particle system prefab
-
-    private float timer = 0f;
-
-    void Update()
+    private void OnCollisionEnter(Collision collision)
     {
-        transform.position += transform.forward * travelSpeed * Time.deltaTime;
-        timer += Time.deltaTime;
+        // Instantiate ExplosionDamageZone at the point of collision
+        Instantiate(explosionDamageZonePrefab, transform.position, Quaternion.identity);
 
-        if (timer > maxLifetime)
-        {
-            Explode(null); // No direct hit
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("SeedProjectile"))
-            return;
-
-        // Deal direct hit damage if it's an enemy
-        if (other.TryGetComponent<IDamageable>(out var target))
-        {
-            int finalDamage = Mathf.CeilToInt(directDamage * PlayerStats.Instance.attackMultiplier);
-            target.TakeDamage(finalDamage, other.ClosestPoint(transform.position), gameObject);
-            Explode(other.gameObject);
-        }
-        else
-        {
-            Explode(other.gameObject);
-        }
-    }
-
-    private void Explode(GameObject hitObject)
-    {
-        if (explosionEffectPrefab)
-            Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
-
+        // Destroy the ExplosiveSeed after it collides (and spawns the ExplosionDamageZone)
         Destroy(gameObject);
+    }
+
+    private void Start()
+    {
+        // Optionally destroy after lifetime to avoid it staying in the world forever
+        Destroy(gameObject, lifetime);
     }
 }

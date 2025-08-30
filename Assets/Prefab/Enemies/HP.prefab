@@ -121,7 +121,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &315320903870898464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,6 +152,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 3429108721701729278}
+  shakeDuration: 0.2
+  shakeMagnitude: 0.15
 --- !u!1 &5271034754705033818
 GameObject:
   m_ObjectHideFlags: 0

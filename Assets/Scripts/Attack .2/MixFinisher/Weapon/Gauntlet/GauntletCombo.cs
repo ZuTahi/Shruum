@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -240,14 +240,34 @@ public class GauntletCombo : ModularWeaponCombo
     }
     private IEnumerator SpawnBladeSpikesRoutine()
     {
-        float duration = 5f;
-        float interval = 1f;
+        float duration = 5f;         // How long to spawn the spikes
+        float interval = 1f;         // Time between each spike spawn
         float timer = 0f;
+        float radius = 2f;           // Radius of the ring around the player
+        int spikesPerTick = 8;       // Number of spikes per tick to create a full circle
 
         while (timer < duration)
         {
-            Instantiate(bladeSpikePrefab, transform.root.position, Quaternion.identity);
+            // Get the player's current position
+            Vector3 playerPos = transform.root.position;
+
+            // Spawn spikes in a ring around the player
+            for (int i = 0; i < spikesPerTick; i++)
+            {
+                // Calculate angle for each spike around the circle
+                float angle = i * Mathf.PI * 2 / spikesPerTick;
+
+                // Calculate spawn position based on the angle
+                Vector3 spawnPosition = playerPos + new Vector3(Mathf.Cos(angle) * radius, -1f, Mathf.Sin(angle) * radius);
+
+                // Instantiate the spike at the calculated position, slightly below the player
+                Instantiate(bladeSpikePrefab, spawnPosition, Quaternion.identity);
+            }
+
+            // Wait for the next interval before spawning the next batch of spikes
             yield return new WaitForSeconds(interval);
+
+            // Update the timer
             timer += interval;
         }
     }

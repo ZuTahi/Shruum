@@ -51,7 +51,7 @@ public static class PlayerData
 
     static PlayerData()
     {
-        ResetWeapons();
+        RespawnResetWeapons();
         InitPermanentItems();
     }
 
@@ -145,8 +145,8 @@ public static class PlayerData
         loreNotes.Clear();
 
         hpUpgradeCount = 0; spUpgradeCount = 0; mpUpgradeCount = 0; atkUpgradeCount = 0; defUpgradeCount = 0;
-
-        ResetWeapons();
+        ResetWeaponsToDefault();
+        RespawnResetWeapons();
         permanentItems.Clear();
         InitPermanentItems();
 
@@ -154,11 +154,27 @@ public static class PlayerData
         SaveSystem.SavePlayer();
     }
 
-    private static void ResetWeapons()
+    // Used on brand new save file
+    public static void ResetWeaponsToDefault()
     {
-        for (int i = 0; i < equippedWeapons.Length; i++)
-            equippedWeapons[i] = WeaponType.None;
-        unlockedWeapons = new HashSet<WeaponType>();
+        equippedWeapons[0] = WeaponType.Dagger;
+        equippedWeapons[1] = WeaponType.None;
+        equippedWeapons[2] = WeaponType.None;
+
+        // 🟢 only unlock dagger by default
+        unlockedWeapons.Clear();
+        unlockedWeapons.Add(WeaponType.Dagger);
+    }
+
+    // Used when returning to hub after death
+    public static void RespawnResetWeapons()
+    {
+        if (equippedWeapons[0] == WeaponType.None)
+            equippedWeapons[0] = WeaponType.Dagger;
+
+        // 🟢 ensure dagger remains unlocked, do not touch other weapons
+        if (!unlockedWeapons.Contains(WeaponType.Dagger))
+            unlockedWeapons.Add(WeaponType.Dagger);
     }
 
     // -------- Upgrade helpers (unchanged) --------

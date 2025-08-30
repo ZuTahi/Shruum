@@ -26,7 +26,7 @@ public class CheatManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha5))
             PlayerInventory.Instance?.AddPermanentItem(PermanentItemType.Root, 1);
 
-        if (Input.GetKeyDown(KeyCode.K))
+        if (Input.GetKeyDown(KeyCode.P))
             PlayerInventory.Instance?.AddPermanentItem(PermanentItemType.WeaponKey, 1);
 
         // Clear Save Data

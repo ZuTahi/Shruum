@@ -730,7 +730,7 @@ MonoBehaviour:
   suppressInput: 1
   suppressNormalFinisher: 0
   weaponType: 1
-  comboResetDelay: 1.5
+  comboResetDelay: 1
   attackPoint: {fileID: 8503751606547731591}
   enemyLayers:
     serializedVersion: 2
@@ -1180,8 +1180,8 @@ MonoBehaviour:
   finisherRadius: 2.5
   finisherMultiplier: 1.5
   manaCost: 25
-  bladeSpikePrefab: {fileID: 5555946528301107041, guid: e1100c675a502d34d979e8efc818831f, type: 3}
-  explosiveSeedPrefab: {fileID: 4741054630493021134, guid: 72239c9bfa166a74b83d485d09584add, type: 3}
+  bladeSpikePrefab: {fileID: 8924570793507303648, guid: 77f209bf6ee261e4e8281e254a8ffbb4, type: 3}
+  explosiveSeedPrefab: {fileID: 1896101344139593545, guid: 788ae2173e6d906459305973f085feda, type: 3}
   projectileSpeed: 20
   minAttackGap: 0.12
 --- !u!1 &5673487031857032504
