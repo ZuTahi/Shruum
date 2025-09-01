@@ -15,7 +15,7 @@ MonoBehaviour:
   enemyName: Dummy
   aiType: 0
   attackStyle: 0
-  maxHealth: 1e+18
+  maxHealth: 100
   moveSpeed: 0
   awarenessRadius: 0
   groupAwarenessRadius: 0

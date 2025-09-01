@@ -11,15 +11,15 @@ public class SlingShotWeapon : ModularWeaponCombo
 
     [Header("Projectile Prefabs")]
     public GameObject seedProjectilePrefab;
-    public GameObject scatterSeedPrefab;
-
-    [Header("Finisher Settings")]
-    public GameObject explosiveSeedPrefab; // Normal finisher (LLK)
-    public float explosiveSeedSpeed = 18f;
 
     [Header("Mix Finishers")]
-    public GameObject orbitalSicklePrefab; // JJK
-    public GameObject vineStrikePrefab;    // KKJ
+    public GameObject orbitalSicklePrefab; // LLJ
+
+    [Header("Vine Strike Settings")]
+    public GameObject vineStrikePrefab; 
+    public int vineStrikeCount = 6;        // how many spikes in the wave
+    public float vineStrikeSpacing = 1.5f; // distance between spikes
+    public float vineStrikeDelay = 0.1f; 
 
     private int comboStep = 0;
     private float lastAttackTime = 0f;
@@ -93,7 +93,7 @@ public class SlingShotWeapon : ModularWeaponCombo
 
         if (comboStep == 3 && !suppressNormalFinisher)
         {
-            // Scatter shot or explosive seed handled in SpawnFinisherVFX()
+            // Scatter shot handled in SpawnFinisherVFX()
         }
 
         suppressInput = true;
@@ -134,20 +134,11 @@ public class SlingShotWeapon : ModularWeaponCombo
             foreach (float angle in angles)
             {
                 Quaternion rot = Quaternion.Euler(0, angle, 0) * attackPoint.rotation;
-                GameObject proj = Instantiate(scatterSeedPrefab, attackPoint.position, rot);
+                GameObject proj = Instantiate(seedProjectilePrefab, attackPoint.position, rot);
                 if (proj.TryGetComponent<Rigidbody>(out var rb))
                     rb.linearVelocity = rot * Vector3.forward * projectileSpeed;
             }
             ResetCombo();
-        }
-        else if (explosiveSeedPrefab != null)
-        {
-            // Explosive seed
-            GameObject proj = Instantiate(explosiveSeedPrefab, attackPoint.position, attackPoint.rotation);
-            if (proj.TryGetComponent<Rigidbody>(out var rb))
-                rb.linearVelocity = attackPoint.forward * explosiveSeedSpeed;
-
-            Debug.Log("[Slingshot VFX] Spawned explosive seed finisher");
         }
     }
 
@@ -192,11 +183,24 @@ public class SlingShotWeapon : ModularWeaponCombo
             if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
             PlayerStats.Instance.SpendMana(manaCost);
 
-            Instantiate(vineStrikePrefab, attackPoint.position, transform.rotation);
+            StartCoroutine(SpawnVineStrikeWave());
 
             ResetCombo();
             suppressNormalFinisher = true;
             FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
+        }
+    }
+
+    private IEnumerator SpawnVineStrikeWave()
+    {
+        Vector3 startPos = attackPoint.position;
+        Vector3 dir = attackPoint.forward;
+
+        for (int i = 0; i < vineStrikeCount; i++)
+        {
+            Vector3 spawnPos = startPos + dir * (i * vineStrikeSpacing);
+            Instantiate(vineStrikePrefab, spawnPos, Quaternion.LookRotation(dir));
+            yield return new WaitForSeconds(vineStrikeDelay);
         }
     }
 
