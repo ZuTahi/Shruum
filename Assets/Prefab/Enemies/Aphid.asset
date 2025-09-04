@@ -23,7 +23,7 @@ MonoBehaviour:
   preAttackDuration: 0.2
   attackDuration: 0.5
   postAttackDuration: 0.2
-  weaponPrefab: {fileID: 1397579104473424997, guid: cf6cdacb1398e7a4d91f6a29bc2c5336, type: 3}
+  weaponPrefab: {fileID: 0}
   attackDamage: 2
   icon: {fileID: 0}
   animatorController: {fileID: 9100000, guid: 0f5cb57059ace6b42a550f0dc48a727c, type: 2}

@@ -38,9 +38,6 @@ public class GameManager : MonoBehaviour
         }
 
         ForestManager.Instance.GenerateRoomSequence();
-
-        // ✅ Load the waiting Room0 scene
-        SceneManager.LoadSceneAsync("Room0");
     }
 
     private void ResetCurrentRunData()

@@ -1,18 +1,27 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using TMPro;
+
 public class MainMenu : MonoBehaviour
 {
     public TextMeshProUGUI[] menuOptions; // Assign Start & Exit TMP texts in inspector
     private int currentIndex = 0;
     public Color highlightedColor = Color.yellow;
     public Color normalColor = Color.white;
+    private SceneTransition sceneTransition;
+
     private void Start()
     {
         UpdateSelection();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        // Find the transition in this scene
+        sceneTransition = Object.FindFirstObjectByType<SceneTransition>();
+        if (sceneTransition == null)
+        {
+            Debug.LogError("SceneTransition prefab is missing in this scene!");
+        }
     }
 
     private void Update()
@@ -52,14 +61,24 @@ public class MainMenu : MonoBehaviour
             }
         }
     }
+
     void SelectOption()
     {
         switch (currentIndex)
         {
             case 0: // Start
                 Debug.Log("Starting game...");
-                SceneManager.LoadScene("HubScene"); // load hub for now
+                if (sceneTransition != null)
+                {
+                    sceneTransition.FadeToScene("HubScene");
+                }
+                else
+                {
+                    // Fallback if transition is missing
+                    SceneManager.LoadScene("HubScene");
+                }
                 break;
+
             case 1: // Exit
                 Debug.Log("Exiting game...");
                 Application.Quit();

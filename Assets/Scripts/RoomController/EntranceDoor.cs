@@ -21,7 +21,19 @@ public class EntranceDoor : MonoBehaviour
         }
 
         ForestManager.Instance.AdvanceRoomIndex();
-        Debug.Log("EntranceDoor: Loading next room: " + nextRoom);
-        SceneManager.LoadSceneAsync(nextRoom);
+
+        Debug.Log("EntranceDoor: Transitioning to next room: " + nextRoom);
+
+        // ✅ Use SceneTransition if available
+        SceneTransition sceneTransition = Object.FindFirstObjectByType<SceneTransition>();
+        if (sceneTransition != null)
+        {
+            sceneTransition.FadeToScene(nextRoom);
+        }
+        else
+        {
+            // fallback
+            SceneManager.LoadScene(nextRoom);
+        }
     }
 }

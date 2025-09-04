@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class HubEntranceDoor : MonoBehaviour
 {
@@ -14,8 +15,21 @@ public class HubEntranceDoor : MonoBehaviour
                 PlayerStats.Instance.SaveToPlayerData();
             }
 
-            // ✅ Start new run (this should trigger SceneManager.LoadScene inside GameManager)
+            // ✅ Prepare new run data
             GameManager.Instance.StartNewRun();
+
+            // ✅ Handle transition here (same approach as MainMenu)
+            string nextRoom = "Room0"; // first room always Room0
+            SceneTransition sceneTransition = Object.FindFirstObjectByType<SceneTransition>();
+
+            if (sceneTransition != null)
+            {
+                sceneTransition.FadeToScene(nextRoom);
+            }
+            else
+            {
+                SceneManager.LoadScene(nextRoom); // fallback
+            }
         }
     }
 }

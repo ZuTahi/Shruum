@@ -160,6 +160,12 @@ public class DaggerCombo : ModularWeaponCombo
         Vector3 start = transform.root.position;
         Vector3 dir = transform.root.forward;
         Vector3 end = start + dir * dashDistance;
+        
+        int borderMask = LayerMask.GetMask("ArenaBorder");
+        if (Physics.Raycast(start, dir, out RaycastHit hit, dashDistance, borderMask))
+        {
+            end = hit.point - dir * 0.2f; // stop slightly before wall
+        }
 
         if (PlayerMovement.Instance != null)
             PlayerMovement.Instance.canMove = false;
