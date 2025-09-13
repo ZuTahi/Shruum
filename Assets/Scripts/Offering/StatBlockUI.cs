@@ -25,11 +25,11 @@ public class StatBlockUI : MonoBehaviour
         // Determine display text for upgrade count
         string displayText;
         if (count <= 0)
-            displayText = "upgrade";
+            displayText = "UPGRADE";
         else if (count >= maxCount)
-            displayText = "Max";
+            displayText = "MAX";
         else
-            displayText = $"LvLl. {count}";
+            displayText = $"LvL. {count}";
 
         // Apply text + visibility
         upgradeCountText.text = displayText;

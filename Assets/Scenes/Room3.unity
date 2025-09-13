@@ -340,6 +340,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_With_Corner_DMG_LVL_3_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 777016ab3d6323549895898508202d1d, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -402,16 +406,157 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeadBush
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 77399469}
   m_SourcePrefab: {fileID: 100100000, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
 --- !u!4 &77399467 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
   m_PrefabInstance: {fileID: 77399466}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &77399468 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+  m_PrefabInstance: {fileID: 77399466}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &77399469
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 77399468}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.008893765
+  m_Center: {x: -0.00028788438, y: 0.002186998, z: 0.007100528}
+--- !u!1001 &81386988
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2812400652807064357, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_Name
+      value: ArtifactManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+--- !u!114 &81386989 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3080425591526273996, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+  m_PrefabInstance: {fileID: 81386988}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfccbd9b631bc6d4da1bd17bff4cff82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &146528660
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -651,6 +796,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock1_P_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5372f71812557a542ba0de7e07efafcb, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -713,16 +862,49 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeadBush (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 231047252}
   m_SourcePrefab: {fileID: 100100000, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
 --- !u!4 &231047250 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
   m_PrefabInstance: {fileID: 231047249}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &231047251 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+  m_PrefabInstance: {fileID: 231047249}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &231047252
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 231047251}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.008893765
+  m_Center: {x: -0.00028788438, y: 0.0021869831, z: 0.0071005262}
 --- !u!1001 &241831544
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -775,6 +957,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_DMG_LVL_3_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: dfb3f4879b0448248ba322af02caccce, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -785,83 +971,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: dfb3f4879b0448248ba322af02caccce, type: 3}
   m_PrefabInstance: {fileID: 241831544}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &254016246
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 254016249}
-  - component: {fileID: 254016248}
-  - component: {fileID: 254016247}
-  m_Layer: 5
-  m_Name: Panel
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &254016247
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 254016246}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &254016248
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 254016246}
-  m_CullTransparentMesh: 1
---- !u!224 &254016249
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 254016246}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1374188662}
-  - {fileID: 1034926086}
-  m_Father: {fileID: 938850100}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &280830568
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -914,16 +1023,49 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeadBush (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 280830571}
   m_SourcePrefab: {fileID: 100100000, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
 --- !u!4 &280830569 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
   m_PrefabInstance: {fileID: 280830568}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &280830570 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+  m_PrefabInstance: {fileID: 280830568}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &280830571
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280830570}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.008893765
+  m_Center: {x: -0.00028789183, y: 0.0021869831, z: 0.007100527}
 --- !u!1001 &294135823
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -976,6 +1118,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_With_Corner_DMG_LVL_3_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 777016ab3d6323549895898508202d1d, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -995,7 +1141,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 342676072}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Obstacle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1076,6 +1222,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: dfb3f4879b0448248ba322af02caccce, type: 3}
       propertyPath: m_Name
       value: Fence_Middle_DMG_LVL_3_FarmAssets_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: dfb3f4879b0448248ba322af02caccce, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1159,6 +1309,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Stone13
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ebca1430eff79c044bdd972c0f16ee1b, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1225,6 +1379,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_and_Corner__DMG_LVL_1_FarmAssets_0 (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1287,6 +1445,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Edge_Simple_DMG_LVL_2_FarmAssets_0_001
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a4034c09d9dfffe4f885ae81757da8b5, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1348,6 +1510,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: a4034c09d9dfffe4f885ae81757da8b5, type: 3}
       propertyPath: m_Name
       value: Fence_Edge_Simple_DMG_LVL_2_FarmAssets_0_001
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a4034c09d9dfffe4f885ae81757da8b5, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1570,6 +1736,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bush1_P_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 29240900615448848b9206f17412762d, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1693,6 +1863,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_With_Corner_DMG_LVL_2_FarmAssets_0 (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 317cc28dab470ba4b9e3a9e8544a0f17, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1755,6 +1929,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Edge_Simple_DMG_LVL_2_FarmAssets_0_001
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a4034c09d9dfffe4f885ae81757da8b5, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1816,6 +1994,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 50e1a49ed9c58e14f8797f3d087c24df, type: 3}
       propertyPath: m_Name
       value: Fence_Edge_Simple_DMG_LVL_3_FarmAssets_0 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 50e1a49ed9c58e14f8797f3d087c24df, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1883,6 +2065,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_With_Corner_DMG_LVL_2_FarmAssets_0 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 317cc28dab470ba4b9e3a9e8544a0f17, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1945,6 +2131,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_and_Corner__DMG_LVL_1_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2006,6 +2196,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 50e1a49ed9c58e14f8797f3d087c24df, type: 3}
       propertyPath: m_Name
       value: Fence_Edge_Simple_DMG_LVL_3_FarmAssets_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 50e1a49ed9c58e14f8797f3d087c24df, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2225,6 +2419,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_With_Corner_DMG_LVL_2_FarmAssets_0 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 317cc28dab470ba4b9e3a9e8544a0f17, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2266,134 +2464,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1270807978}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &938850095
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 938850100}
-  - component: {fileID: 938850099}
-  - component: {fileID: 938850098}
-  - component: {fileID: 938850097}
-  - component: {fileID: 938850096}
-  m_Layer: 5
-  m_Name: ArtifactManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &938850096
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 938850095}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfccbd9b631bc6d4da1bd17bff4cff82, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  temporaryPool: []
-  artifactSlotImages:
-  - {fileID: 1374188664}
-  - {fileID: 1034926088}
-  artifactUIPanel: {fileID: 254016246}
-  flowerIcon: {fileID: 0}
-  leafIcon: {fileID: 0}
-  waterIcon: {fileID: 0}
-  fruitIcon: {fileID: 0}
-  rootIcon: {fileID: 0}
-  keyIcon: {fileID: 0}
-  selectScale: 1.5
-  normalScale: 1
---- !u!114 &938850097
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 938850095}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!114 &938850098
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 938850095}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
---- !u!223 &938850099
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 938850095}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
---- !u!224 &938850100
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 938850095}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 254016249}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
 --- !u!1001 &943844224
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2449,6 +2519,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 777016ab3d6323549895898508202d1d, type: 3}
       propertyPath: m_Name
       value: Fence_Middle_With_Corner_DMG_LVL_3_FarmAssets_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 777016ab3d6323549895898508202d1d, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2590,6 +2664,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_and_Corner__DMG_LVL_1_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2652,16 +2730,49 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeadBush
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1013567068}
   m_SourcePrefab: {fileID: 100100000, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
 --- !u!4 &1013567066 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
   m_PrefabInstance: {fileID: 1013567065}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1013567067 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+  m_PrefabInstance: {fileID: 1013567065}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &1013567068
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1013567067}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.008893765
+  m_Center: {x: -0.00028789183, y: 0.0021869831, z: 0.0071005262}
 --- !u!1 &1019414755
 GameObject:
   m_ObjectHideFlags: 0
@@ -2693,81 +2804,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1270807978}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1034926085
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1034926086}
-  - component: {fileID: 1034926087}
-  - component: {fileID: 1034926088}
-  m_Layer: 5
-  m_Name: Image (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1034926086
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1034926085}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 254016249}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 250, y: 0}
-  m_SizeDelta: {x: 225, y: 225}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &1034926087
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1034926085}
-  m_CullTransparentMesh: 1
---- !u!114 &1034926088
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1034926085}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1001 &1099628079
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2819,6 +2855,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
       propertyPath: m_Name
       value: Fence_Middle_and_Corner__DMG_LVL_1_FarmAssets_0 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2882,6 +2922,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_With_Corner_DMG_LVL_2_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 317cc28dab470ba4b9e3a9e8544a0f17, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2943,6 +2987,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: dfb3f4879b0448248ba322af02caccce, type: 3}
       propertyPath: m_Name
       value: Fence_Middle_DMG_LVL_3_FarmAssets_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: dfb3f4879b0448248ba322af02caccce, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3154,7 +3202,7 @@ MonoBehaviour:
   doors:
   - {fileID: 521112129}
   enemySpawner: {fileID: 1270807977}
-  artifactManager: {fileID: 938850096}
+  artifactManager: {fileID: 81386989}
 --- !u!4 &1235336431
 Transform:
   m_ObjectHideFlags: 0
@@ -3502,6 +3550,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle__DMG_LVL_1_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 15216d6e9673b5e45a1e2b0455060ac2, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3725,6 +3777,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bush5_P_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b50f431eb3555b24da5ffae8b1696ed0, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3849,6 +3905,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_With_Corner_DMG_LVL_2_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 317cc28dab470ba4b9e3a9e8544a0f17, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3859,81 +3919,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 317cc28dab470ba4b9e3a9e8544a0f17, type: 3}
   m_PrefabInstance: {fileID: 1369799353}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1374188661
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1374188662}
-  - component: {fileID: 1374188663}
-  - component: {fileID: 1374188664}
-  m_Layer: 5
-  m_Name: Image
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1374188662
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1374188661}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 254016249}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -250, y: 0}
-  m_SizeDelta: {x: 225, y: 225}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &1374188663
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1374188661}
-  m_CullTransparentMesh: 1
---- !u!114 &1374188664
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1374188661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1001 &1395580463
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4030,7 +4015,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ff23a19be57c0b94db0f930137e896f7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.76
+      value: -2.01
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ff23a19be57c0b94db0f930137e896f7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4071,6 +4056,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ff23a19be57c0b94db0f930137e896f7, type: 3}
       propertyPath: m_Name
       value: bush_003
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ff23a19be57c0b94db0f930137e896f7, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4137,6 +4126,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 317cc28dab470ba4b9e3a9e8544a0f17, type: 3}
       propertyPath: m_Name
       value: Fence_Middle_With_Corner_DMG_LVL_2_FarmAssets_0 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 317cc28dab470ba4b9e3a9e8544a0f17, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4887,6 +4880,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Edge_Simple_DMG_LVL_2_FarmAssets_0_001
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a4034c09d9dfffe4f885ae81757da8b5, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4948,6 +4945,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 50e1a49ed9c58e14f8797f3d087c24df, type: 3}
       propertyPath: m_Name
       value: Fence_Edge_Simple_DMG_LVL_3_FarmAssets_0 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 50e1a49ed9c58e14f8797f3d087c24df, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5045,7 +5046,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1615383636}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5150,6 +5151,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_and_Corner__DMG_LVL_1_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5212,16 +5217,49 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeadBush (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1641076035}
   m_SourcePrefab: {fileID: 100100000, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
 --- !u!4 &1641076033 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
   m_PrefabInstance: {fileID: 1641076032}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1641076034 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+  m_PrefabInstance: {fileID: 1641076032}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &1641076035
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1641076034}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.008893765
+  m_Center: {x: -0.00028789183, y: 0.0021869906, z: 0.0071005262}
 --- !u!1 &1650609630
 GameObject:
   m_ObjectHideFlags: 0
@@ -5353,6 +5391,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tomatoes1_P_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 879dab7b8dc66f846838bc5d07f62927, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5414,6 +5456,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 28b61e305cc96304b90734c55e0b70ab, type: 3}
       propertyPath: m_Name
       value: Fence_Middle_DMG_LVL_2_FarmAssets_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 28b61e305cc96304b90734c55e0b70ab, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5713,6 +5759,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_and_Corner__DMG_LVL_1_FarmAssets_0 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5831,6 +5881,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
       propertyPath: m_Name
       value: Fence_Middle_and_Corner__DMG_LVL_1_FarmAssets_0 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6003,7 +6057,7 @@ SceneRoots:
   - {fileID: 1650609633}
   - {fileID: 521112126}
   - {fileID: 1270807978}
-  - {fileID: 938850100}
   - {fileID: 1422340272}
   - {fileID: 1565138811}
   - {fileID: 1326624223}
+  - {fileID: 81386988}

@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   artifactName: 
   description: 
-  artifactIcon: {fileID: 21300000, guid: fd51702e5ed932e48b2e7c40b58802c1, type: 3}
+  artifactIcon: {fileID: 21300000, guid: 67927747d5e77164f9f16047fee8a466, type: 3}
   effectType: 1
-  effectAmount: 20
+  effectAmount: 10

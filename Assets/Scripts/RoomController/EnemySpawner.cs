@@ -25,6 +25,12 @@ public class EnemySpawner : MonoBehaviour
 
     private RoomManager roomManager;
 
+    // ForestManager will call this to inject the correct difficulty waves
+    public void AssignWaves(List<Wave> newWaves)
+    {
+        waves = newWaves ?? new List<Wave>();
+    }
+
     public void SetRoomManager(RoomManager manager)
     {
         roomManager = manager;
@@ -38,13 +44,17 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnCurrentWave()
     {
+        if (waves == null || waves.Count == 0)
+        {
+            Debug.LogWarning("EnemySpawner: No waves assigned.");
+            roomManager?.OnRoomCleared();
+            return;
+        }
+
         if (currentWaveIndex >= waves.Count)
         {
             Debug.Log("All waves cleared!");
-            if (roomManager != null)
-            {
-                roomManager.OnRoomCleared();
-            }
+            roomManager?.OnRoomCleared();
             return;
         }
 
@@ -55,7 +65,19 @@ public class EnemySpawner : MonoBehaviour
         {
             for (int i = 0; i < entry.count; i++)
             {
+                if (spawnPoints == null || spawnPoints.Length == 0)
+                {
+                    Debug.LogError("EnemySpawner: spawnPoints not set.");
+                    return;
+                }
+
                 Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+                if (entry.enemyPrefab == null)
+                {
+                    Debug.LogWarning("EnemySpawner: an entry has a null enemyPrefab.");
+                    continue;
+                }
+
                 GameObject enemy = Instantiate(entry.enemyPrefab, spawnPoint.position, Quaternion.identity);
                 spawnedEnemies.Add(enemy);
 
@@ -64,7 +86,7 @@ public class EnemySpawner : MonoBehaviour
                 {
                     ai.spawner = this;
 
-                    // Safely copy the data from the original prefab's EnemyAIController
+                    // Copy data from prefab (if present)
                     EnemyAIController prefabAI = entry.enemyPrefab.GetComponent<EnemyAIController>();
                     if (prefabAI != null)
                     {
@@ -92,5 +114,11 @@ public class EnemySpawner : MonoBehaviour
             currentWaveIndex++;
             SpawnCurrentWave();
         }
+    }
+
+    // Optional: cleanup to avoid stale references if scene unloads early
+    private void OnDisable()
+    {
+        spawnedEnemies.Clear();
     }
 }

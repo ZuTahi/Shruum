@@ -7,8 +7,16 @@ public class DaggerCombo : ModularWeaponCombo
     public float comboResetDelay = 1.5f;
     public Transform attackPoint;
     public LayerMask enemyLayers;
-    
-    [Header("VFX Prefabs")]
+    [Header("Audio Clips")]
+    public AudioClip attackClip;
+    public AudioClip finisherClip;
+
+    // Mix finishers
+    public AudioClip bladeBurstMixClip;    // from Dagger+Dagger+Gauntlet
+    public AudioClip boomerangMixClip; // from Sling+Sling+Gauntlet
+
+    private AudioSource audioSource;
+        [Header("VFX Prefabs")]
     public GameObject slashRedPrefab;
     public GameObject slashBluePrefab;
     public GameObject finisherPrefab;
@@ -36,6 +44,10 @@ public class DaggerCombo : ModularWeaponCombo
         base.Awake();
         suppressInput = true;
         slotManager = FindFirstObjectByType<ModularWeaponSlotManager>();
+
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0.9f;
     }
 
     void Update()
@@ -123,6 +135,7 @@ public class DaggerCombo : ModularWeaponCombo
 
     public override void SpawnAttackVFX()
     {
+        PlayAttackSound();
         GameObject vfx = comboStep switch
         {
             1 => slashRedPrefab,
@@ -160,7 +173,7 @@ public class DaggerCombo : ModularWeaponCombo
         Vector3 start = transform.root.position;
         Vector3 dir = transform.root.forward;
         Vector3 end = start + dir * dashDistance;
-        
+
         int borderMask = LayerMask.GetMask("ArenaBorder");
         if (Physics.Raycast(start, dir, out RaycastHit hit, dashDistance, borderMask))
         {
@@ -199,6 +212,7 @@ public class DaggerCombo : ModularWeaponCombo
         FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
         foreach (var w in FindFirstObjectByType<ModularWeaponSlotManager>()?.GetAllWeapons())
             w?.ResetCombo();
+        PlayFinisherSound();
     }
 
     public override void HandleMixFinisher(ModularWeaponInput[] combo)
@@ -221,6 +235,7 @@ public class DaggerCombo : ModularWeaponCombo
 
         if (IsCombo<GauntletCombo, GauntletCombo, DaggerCombo>(w1, w2, w3))
             TryBladeBurst();
+            
         else if (IsCombo<SlingShotWeapon, SlingShotWeapon, DaggerCombo>(w1, w2, w3))
             TryTripleBoomerang();
     }
@@ -230,7 +245,8 @@ public class DaggerCombo : ModularWeaponCombo
         => w1 is T1 && w2 is T2 && w3 is T3;
 
     private void TryBladeBurst()
-    {
+    {   
+        PlayMixFinisherSound(bladeBurstMixClip);
         if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
         PlayerStats.Instance.SpendMana(manaCost);
 
@@ -242,6 +258,7 @@ public class DaggerCombo : ModularWeaponCombo
 
     private void TryTripleBoomerang()
     {
+        PlayMixFinisherSound(boomerangMixClip);
         if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
         PlayerStats.Instance.SpendMana(manaCost);
 
@@ -273,6 +290,21 @@ public class DaggerCombo : ModularWeaponCombo
             yield return new WaitForSeconds(duration);
             PlayerMovement.Instance.canMove = true;
         }
+    }
+
+    private void PlayAttackSound()
+    {
+        if (attackClip != null) audioSource.PlayOneShot(attackClip);
+    }
+
+    private void PlayFinisherSound()
+    {
+        if (finisherClip != null) audioSource.PlayOneShot(finisherClip);
+    }
+
+    private void PlayMixFinisherSound(AudioClip clip)
+    {
+        if (clip != null) audioSource.PlayOneShot(clip);
     }
     private void OnDrawGizmosSelected()
     {

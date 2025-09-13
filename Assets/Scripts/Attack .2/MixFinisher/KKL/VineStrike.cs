@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class VineStrike : MonoBehaviour
 {
+    [Header("Strike Settings")]
     public float maxLength = 6f;
     public float growSpeed = 12f;
     public int damage = 25;
@@ -21,8 +21,29 @@ public class VineStrike : MonoBehaviour
 
     private Transform visual; // Reference to the child mesh
 
+    [Header("Audio Clips")]
+    public AudioClip loopClip;   // continuous vine sound
+
+    private AudioSource audioSource;
+
+    void Awake()
+    {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.loop = true;            // 🔁 loop while alive
+        audioSource.spatialBlend = 0.7f;    // positional sound
+    }
+
     void Start()
     {
+        // Start looping audio
+        if (loopClip != null)
+        {
+            audioSource.clip = loopClip;
+            audioSource.Play();
+        }
+
+        // Setup visuals
         visual = transform.GetChild(0); // assumes first child is the mesh
         originalScale = visual.localScale;
         visual.localScale = new Vector3(originalScale.x, originalScale.y, 0.01f);
@@ -41,7 +62,7 @@ public class VineStrike : MonoBehaviour
             visual.localScale = new Vector3(originalScale.x, originalScale.y, currentLength);
             visual.localPosition = new Vector3(0, 0, currentLength / 2f);
 
-            // ✅ Only deal damage at interval
+            // Damage interval
             damageTimer -= Time.deltaTime;
             if (damageTimer <= 0f)
             {
@@ -57,7 +78,7 @@ public class VineStrike : MonoBehaviour
         }
         else
         {
-            // ✅ Keep dealing damage even after fully grown
+            // Keep damaging while alive
             damageTimer -= Time.deltaTime;
             if (damageTimer <= 0f)
             {
@@ -70,6 +91,7 @@ public class VineStrike : MonoBehaviour
                 Destroy(gameObject);
         }
     }
+
     void DealDamage()
     {
         Vector3 center = transform.position + transform.forward * (currentLength / 2f);
@@ -84,6 +106,13 @@ public class VineStrike : MonoBehaviour
                 target.TakeDamage(finalDamage, hit.ClosestPoint(transform.position), gameObject);
             }
         }
+    }
+
+    void OnDestroy()
+    {
+        // Stop audio when object dies
+        if (audioSource != null && audioSource.isPlaying)
+            audioSource.Stop();
     }
 
     void OnDrawGizmosSelected()

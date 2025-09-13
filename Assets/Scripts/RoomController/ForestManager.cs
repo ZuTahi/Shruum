@@ -1,14 +1,23 @@
 using System.Collections.Generic;
 using UnityEngine;
-
+[System.Serializable]
+public class WaveSet
+{
+    public List<Wave> waves;
+}
 public class ForestManager : MonoBehaviour
 {
     public static ForestManager Instance { get; private set; }
-
+    
     [Header("Room Configuration")]
     public List<string> normalRoomScenes;  // Populate via inspector (e.g., Room1, Room2,...)
     public string midBossScene;
     public string finalBossScene;
+
+    [Header("Enemy Wave Sets (difficulty order)")]
+    public List<WaveSet> globalWaveSets = new List<WaveSet>();
+
+    private int currentWaveSetIndex = 0;
 
     private List<string> roomSequence = new List<string>();
     private int currentRoomIndex = 0;
@@ -24,6 +33,24 @@ public class ForestManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    public WaveSet GetNextWaveSet()
+    {
+        if (globalWaveSets == null || globalWaveSets.Count == 0)
+        {
+            Debug.LogWarning("ForestManager: No globalWaveSets configured.");
+            return null;
+        }
+
+        if (currentWaveSetIndex >= globalWaveSets.Count)
+            currentWaveSetIndex = globalWaveSets.Count - 1; // clamp at hardest
+
+        return globalWaveSets[currentWaveSetIndex++];
+    }
+
+    public void ResetWaveProgression()
+    {
+        currentWaveSetIndex = 0;
+    }
     /// <summary>
     /// Generates the shuffled room sequence for the current run.
     /// </summary>

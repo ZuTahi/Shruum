@@ -52,10 +52,12 @@ MonoBehaviour:
   spawner: {fileID: 0}
   healthBarPrefab: {fileID: 7591295072350178841, guid: 05f5b3be33dc06b4f953eab7d4525326, type: 3}
   aggroIconPrefab: {fileID: 8359191373501381227, guid: 0dd859de113c1754dab0db27f98dfb27, type: 3}
+  lungeSpeed: 18
   enemyDropPrefab: {fileID: 8459696941023806976, guid: e7826a83c0474f74886104c63c8a3d44, type: 3}
   minManaDrop: 5
   maxManaDrop: 8
   poofPrefab: {fileID: 4105938874594104566, guid: 2c2428c397c74f04db7e9fbabe5fcef3, type: 3}
+  hitClip: {fileID: 8300000, guid: fda4e77c066a68d4f80f76bcf211a90d, type: 3}
   minWanderWait: 1
   maxWanderWait: 3
   wanderRadius: 3.5

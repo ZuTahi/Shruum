@@ -5,6 +5,7 @@ public class InteractionPromptUI : MonoBehaviour
 {
     [SerializeField] private GameObject promptUI;
     [SerializeField] private TextMeshProUGUI promptText;
+    [SerializeField] private GameObject backgroundImage; // 👈 add this
 
     private void Start()
     {
@@ -14,12 +15,14 @@ public class InteractionPromptUI : MonoBehaviour
     public void ShowPrompt(string promptMessage)
     {
         promptUI.SetActive(true);
+        backgroundImage.SetActive(true);  // show background
         promptText.text = promptMessage;
     }
 
     public void HidePrompt()
     {
         promptUI.SetActive(false);
+        backgroundImage.SetActive(false); // hide background
         promptText.text = "";
     }
 }

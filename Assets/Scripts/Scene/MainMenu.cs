@@ -10,6 +10,11 @@ public class MainMenu : MonoBehaviour
     public Color normalColor = Color.white;
     private SceneTransition sceneTransition;
 
+    [Header("Audio")]
+    public AudioClip navigateClip;
+    public AudioClip selectClip;
+    private AudioSource audioSource;
+
     private void Start()
     {
         UpdateSelection();
@@ -22,6 +27,11 @@ public class MainMenu : MonoBehaviour
         {
             Debug.LogError("SceneTransition prefab is missing in this scene!");
         }
+
+        // Add or reuse AudioSource
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f; // 2D sound
     }
 
     private void Update()
@@ -87,5 +97,17 @@ public class MainMenu : MonoBehaviour
 #endif
                 break;
         }
+    }
+
+    private void PlayNavigateSound()
+    {
+        if (navigateClip != null)
+            audioSource.PlayOneShot(navigateClip, 0.7f); // softer
+    }
+
+    private void PlaySelectSound()
+    {
+        if (selectClip != null)
+            audioSource.PlayOneShot(selectClip, 1f);
     }
 }

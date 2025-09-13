@@ -8,7 +8,14 @@ public class SlingShotWeapon : ModularWeaponCombo
     public Transform attackPoint;
     public float projectileSpeed = 20f;
     public int manaCost = 30;
+    [Header("Audio Clips")]
+    public AudioClip attackClip;
+    public AudioClip finisherClip;
 
+    // Mix finishers
+    public AudioClip OrbitalMixClip;
+    public AudioClip VinStrikeMixClip;
+    private AudioSource audioSource;
     [Header("Projectile Prefabs")]
     public GameObject seedProjectilePrefab;
 
@@ -16,10 +23,10 @@ public class SlingShotWeapon : ModularWeaponCombo
     public GameObject orbitalSicklePrefab; // LLJ
 
     [Header("Vine Strike Settings")]
-    public GameObject vineStrikePrefab; 
+    public GameObject vineStrikePrefab;
     public int vineStrikeCount = 6;        // how many spikes in the wave
     public float vineStrikeSpacing = 1.5f; // distance between spikes
-    public float vineStrikeDelay = 0.1f; 
+    public float vineStrikeDelay = 0.1f;
 
     private int comboStep = 0;
     private float lastAttackTime = 0f;
@@ -32,6 +39,10 @@ public class SlingShotWeapon : ModularWeaponCombo
         base.Awake();
         slotManager = FindFirstObjectByType<ModularWeaponSlotManager>();
         suppressInput = true; // Disable input until equipped
+
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0.9f;
     }
 
     void Update()
@@ -116,6 +127,7 @@ public class SlingShotWeapon : ModularWeaponCombo
     // Animation Event — Normal shot spawn
     public override void SpawnAttackVFX()
     {
+        PlayAttackSound();
         if (comboStep < 3)
         {
             GameObject proj = Instantiate(seedProjectilePrefab, attackPoint.position, attackPoint.rotation);
@@ -127,6 +139,7 @@ public class SlingShotWeapon : ModularWeaponCombo
     // Animation Event — Finisher spawn
     public override void ExecuteFinisher()
     {
+        PlayFinisherSound();
         if (comboStep == 3 && !suppressNormalFinisher)
         {
             // Scatter shot (normal finisher)
@@ -173,7 +186,7 @@ public class SlingShotWeapon : ModularWeaponCombo
             var sickle = Instantiate(orbitalSicklePrefab, transform.root.position, Quaternion.identity);
             if (sickle.TryGetComponent<OrbitingSicklesController>(out var orbital))
                 orbital.followTarget = transform.root;
-
+            PlayMixFinisherSound(OrbitalMixClip);     
             ResetCombo();
             suppressNormalFinisher = true;
             FindFirstObjectByType<ModularComboBuffer>()?.ClearBuffer();
@@ -193,12 +206,14 @@ public class SlingShotWeapon : ModularWeaponCombo
 
     private IEnumerator SpawnVineStrikeWave()
     {
+        PlayMixFinisherSound(VinStrikeMixClip);
         Vector3 startPos = attackPoint.position;
         Vector3 dir = attackPoint.forward;
 
         for (int i = 0; i < vineStrikeCount; i++)
         {
             Vector3 spawnPos = startPos + dir * (i * vineStrikeSpacing);
+            spawnPos.y = 1f;
             Instantiate(vineStrikePrefab, spawnPos, Quaternion.LookRotation(dir));
             yield return new WaitForSeconds(vineStrikeDelay);
         }
@@ -213,4 +228,19 @@ public class SlingShotWeapon : ModularWeaponCombo
         PlayerAnimationHandler.Instance.StopAttackAnimation();
         PlayerAnimationHandler.Instance.animator.SetInteger("AttackIndex", 0);
     }
-}
+
+    private void PlayAttackSound()
+    {
+        if (attackClip != null) audioSource.PlayOneShot(attackClip);
+    }
+
+    private void PlayFinisherSound()
+    {
+        if (finisherClip != null) audioSource.PlayOneShot(finisherClip);
+    }
+
+    private void PlayMixFinisherSound(AudioClip clip)
+    {
+        if (clip != null) audioSource.PlayOneShot(clip);
+    }
+    }

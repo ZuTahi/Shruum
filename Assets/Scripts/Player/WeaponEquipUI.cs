@@ -28,6 +28,7 @@ public class WeaponEquipUI : MonoBehaviour
 
     [Header("Equip Prompt")]
     public TextMeshProUGUI promptText;
+    [SerializeField] private GameObject promptBackground; // 👈 added background
 
     private WeaponType currentWeapon;
     private bool isChoosingSlot = false;
@@ -37,6 +38,8 @@ public class WeaponEquipUI : MonoBehaviour
     {
         Instance = this;
         promptText.gameObject.SetActive(false);
+        if (promptBackground != null)
+            promptBackground.SetActive(false);
 
         // Initialize with default sprites
         slotJImage.sprite = defaultSpriteJ;
@@ -60,7 +63,11 @@ public class WeaponEquipUI : MonoBehaviour
     {
         currentWeapon = weapon;
         isChoosingSlot = true;
+
         promptText.gameObject.SetActive(true);
+        if (promptBackground != null)
+            promptBackground.SetActive(true);
+
         promptText.text = $"Press J / K / L to equip {weapon}";
 
         // Show assigning state
@@ -78,7 +85,10 @@ public class WeaponEquipUI : MonoBehaviour
     public void CloseEquipPrompt()
     {
         isChoosingSlot = false;
+
         promptText.gameObject.SetActive(false);
+        if (promptBackground != null)
+            promptBackground.SetActive(false);
 
         // Revert back to correct visuals (default if empty, weapon if assigned)
         RefreshAllSlots();

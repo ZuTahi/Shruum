@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,8 +12,9 @@ public class EnemyAIController : MonoBehaviour, IDamageable
     private float health;
     private Animator animator;
     private NavMeshAgent agent;
-    private Renderer rend;
-    private Color originalColor;
+    private Renderer[] renderers;
+    private Dictionary<Renderer, Color[]> originalColors = new Dictionary<Renderer, Color[]>();
+
     private bool hasAggro = false;
 
     [Header("UI")]
@@ -22,7 +24,10 @@ public class EnemyAIController : MonoBehaviour, IDamageable
     [Header("Aggro")]
     [SerializeField] private EnemyAggroIcon aggroIconPrefab;
     private EnemyAggroIcon aggroIconInstance;
-
+    // Add near the top with other fields
+    private bool isLunging = false;
+    [SerializeField] private float lungeSpeed = 18f;
+    
     [Header("Drops")]
     public EnemyDrop enemyDropPrefab;
     public int minManaDrop = 0;
@@ -33,6 +38,10 @@ public class EnemyAIController : MonoBehaviour, IDamageable
     private bool isStaggered = false;
     private float staggerDuration = 0.2f;
 
+    [Header("Audio")]
+    public AudioClip hitClip;
+
+    private AudioSource audioSource;
     private EnemyState currentState;
     private float stateTimer;
     private bool damageApplied;
@@ -61,7 +70,26 @@ public class EnemyAIController : MonoBehaviour, IDamageable
     private float wanderTimer = 0f;
     private Vector3 wanderTarget;
     private bool hasWanderTarget = false;
+    private void Awake()
+    {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0.7f; // 3D positional audio
+        // Get all renderers in this enemy (including children)
+        renderers = GetComponentsInChildren<Renderer>();
 
+        // Cache original colors
+        foreach (Renderer r in renderers)
+        {
+            Material[] mats = r.materials;
+            Color[] colors = new Color[mats.Length];
+            for (int i = 0; i < mats.Length; i++)
+            {
+                colors[i] = mats[i].color;
+            }
+            originalColors[r] = colors;
+        }
+    }
     private void Start()
     {
         if (data == null)
@@ -85,8 +113,6 @@ public class EnemyAIController : MonoBehaviour, IDamageable
 
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
         animator = GetComponent<Animator>();
-        rend = GetComponentInChildren<Renderer>();
-        if (rend != null) originalColor = rend.material.color;
 
         health = data.maxHealth;
 
@@ -202,67 +228,110 @@ public class EnemyAIController : MonoBehaviour, IDamageable
             animator.SetFloat("Speed", 0f);
         }
     }
-
-   private void UpdateWindup()
-{
-    FacePlayer(); // lock in facing while winding up
-
-    stateTimer -= Time.deltaTime;
-    if (stateTimer <= 0f)
+    // Called by animation event at the start of the lunge motion
+    public void StartLunge()
     {
-        currentState = EnemyState.Attack;
-        stateTimer = data.attackDuration;
+        isLunging = true;
         damageApplied = false;
+        currentState = EnemyState.Attack;   // ✅ now switch when the animation actually begins
+        stateTimer = data.attackDuration;
+    }
 
+    // Called by animation event at the end of the lunge motion
+    public void EndLunge()
+    {
+        isLunging = false;
+
+        // Put into PostAttack "rest" state
+        currentState = EnemyState.PostAttack;
+        stateTimer = 1.5f; // 1.5s cooldown after lunge
+    }
+
+    private void UpdateWindup()
+    {
+        FacePlayer(); // lock in facing while winding up
+
+        stateTimer -= Time.deltaTime;
+        if (stateTimer <= 0f)
+        {
+            currentState = EnemyState.Attack;
+            stateTimer = data.attackDuration;
+            damageApplied = false;
+
+            if (data.attackStyle == EnemyAttackStyle.Lunge)
+            {
+                if (agent != null)
+                {
+                    agent.isStopped = true;
+                    agent.updatePosition = false;
+                    agent.updateRotation = false;
+                }
+
+                // 🛑 Lock the facing here so it won't keep adjusting in UpdateAttack
+                FacePlayer();
+                animator.SetTrigger("attack");
+            }
+            else
+            {
+                animator.SetTrigger("attack");
+                currentState = EnemyState.Attack;
+                stateTimer = data.attackDuration;
+                damageApplied = false;
+                
+            }
+        }
+    }
+
+    private void UpdateAttack()
+    {
         if (data.attackStyle == EnemyAttackStyle.Lunge)
         {
-            if (agent != null)
+            // ❌ old: LungeForward();
+            if (isLunging)
             {
-                agent.isStopped = true;
-                agent.updatePosition = false;
-                agent.updateRotation = false;
-            }
+                // Move forward while animation says so
+                transform.position += transform.forward * lungeSpeed * Time.deltaTime;
 
-            // 🛑 Lock the facing here so it won't keep adjusting in UpdateAttack
-            FacePlayer(); 
-            animator.SetTrigger("attack");
+                // Hit detection
+                if (!damageApplied)
+                {
+                    Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward * 1.2f, 0.8f);
+                    foreach (var hit in hits)
+                    {
+                        if (hit.CompareTag("Player"))
+                        {
+                            var ps = hit.GetComponent<PlayerStats>();
+                            if (ps != null) ps.TakeDamage(data.attackDamage);
+
+                            damageApplied = true;
+                            break;
+                        }
+                    }
+                }
+            }
         }
         else
         {
-            animator.SetTrigger("attack");
+            MeleeAttack();
         }
-    }
-}
 
-private void UpdateAttack()
-{
-    if (data.attackStyle == EnemyAttackStyle.Lunge)
-    {
-        // ❌ removed FacePlayer();
-        LungeForward();
-    }
-    else
-    {
-        MeleeAttack(); // melee still faces during swing
-    }
-
-    stateTimer -= Time.deltaTime;
-    if (stateTimer <= 0f)
-    {
-        currentState = EnemyState.PostAttack;
-        stateTimer = data.postAttackDuration;
-
-        animator.SetFloat("Speed", 0f);
-
-        if (agent != null)
+        stateTimer -= Time.deltaTime;
+        if (stateTimer <= 0f)
         {
-            agent.Warp(transform.position);
-            agent.isStopped = false;
-            agent.updatePosition = true;
-            agent.updateRotation = false;
+            currentState = EnemyState.PostAttack;
+            stateTimer = data.postAttackDuration;
+
+            animator.SetFloat("Speed", 0f);
+
+            if (agent != null)
+            {
+                agent.Warp(transform.position);
+                agent.isStopped = false;
+                agent.updatePosition = true;
+                agent.updateRotation = false;
+            }
         }
     }
-}
 
     private void UpdatePostAttack()
     {
@@ -462,32 +531,32 @@ private void UpdateAttack()
 
     // ------------------- ATTACK METHODS -------------------
 
-    private void LungeForward()
-    {
-        if (!damageApplied)
-        {
-            // Hitbox shifted forward (head area), tighter radius
-            Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward * 1.2f, 0.8f);
-            foreach (var hit in hits)
-            {
-                if (hit.CompareTag("Player"))
-                {
-                    var ps = hit.GetComponent<PlayerStats>();
-                    if (ps != null) ps.TakeDamage(data.attackDamage);
+    // private void LungeForward()
+    // {
+    //     if (!damageApplied)
+    //     {
+    //         // Hitbox shifted forward (head area), tighter radius
+    //         Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward * 1.2f, 0.8f);
+    //         foreach (var hit in hits)
+    //         {
+    //             if (hit.CompareTag("Player"))
+    //             {
+    //                 var ps = hit.GetComponent<PlayerStats>();
+    //                 if (ps != null) ps.TakeDamage(data.attackDamage);
 
-                    damageApplied = true;
+    //                 damageApplied = true;
 
-                    // stop lunge immediately on hit
-                    stateTimer = 0f; 
-                    return;
-                }
-            }
-        }
+    //                 // stop lunge immediately on hit
+    //                 stateTimer = 0f; 
+    //                 return;
+    //             }
+    //         }
+    //     }
 
-        // keep moving forward only while in attack state
-        if (!damageApplied)
-            transform.position += transform.forward * 18f * Time.deltaTime;
-    }
+    //     // keep moving forward only while in attack state
+    //     if (!damageApplied)
+    //         transform.position += transform.forward * 18f * Time.deltaTime;
+    // }
 
     private void MeleeAttack()
     {
@@ -527,6 +596,8 @@ private void UpdateAttack()
             healthBarInstance.Show();             // 🆕 make it visible
             healthBarInstance.SetHealth(health);
         }
+        if (hitClip != null && health > 0f)
+            audioSource.PlayOneShot(hitClip);
 
         StartCoroutine(OnHitReaction());
 
@@ -541,19 +612,35 @@ private void UpdateAttack()
         isStaggered = false;
     }
 
-    private IEnumerator FlickerRed()
+    public IEnumerator FlickerRed(float duration = 0.1f, int times = 2)
     {
-        if (rend == null) yield break;
-        Color red = Color.red;
-        for (int i = 0; i < 2; i++)
+        for (int t = 0; t < times; t++)
         {
-            rend.material.color = red;
-            yield return new WaitForSeconds(0.05f);
-            rend.material.color = originalColor;
-            yield return new WaitForSeconds(0.05f);
+            // Set all to red
+            foreach (Renderer r in renderers)
+            {
+                foreach (Material mat in r.materials)
+                {
+                    mat.color = Color.red;
+                }
+            }
+
+            yield return new WaitForSeconds(duration);
+
+            // Restore original colors
+            foreach (Renderer r in renderers)
+            {
+                Color[] colors = originalColors[r];
+                Material[] mats = r.materials;
+                for (int i = 0; i < mats.Length; i++)
+                {
+                    mats[i].color = colors[i];
+                }
+            }
+
+            yield return new WaitForSeconds(duration);
         }
     }
-
     private void Die()
     {
         // 🟢 Spawn poof effect immediately

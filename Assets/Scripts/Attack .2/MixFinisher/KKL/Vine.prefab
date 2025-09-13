@@ -145,6 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6da63948cd03da4ea7ed015967995b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnClip: {fileID: 8300000, guid: eea16c870ca2c4145aaed4484611c819, type: 3}
   lifeTime: 1.5
   damageRadius: 1.2
   damage: 15

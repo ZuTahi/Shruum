@@ -334,6 +334,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_With_Corner_DMG_LVL_2_FarmAssets_0 (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 317cc28dab470ba4b9e3a9e8544a0f17, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -400,6 +404,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_and_Corner__DMG_LVL_1_FarmAssets_0 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -462,16 +470,49 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeadBush
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 236186570}
   m_SourcePrefab: {fileID: 100100000, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
 --- !u!4 &236186568 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
   m_PrefabInstance: {fileID: 236186567}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &236186569 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+  m_PrefabInstance: {fileID: 236186567}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &236186570
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 236186569}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.008893765
+  m_Center: {x: -0.00028789183, y: 0.0021869831, z: 0.0071005262}
 --- !u!1 &239100663
 GameObject:
   m_ObjectHideFlags: 0
@@ -743,16 +784,49 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeadBush (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 290581014}
   m_SourcePrefab: {fileID: 100100000, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
 --- !u!4 &290581012 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
   m_PrefabInstance: {fileID: 290581011}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &290581013 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+  m_PrefabInstance: {fileID: 290581011}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &290581014
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 290581013}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.008893765
+  m_Center: {x: -0.00028789183, y: 0.0021869906, z: 0.0071005262}
 --- !u!1001 &297457874
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -957,6 +1031,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Edge_Simple_DMG_LVL_2_FarmAssets_0_001
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a4034c09d9dfffe4f885ae81757da8b5, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1018,6 +1096,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 15216d6e9673b5e45a1e2b0455060ac2, type: 3}
       propertyPath: m_Name
       value: Fence_Middle__DMG_LVL_1_FarmAssets_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 15216d6e9673b5e45a1e2b0455060ac2, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1084,6 +1166,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 317cc28dab470ba4b9e3a9e8544a0f17, type: 3}
       propertyPath: m_Name
       value: Fence_Middle_With_Corner_DMG_LVL_2_FarmAssets_0 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 317cc28dab470ba4b9e3a9e8544a0f17, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1181,6 +1267,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 317cc28dab470ba4b9e3a9e8544a0f17, type: 3}
       propertyPath: m_Name
       value: Fence_Middle_With_Corner_DMG_LVL_2_FarmAssets_0 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 317cc28dab470ba4b9e3a9e8544a0f17, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1317,6 +1407,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bush1_P_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 29240900615448848b9206f17412762d, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1379,16 +1473,49 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeadBush (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 621354489}
   m_SourcePrefab: {fileID: 100100000, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
 --- !u!4 &621354487 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
   m_PrefabInstance: {fileID: 621354486}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &621354488 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+  m_PrefabInstance: {fileID: 621354486}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &621354489
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621354488}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.008893765
+  m_Center: {x: -0.00028788438, y: 0.0021869831, z: 0.0071005262}
 --- !u!1001 &625453493
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1441,6 +1568,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Edge_Simple_DMG_LVL_3_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 50e1a49ed9c58e14f8797f3d087c24df, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1451,134 +1582,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 50e1a49ed9c58e14f8797f3d087c24df, type: 3}
   m_PrefabInstance: {fileID: 625453493}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &653851084
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 653851086}
-  - component: {fileID: 653851089}
-  - component: {fileID: 653851088}
-  - component: {fileID: 653851087}
-  - component: {fileID: 653851085}
-  m_Layer: 5
-  m_Name: ArtifactManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &653851085
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 653851084}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfccbd9b631bc6d4da1bd17bff4cff82, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  temporaryPool: []
-  artifactSlotImages:
-  - {fileID: 1943265028}
-  - {fileID: 706381319}
-  artifactUIPanel: {fileID: 1777205181}
-  flowerIcon: {fileID: 0}
-  leafIcon: {fileID: 0}
-  waterIcon: {fileID: 0}
-  fruitIcon: {fileID: 0}
-  rootIcon: {fileID: 0}
-  keyIcon: {fileID: 0}
-  selectScale: 1.5
-  normalScale: 1
---- !u!224 &653851086
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 653851084}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1777205184}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
---- !u!114 &653851087
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 653851084}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!114 &653851088
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 653851084}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
---- !u!223 &653851089
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 653851084}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1 &659337111
 GameObject:
   m_ObjectHideFlags: 0
@@ -1615,81 +1618,6 @@ Transform:
   - {fileID: 1063166155}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &706381316
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 706381317}
-  - component: {fileID: 706381318}
-  - component: {fileID: 706381319}
-  m_Layer: 5
-  m_Name: Image (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &706381317
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 706381316}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1777205184}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 250, y: 0}
-  m_SizeDelta: {x: 225, y: 225}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &706381318
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 706381316}
-  m_CullTransparentMesh: 1
---- !u!114 &706381319
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 706381316}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1001 &753442973
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1742,16 +1670,49 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeadBush (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 753442976}
   m_SourcePrefab: {fileID: 100100000, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
 --- !u!4 &753442974 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
   m_PrefabInstance: {fileID: 753442973}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &753442975 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+  m_PrefabInstance: {fileID: 753442973}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &753442976
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 753442975}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.008893765
+  m_Center: {x: -0.00028789183, y: 0.0021869831, z: 0.007100527}
 --- !u!1001 &772675528
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1803,6 +1764,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: dfb3f4879b0448248ba322af02caccce, type: 3}
       propertyPath: m_Name
       value: Fence_Middle_DMG_LVL_3_FarmAssets_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: dfb3f4879b0448248ba322af02caccce, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1865,6 +1830,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 879dab7b8dc66f846838bc5d07f62927, type: 3}
       propertyPath: m_Name
       value: Tomatoes1_P_FarmAssets_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 879dab7b8dc66f846838bc5d07f62927, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2009,6 +1978,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
       propertyPath: m_Name
       value: Fence_Middle_and_Corner__DMG_LVL_1_FarmAssets_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2347,6 +2320,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_With_Corner_DMG_LVL_3_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 777016ab3d6323549895898508202d1d, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2475,6 +2452,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeadTree4
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7d0562462823cb84997a8cc8d80f86b2, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4464627999773218650, guid: 7d0562462823cb84997a8cc8d80f86b2, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 8934777400606672865, guid: 7d0562462823cb84997a8cc8d80f86b2, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 65702495048144492, guid: 7d0562462823cb84997a8cc8d80f86b2, type: 3}
@@ -2584,7 +2573,7 @@ MonoBehaviour:
   doors:
   - {fileID: 67568410}
   enemySpawner: {fileID: 1683272465}
-  artifactManager: {fileID: 653851085}
+  artifactManager: {fileID: 1848283457}
 --- !u!4 &1049952528
 Transform:
   m_ObjectHideFlags: 0
@@ -2706,6 +2695,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Edge_Simple_DMG_LVL_3_FarmAssets_0 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 50e1a49ed9c58e14f8797f3d087c24df, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2767,6 +2760,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 50e1a49ed9c58e14f8797f3d087c24df, type: 3}
       propertyPath: m_Name
       value: Fence_Edge_Simple_DMG_LVL_3_FarmAssets_0 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 50e1a49ed9c58e14f8797f3d087c24df, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2853,7 +2850,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1105835899}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Obstacle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3232,7 +3229,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1225339023}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3341,6 +3338,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_and_Corner__DMG_LVL_1_FarmAssets_0 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3423,6 +3424,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Stone13
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ebca1430eff79c044bdd972c0f16ee1b, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3485,6 +3490,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Edge_Simple_DMG_LVL_2_FarmAssets_0_001
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a4034c09d9dfffe4f885ae81757da8b5, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3546,6 +3555,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
       propertyPath: m_Name
       value: Fence_Middle_and_Corner__DMG_LVL_1_FarmAssets_0 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3687,6 +3700,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_With_Corner_DMG_LVL_3_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 777016ab3d6323549895898508202d1d, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3780,6 +3797,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_DMG_LVL_3_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: dfb3f4879b0448248ba322af02caccce, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3846,6 +3867,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_With_Corner_DMG_LVL_2_FarmAssets_0 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 317cc28dab470ba4b9e3a9e8544a0f17, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3908,6 +3933,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_With_Corner_DMG_LVL_2_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 317cc28dab470ba4b9e3a9e8544a0f17, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3969,6 +3998,18 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 7d0562462823cb84997a8cc8d80f86b2, type: 3}
       propertyPath: m_Name
       value: DeadTree4 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7d0562462823cb84997a8cc8d80f86b2, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4464627999773218650, guid: 7d0562462823cb84997a8cc8d80f86b2, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 8934777400606672865, guid: 7d0562462823cb84997a8cc8d80f86b2, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -4033,6 +4074,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Edge_Simple_DMG_LVL_2_FarmAssets_0_001
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a4034c09d9dfffe4f885ae81757da8b5, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4095,6 +4140,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_and_Corner__DMG_LVL_1_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4156,6 +4205,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 317cc28dab470ba4b9e3a9e8544a0f17, type: 3}
       propertyPath: m_Name
       value: Fence_Middle_With_Corner_DMG_LVL_2_FarmAssets_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 317cc28dab470ba4b9e3a9e8544a0f17, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4222,6 +4275,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
       propertyPath: m_Name
       value: Fence_Middle_and_Corner__DMG_LVL_1_FarmAssets_0 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5038,6 +5095,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_With_Corner_DMG_LVL_3_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 777016ab3d6323549895898508202d1d, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5048,83 +5109,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 777016ab3d6323549895898508202d1d, type: 3}
   m_PrefabInstance: {fileID: 1773479571}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1777205181
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1777205184}
-  - component: {fileID: 1777205183}
-  - component: {fileID: 1777205182}
-  m_Layer: 5
-  m_Name: Panel
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1777205182
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1777205181}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1777205183
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1777205181}
-  m_CullTransparentMesh: 1
---- !u!224 &1777205184
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1777205181}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1943265026}
-  - {fileID: 706381317}
-  m_Father: {fileID: 653851086}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1784053737
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5277,6 +5261,114 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: de8c0152ad9de65449b6611e05d4e2c7, type: 3}
   m_PrefabInstance: {fileID: 1789991697}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1848283456
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2812400652807064357, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_Name
+      value: ArtifactManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158322668381352496, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+--- !u!114 &1848283457 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3080425591526273996, guid: b108cf1ca8740c545b0dc3470149ea93, type: 3}
+  m_PrefabInstance: {fileID: 1848283456}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfccbd9b631bc6d4da1bd17bff4cff82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1885096379
 GameObject:
   m_ObjectHideFlags: 0
@@ -5359,6 +5451,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 28b61e305cc96304b90734c55e0b70ab, type: 3}
       propertyPath: m_Name
       value: Fence_Middle_DMG_LVL_2_FarmAssets_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 28b61e305cc96304b90734c55e0b70ab, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5448,81 +5544,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9156b26beeda1d84a926782f24837f66, type: 3}
   m_PrefabInstance: {fileID: 1943206396}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1943265025
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1943265026}
-  - component: {fileID: 1943265027}
-  - component: {fileID: 1943265028}
-  m_Layer: 5
-  m_Name: Image
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1943265026
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1943265025}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1777205184}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -250, y: 0}
-  m_SizeDelta: {x: 225, y: 225}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &1943265027
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1943265025}
-  m_CullTransparentMesh: 1
---- !u!114 &1943265028
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1943265025}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1001 &1950475819
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5650,6 +5671,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Middle_and_Corner__DMG_LVL_1_FarmAssets_0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cd0b019c4ff40f04ca198ec96bd506b0, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5711,6 +5736,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: dfb3f4879b0448248ba322af02caccce, type: 3}
       propertyPath: m_Name
       value: Fence_Middle_DMG_LVL_3_FarmAssets_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: dfb3f4879b0448248ba322af02caccce, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5774,6 +5803,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence_Edge_Simple_DMG_LVL_2_FarmAssets_0_001
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a4034c09d9dfffe4f885ae81757da8b5, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5836,16 +5869,49 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeadBush
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2097667663}
   m_SourcePrefab: {fileID: 100100000, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
 --- !u!4 &2097667661 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
   m_PrefabInstance: {fileID: 2097667660}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2097667662 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 124ddb0efca9f50489af6963a67df862, type: 3}
+  m_PrefabInstance: {fileID: 2097667660}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &2097667663
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097667662}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.008893765
+  m_Center: {x: -0.00028788438, y: 0.002186998, z: 0.007100528}
 --- !u!1 &2110393455
 GameObject:
   m_ObjectHideFlags: 0
@@ -5909,10 +5975,10 @@ SceneRoots:
   - {fileID: 588700841}
   - {fileID: 1198728311}
   - {fileID: 1208622251}
-  - {fileID: 653851086}
   - {fileID: 1683272466}
   - {fileID: 239100666}
   - {fileID: 1049952528}
   - {fileID: 67568407}
   - {fileID: 1678632123}
   - {fileID: 659337112}
+  - {fileID: 1848283456}

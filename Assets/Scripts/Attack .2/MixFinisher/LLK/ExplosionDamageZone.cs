@@ -9,9 +9,26 @@ public class ExplosionDamageZone : MonoBehaviour
 
     private Renderer rend;
     private Color originalColor;
+    public AudioClip explosionClip;
+    private AudioSource audioSource;
+
+    private void Awake()
+    {
+        // Add or get AudioSource
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
+
+        audioSource.playOnAwake = false; // don’t auto-play
+        audioSource.spatialBlend = 1f;   // 3D sound
+    }
 
     private void Start()
     {
+        // Play sound immediately when spawned
+        if (explosionClip != null)
+            audioSource.PlayOneShot(explosionClip);
+            
         // Get the renderer and set up the explosion effect (if it's part of the same prefab)
         rend = GetComponent<Renderer>();
         if (rend != null) originalColor = rend.material.color;

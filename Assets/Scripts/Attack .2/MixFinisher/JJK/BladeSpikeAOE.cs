@@ -2,15 +2,28 @@ using UnityEngine;
 
 public class BladeSpike : MonoBehaviour
 {
+
+    [Header("Audio Clips")]
+    public AudioClip spawnClip;
+    private AudioSource audioSource;
     public float lifeTime = 1.5f;       // lasts for 1.5s
     public float damageRadius = 1.2f;
     public int damage = 15;
     public LayerMask enemyLayers;
+    void Awake()
+    {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0.7f;
+    }
 
     void Start()
     {
-        DealDamage();                   // deal damage once when spawned
-        Destroy(gameObject, lifeTime);  // despawn after 1.5s
+        if (spawnClip != null)
+            audioSource.PlayOneShot(spawnClip);
+
+        DealDamage();
+        Destroy(gameObject, lifeTime);
     }
 
     void DealDamage()

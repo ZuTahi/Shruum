@@ -23,10 +23,29 @@ public class BoomerangSeed : MonoBehaviour
     private Vector3 returnDirection;
     private float exitTimer = 0f;
 
+    [Header("Audio")]
+    public AudioClip loopClip;
+
+    private AudioSource audioSource;
+
+    private void Awake()
+    {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.loop = true;         // 🔁 keep playing while alive
+        audioSource.spatialBlend = 0.7f; // positional sound
+    }
+
     private void Start()
     {
         spawnPosition = transform.position;
         travelDirection = transform.forward;
+
+        if (loopClip != null)
+        {
+            audioSource.clip = loopClip;
+            audioSource.Play();
+        }
     }
 
     private void Update()
@@ -81,5 +100,11 @@ public class BoomerangSeed : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void OnDestroy()
+    {
+        if (audioSource != null && audioSource.isPlaying)
+            audioSource.Stop();
     }
 }

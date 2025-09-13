@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+
 
 public class RoomManager : MonoBehaviour
 {
@@ -47,6 +49,18 @@ public class RoomManager : MonoBehaviour
 
         if (enemySpawner != null)
         {
+            // Ask ForestManager for the next difficulty wave set
+            WaveSet waveSet = ForestManager.Instance?.GetNextWaveSet();
+
+            if (waveSet != null && waveSet.waves != null && waveSet.waves.Count > 0)
+            {
+                enemySpawner.AssignWaves(new List<Wave>(waveSet.waves));
+            }
+            else
+            {
+                Debug.LogWarning("RoomManager: No WaveSet provided; using waves assigned in the scene's EnemySpawner (if any).");
+            }
+
             enemySpawner.SetRoomManager(this);
             enemySpawner.StartSpawning();
         }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4887218510818908074}
   - component: {fileID: 7619920741053926284}
   m_Layer: 0
-  m_Name: NurbsPath.003
+  m_Name: Sickle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

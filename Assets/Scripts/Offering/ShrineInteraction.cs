@@ -33,7 +33,7 @@ public class ShrineInteraction : MonoBehaviour
             playerInRange = true;
 
             if (promptUI != null && !uiManager.IsPanelActive())
-                promptUI.ShowPrompt("Press [SPACE] to Interact");
+                promptUI.ShowPrompt("[SPACE]");
         }
     }
 

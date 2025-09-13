@@ -4916,3 +4916,4 @@ MonoBehaviour:
   damage: 30
   radius: 3
   effectDuration: 1
+  explosionClip: {fileID: 8300000, guid: a996505774b57f2468a51db31a892f0a, type: 3}

@@ -24,9 +24,16 @@ public class PlayerStats : MonoBehaviour
     private bool isDead = false;
     public Animator animator;
     public static PlayerStats Instance { get; private set; }
+    [Header("Audio")]
+    public AudioClip hitClip;
+
+    private AudioSource audioSource;
 
     private void Awake()
     {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f; 
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -89,7 +96,8 @@ public class PlayerStats : MonoBehaviour
         finalDamage = Mathf.Max(finalDamage, 1);
 
         currentHP -= finalDamage;
-        CameraShake.Instance?.Shake(0.2f, 0.15f);
+        if (hitClip != null)
+            audioSource.PlayOneShot(hitClip);
         if (currentHP <= 0)
         {
             currentHP = 0;
@@ -103,6 +111,8 @@ public class PlayerStats : MonoBehaviour
             animator?.SetTrigger("Stagger");
         }
         PlayerUIManager.Instance.UpdateHP(currentHP, maxHP);
+        PlayerDamageOverlay.Instance?.FlashOnDamage();
+        PlayerDamageOverlay.Instance?.UpdateOverlayByHP(currentHP, maxHP);
     }
     private void HandleDeath()
     {
@@ -168,7 +178,9 @@ public class PlayerStats : MonoBehaviour
     public void RefreshUI()
     {
         PlayerUIManager.Instance?.RefreshAllStats();
+        PlayerDamageOverlay.Instance?.UpdateOverlayByHP(currentHP, maxHP);
     }
+
     public void SaveToPlayerData()
     {
         PlayerData.currentHP = currentHP;

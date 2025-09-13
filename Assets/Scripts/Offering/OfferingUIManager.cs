@@ -10,7 +10,9 @@ public class OfferingUIManager : MonoBehaviour
     [SerializeField] private Transform slidingBorder;               // moves between selections
     [SerializeField] private Transform[] statBlockTargets;         // assign from Editor
     [SerializeField] private Sprite[] statIcons;                   // assign sprites in order: HP → SP → MP → ATK → DEF
+    [SerializeField] private Image promptIconFront;
     [SerializeField] private TextMeshProUGUI upgradePromptText;
+
     [SerializeField] private PlayerMovement playerMovement;
 
     private int selectedIndex = 0;
@@ -152,7 +154,7 @@ public class OfferingUIManager : MonoBehaviour
         }
 
         // Show upgrade prompt only if panel active
-        if (upgradePromptText != null)
-            upgradePromptText.gameObject.SetActive(true);
+        if (promptIconFront != null)  promptIconFront.gameObject.SetActive(true);
+        if (upgradePromptText != null) upgradePromptText.gameObject.SetActive(true);
     }
 }

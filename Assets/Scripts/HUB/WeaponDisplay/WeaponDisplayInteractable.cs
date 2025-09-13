@@ -76,7 +76,7 @@ public class WeaponDisplayInteractable : MonoBehaviour
             playerInRange = true;
             if (promptUI != null)
             {
-                string promptText = isUnlocked ? "Press [SPACE] to Interact" : "Press [SPACE] to Unlock";
+                string promptText = isUnlocked ? "[SPACE]" : "[SPACE]";
                 promptUI.ShowPrompt(promptText);
             }
         }

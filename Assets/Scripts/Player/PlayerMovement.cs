@@ -30,6 +30,16 @@ public class PlayerMovement : MonoBehaviour
 
     public static PlayerMovement Instance { get; private set; }
 
+    [Header("Audio Clips")]
+    public AudioClip walkClip;   // loopable walking sound
+    public AudioClip dashClip;   // one-shot dash sound
+    private AudioSource audioSource;
+
+    [Header("Footstep Settings")]
+    [Tooltip("Time between footsteps at normal walking speed")]
+    public float baseStepInterval = 0.5f;
+    private float stepTimer = 0f;
+
     private void Awake()
     {
         if (Instance != null && Instance != this) Destroy(gameObject);
@@ -40,6 +50,8 @@ public class PlayerMovement : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
+
+        audioSource = PlayerStats.Instance.GetComponent<AudioSource>();
     }
 
     void Update()
@@ -56,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
 
         // ✅ Dash only if not interacting
         if (Input.GetKeyDown(KeyCode.Space)
-            && canDash  
+            && canDash
             && !isDashing
             && dashCooldownTimer <= 0f
             && PlayerStats.Instance != null
@@ -67,6 +79,9 @@ public class PlayerMovement : MonoBehaviour
             isInvincible = true;
             dashTimer = dashDuration;
             dashCooldownTimer = dashCooldown;
+
+            if (dashClip != null)
+                audioSource.PlayOneShot(dashClip);
 
             Vector3 dashInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
             Vector3 dashCamForward = Camera.main.transform.forward;
@@ -118,6 +133,33 @@ public class PlayerMovement : MonoBehaviour
         }
         float normalizedSpeed = controller.velocity.magnitude / moveSpeed;
         animator?.SetFloat("Speed", normalizedSpeed);
+        
+        // ✅ Footstep timing
+        HandleFootsteps(moveDir, isSprinting);
+    }
+
+      private void HandleFootsteps(Vector3 moveDir, bool isSprinting)
+    {
+        if (moveDir != Vector3.zero && controller.isGrounded)
+        {
+            stepTimer -= Time.deltaTime;
+
+            if (stepTimer <= 0f)
+            {
+                float interval = baseStepInterval / (isSprinting ? sprintMultiplier : 1f);
+                stepTimer = interval;
+
+                if (walkClip != null)
+                {
+                    audioSource.pitch = Random.Range(0.95f, 1.05f); // little variation
+                    audioSource.PlayOneShot(walkClip, 0.01f);
+                }
+            }
+        }
+        else
+        {
+            stepTimer = 0f;
+        }
     }
 
     public void TemporarilyLockMovement(float duration)

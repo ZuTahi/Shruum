@@ -9,7 +9,15 @@ public class GauntletCombo : ModularWeaponCombo
     public Transform attackPoint;
     public LayerMask enemyLayers;
     public float attackDamage = 15f;
+    [Header("Audio Clips")]
+    public AudioClip attackClip;
+    public AudioClip finisherClip;
 
+    // Mix finishers
+    public AudioClip bladeSpikeMixClip;    // from Dagger+Dagger+Gauntlet
+    public AudioClip explosiveSeedMixClip; // from Sling+Sling+Gauntlet
+
+    private AudioSource audioSource;
     [Header("VFX Prefabs")]
     public GameObject punchRedPrefab;
     public GameObject punchBluePrefab;
@@ -17,7 +25,7 @@ public class GauntletCombo : ModularWeaponCombo
 
     [Header("Hitbox Settings")]
     public float punchRadius = 0.6f;   // 🔹 normal attack hitbox
-  
+
     [Header("Finisher Settings")]
     public float finisherRadius = 1.5f;
     public float finisherMultiplier = 1.5f;
@@ -44,6 +52,10 @@ public class GauntletCombo : ModularWeaponCombo
         base.Awake();
         slotManager = FindFirstObjectByType<ModularWeaponSlotManager>();
         suppressInput = true; // won't accept input until enabled (equip)
+
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0.9f;
     }
 
     void Update()
@@ -136,6 +148,7 @@ public class GauntletCombo : ModularWeaponCombo
     // Called from animation event for normal punches
     public override void SpawnAttackVFX()
     {
+        PlayAttackSound();
         GameObject vfx = comboStep switch
         {
             1 => punchRedPrefab,
@@ -165,8 +178,8 @@ public class GauntletCombo : ModularWeaponCombo
     public override void ExecuteFinisher()
     {
         if (!isFinisherActive) return;
-
-        Vector3 slamPos = transform.root.position;
+        PlayFinisherSound();
+        Vector3 slamPos = transform.root.position + new Vector3(0f, -1f, 0f);
 
         if (slamAoEPrefab != null)
             Instantiate(slamAoEPrefab, slamPos, Quaternion.identity);
@@ -217,7 +230,7 @@ public class GauntletCombo : ModularWeaponCombo
         {
             if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
             PlayerStats.Instance.SpendMana(manaCost);
-
+            PlayMixFinisherSound(bladeSpikeMixClip);
             StartCoroutine(SpawnBladeSpikesRoutine());
 
             ResetCombo();
@@ -228,7 +241,7 @@ public class GauntletCombo : ModularWeaponCombo
         {
             if (!PlayerStats.Instance.HasEnoughMana(manaCost)) return;
             PlayerStats.Instance.SpendMana(manaCost);
-
+            PlayMixFinisherSound(explosiveSeedMixClip);
             GameObject proj = Instantiate(explosiveSeedPrefab, attackPoint.position, attackPoint.rotation);
             if (proj.TryGetComponent<Rigidbody>(out var rb))
                 rb.linearVelocity = attackPoint.forward * projectileSpeed;
@@ -293,6 +306,20 @@ public class GauntletCombo : ModularWeaponCombo
             PlayerMovement.Instance.canMove = true;
         }
     }
+    private void PlayAttackSound()
+    {
+        if (attackClip != null) audioSource.PlayOneShot(attackClip);
+    }
+
+    private void PlayFinisherSound()
+    {
+        if (finisherClip != null) audioSource.PlayOneShot(finisherClip);
+    }
+
+    private void PlayMixFinisherSound(AudioClip clip)
+    {
+        if (clip != null) audioSource.PlayOneShot(clip);
+    }
     #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
@@ -306,6 +333,6 @@ public class GauntletCombo : ModularWeaponCombo
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.root.position, finisherRadius);
     }
-    #endif
+#endif
 
 }
