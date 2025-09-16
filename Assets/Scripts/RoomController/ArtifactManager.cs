@@ -19,6 +19,11 @@ public class ArtifactManager : MonoBehaviour
     [SerializeField] private Sprite rootIcon;
     [SerializeField] private Sprite keyIcon;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip navigateClip;
+    [SerializeField] private AudioClip confirmClip;
+
+    private AudioSource audioSource;
     private ArtifactChoice[] currentChoices = new ArtifactChoice[2];
     private int currentSelectionIndex = -1;
     private bool selectionActive = false;
@@ -113,15 +118,18 @@ public class ArtifactManager : MonoBehaviour
         {
             currentSelectionIndex = Mathf.Max(0, currentSelectionIndex - 1);
             UpdateUISelection();
+            PlayNavigateSound();
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
             currentSelectionIndex = Mathf.Min(artifactSlotImages.Length - 1, currentSelectionIndex + 1);
             UpdateUISelection();
+            PlayNavigateSound();
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
             ConfirmSelection();
+            PlayConfirmSound();
         }
     }
 
@@ -156,5 +164,16 @@ public class ArtifactManager : MonoBehaviour
         artifactUIPanel.SetActive(false);
 
         roomManagerRef.OnArtifactChosen();
+    }
+        private void PlayNavigateSound()
+    {
+        if (navigateClip != null)
+            audioSource.PlayOneShot(navigateClip, 0.6f);
+    }
+
+    private void PlayConfirmSound()
+    {
+        if (confirmClip != null)
+            audioSource.PlayOneShot(confirmClip, 0.8f);
     }
 }

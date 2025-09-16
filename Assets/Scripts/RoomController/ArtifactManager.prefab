@@ -131,6 +131,8 @@ MonoBehaviour:
   fruitIcon: {fileID: 21300000, guid: b071db7b7bd319b43bec40e34bfb55f7, type: 3}
   rootIcon: {fileID: 21300000, guid: c41ac8635ac67fb408909a75e4e069f0, type: 3}
   keyIcon: {fileID: 21300000, guid: 1c773ffd8a7762e43875dcb8d42f8186, type: 3}
+  navigateClip: {fileID: 8300000, guid: 11948e1478cf65748a23a812096754db, type: 3}
+  confirmClip: {fileID: 8300000, guid: ef0da3768358eb94388ac53b74d8d9c0, type: 3}
   selectScale: 1.5
   normalScale: 1
 --- !u!1 &5197734295779581653
@@ -317,7 +319,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -50, y: -436}
+  m_AnchoredPosition: {x: 0, y: -436}
   m_SizeDelta: {x: 450, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8687126955158717516
@@ -453,7 +455,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -50, y: -439}
+  m_AnchoredPosition: {x: 0, y: -439}
   m_SizeDelta: {x: 450, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4408350879294615755
@@ -511,7 +513,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2512849555877352607
 RectTransform:
   m_ObjectHideFlags: 0

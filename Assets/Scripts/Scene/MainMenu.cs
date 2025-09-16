@@ -41,17 +41,20 @@ public class MainMenu : MonoBehaviour
             currentIndex--;
             if (currentIndex < 0) currentIndex = menuOptions.Length - 1;
             UpdateSelection();
+            PlayNavigateSound();
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
             currentIndex++;
             if (currentIndex >= menuOptions.Length) currentIndex = 0;
             UpdateSelection();
+            PlayNavigateSound();
         }
 
         if (Input.GetKeyDown(KeyCode.Space)) // Space = select
         {
             SelectOption();
+            PlaySelectSound();
         }
     }
 

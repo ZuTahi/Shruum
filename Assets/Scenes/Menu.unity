@@ -356,7 +356,7 @@ RectTransform:
   - {fileID: 414392847}
   - {fileID: 1556931421}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -9.957, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -379,8 +379,8 @@ MonoBehaviour:
   - {fileID: 1556931422}
   highlightedColor: {r: 0.8490566, g: 0.55493057, b: 0.113741554, a: 1}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
-  navigateClip: {fileID: 0}
-  selectClip: {fileID: 0}
+  navigateClip: {fileID: 8300000, guid: 11948e1478cf65748a23a812096754db, type: 3}
+  selectClip: {fileID: 8300000, guid: ef0da3768358eb94388ac53b74d8d9c0, type: 3}
 --- !u!1 &1481117591
 GameObject:
   m_ObjectHideFlags: 0
@@ -576,7 +576,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1538312987}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: fc3ea0e0e04f6eb4fad4649e31bc2091, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: 05eb42d4aee922d4993961149114a19a, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -587,15 +587,17 @@ VideoPlayer:
   m_RenderMode: 2
   m_AspectRatio: 2
   m_DataSource: 0
-  m_TimeUpdateMode: 2
-  m_PlaybackSpeed: 1
+  m_TimeUpdateMode: 1
+  m_PlaybackSpeed: 0.7
   m_AudioOutputMode: 2
-  m_TargetAudioSources: []
-  m_DirectAudioVolumes: []
+  m_TargetAudioSources:
+  - {fileID: 0}
+  m_DirectAudioVolumes:
+  - 1
   m_Url: 
-  m_EnabledAudioTracks: 
-  m_DirectAudioMutes: 
-  m_ControlledAudioTrackCount: 0
+  m_EnabledAudioTracks: 01
+  m_DirectAudioMutes: 00
+  m_ControlledAudioTrackCount: 1
   m_PlayOnAwake: 1
   m_SkipOnDrop: 1
   m_Looping: 1
@@ -984,13 +986,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1731724778}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.084895246, y: 0, z: 0, w: 0.9963899}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -21.4, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -9.74, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2066193437
 GameObject:
   m_ObjectHideFlags: 0
@@ -1268,10 +1270,6 @@ PrefabInstance:
     - target: {fileID: 6346042764215077781, guid: 44c8e75692ceba04b97dad82e77bc2f0, type: 3}
       propertyPath: m_Name
       value: Transition
-      objectReference: {fileID: 0}
-    - target: {fileID: 6346042764215077781, guid: 44c8e75692ceba04b97dad82e77bc2f0, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
