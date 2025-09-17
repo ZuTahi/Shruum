@@ -1,13 +1,17 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 [System.Serializable]
 public class StatBar
 {
-    public RectTransform background;  // Resizes with max stat (black base)
-    public RectTransform fill;        // Shrinks/fills based on current stat
-    public float baseStat = 100f;     // Base max stat
-    public float baseHeight = 120f;   // Base height for baseStat (in pixels)
+    public RectTransform background;   // Resizes with max stat (black base)
+    public RectTransform fill;         // Shrinks/fills based on current stat
+    public float baseStat = 100f;      // Base max stat
+    public float baseHeight = 120f;    // Base height for baseStat (in pixels)
+
+    [Header("Optional Number Display")]
+    public TextMeshProUGUI valueText;  // Shows "current / max"
 }
 
 public class PlayerUIManager : MonoBehaviour
@@ -69,5 +73,10 @@ public class PlayerUIManager : MonoBehaviour
         Image fillImage = bar.fill?.GetComponent<Image>();
         if (fillImage != null)
             fillImage.fillAmount = max > 0 ? current / max : 0;
+
+        // 🔹 Only show current value
+        if (bar.valueText != null)
+            bar.valueText.text = Mathf.RoundToInt(current).ToString();
     }
+
 }
